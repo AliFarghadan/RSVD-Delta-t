@@ -45,8 +45,8 @@ Note: Newer versions of Petsc and Slepc do not change the code principles; howev
 
 ### References
 
-* Scalable resolvent analysis for three-dimensional flows, *JCP (under review)*, 2024
-* A randomized time-domain algorithm for efficiently computing resolvent modes, *AIAA AVIATION*, 2021
+* [Scalable resolvent analysis for three-dimensional flows](https://arxiv.org/pdf/2309.04617.pdf), *JCP (under review)*, 2024
+* [A randomized time-domain algorithm for efficiently computing resolvent modes](https://arc.aiaa.org/doi/10.2514/6.2021-2896), *AIAA AVIATION*, 2021
 
 ### Contact information
 
