@@ -11,7 +11,7 @@ Resolvent analysis is a valuable tool for studying coherent structures in turbul
 ## Features
 
 * CPU time scales linearly with problem dimension: $\text{RSVD}-\Delta t$ offers linear scalability with the number of discrete degrees of freedom $O(N)$, significantly reducing computational overhead for large systems compared to existing algorithms.
-* Minimal memory requirements: the algorithm minimizes memory usage via streaming Fourier sums, enabling the study of high-dimensional systems.
+* Memory usage scales linearly with problem dimension: $\text{RSVD}-\Delta t$ minimizes memory usage via streaming Fourier sums, enabling the study of high-dimensional systems.
 * Error control strategies: $\text{RSVD}-\Delta t$ incorporates strategies such as power iteration and transient removal to control errors and ensure the reliability of computed resolvent modes.
 
 ## Usage
