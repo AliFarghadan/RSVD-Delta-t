@@ -11,11 +11,3 @@ This product includes software from the Petsc toolkit (Petsc 3.18.5)
 This product includes software from the Slepc toolkit (Slepc 3.18)
 * Copyright © 2002-2024, Universitat Politecnica de Valencia, Spain (2-clause BSD license)
 
-This product includes software from the CMake project
-* Copyright 2001-2009 Kitware, Inc.
-* Copyright 2012-2014 Continuum Analytics, Inc.
-* All rights reserved.
-
-This product includes software from the OpenMPI project
-* https://www.open-mpi.org/community/license.php (3-clause BSD license)
-
