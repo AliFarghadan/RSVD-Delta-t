@@ -4,9 +4,13 @@
 
 ### Introduction
 
-In this tutorial, we will walk through the process of using the $\text{RSVD}-\Delta t$ algorithm on a Ginzburg-Landau test case. We showcase both the transient run (pre-processing step) and the main algorithm (for computing resolvent modes). We also describe all related input variables, and the logisitics of I/O directories. The linearized operator is provided in [folder](/./) 
+In this tutorial, we will walk through the process of using the $\text{RSVD}-\Delta t$ algorithm on a Ginzburg-Landau test case. We showcase both the transient run (the pre-processing step) and the main algorithm (for computing resolvent modes). We also describe all related input variables, and the logisitics of I/O directories. The linearized operator is provided in [folder](./). This operator is the operator we used in our [paper](https://arxiv.org/pdf/2309.04617.pdf).
 
-###
+### List of input variables
+
+Here, we provide a list of variables we used for this test case. You need to change the variables for your own project.
+
+
 
 ### Prerequisite modules
 
@@ -39,10 +43,6 @@ srun -c1 ./RSVD-delta-t -inputs variables.txt
 ```
 
 In this jobfile, $\text{RSVD}-\Delta t$ is the executable for our algorithm, and variables.txt contains the prerequisite variables required for running the algorithm.
-
-### List of input variables
-
-Here, we provide a list of variables we used for this test case. You need to change the variables for your own project.
 
 
 
