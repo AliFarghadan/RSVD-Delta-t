@@ -2,7 +2,7 @@
 # Copyright © 2024 The Regents of the University of Michigan
 
 This product includes software developed at Towne Lab, University of Michigan
-* Copyright © 2024 The Regents of the University of Michigan, Towne Lab
+* Copyright © 2024 The Regents of the University of Michigan, Towne Lab (3-clause BSD license)
 
 This product includes software from the Petsc toolkit (Petsc 3.19.4)
 * Copyright © 1991-2021, UChicago Argonne, LLC and the PETSc Development Team  (2-clause BSD license)
