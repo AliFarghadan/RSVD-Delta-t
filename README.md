@@ -1,4 +1,4 @@
-# Basic information of $\text{RSVD}-\Delta t$ for users
+# $\text{RSVD}-\Delta t$: Randomized Singular Value Decomposition with Time-stepping
 
 Copyright © 2024 The Regents of the University of Michigan
 
