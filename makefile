@@ -4,7 +4,6 @@ PETSC_ARCH ?= complex-opt
 
 SRCDIR = ./SourceCode
 
-# SRCS = $(SRCDIR)/main.c $(SRCDIR)/CreateTSMats.c $(SRCDIR)/QR_simple.c $(SRCDIR)/ReadUserInput.c
 SRCS := $(wildcard $(SRCDIR)/*.c)
 
 TARGET = RSVDt_clean
