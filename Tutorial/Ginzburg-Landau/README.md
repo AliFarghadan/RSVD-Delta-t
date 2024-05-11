@@ -16,28 +16,6 @@ Make sure you have the following prerequisite modules installed:
 
 Note that the same versions of GCC and OpenMPI are used to compile PETSc and SLEPc that are used to build the executable. Please refer to the [README](/README.md) file for instructions on installing PETSc and SLEPc.
 
-## Example Jobfile
-
-To illustrate the usage of the $\text{RSVD}-\Delta t$ algorithm, we provide an example jobfile. This jobfile specifies the configuration for running the algorithm on a computing cluster.
-
-```bash
-#!/bin/bash
-#SBATCH --job-name=<name>
-#SBATCH --nodes=<count>
-#SBATCH --ntasks-per-node=<count>
-#SBATCH --mem=<memory>
-#SBATCH --time=<dd-hh:mm:ss>
-
-module load gcc/<version> openmpi/<version>
-
-cd /path/to/executable/
-make PETSC_ARCH=complex-opt # this will compile the source files to create the executable, or do nothing if the executable is already up-to-date
-
-mpirun RSVD-delta-t -inputs variables.yaml  # runs the algorithm for a given set of variables in variables.yaml file
-```
-
-In this jobfile, `RSVD-delta-t` is the executable for our algorithm, and `variables.yaml` contains the prerequisite variables required for running the algorithm.
-
 ## List of input variables
 
 Here is a list of variables used for this test case. Please note that you will need to modify these variables to suit your own projects.
