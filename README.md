@@ -16,17 +16,18 @@ Resolvent analysis is a valuable tool for studying coherent structures in turbul
 
 ## Usage
 
-To use $\text{RSVD}-\Delta t$, you can follow these steps:
- 
-1. Install the required dependencies:
-	+ OpenMPI (or similar MPI package)
-	+ C++ compiler
-	+ PETSc and SLEPc packages (working versions are PETSc 3.18.5, SLEPc 3.18)
+To use $\text{RSVD}-\Delta t$, follow these steps:
 
-2. Download and extract the $\text{RSVD}-\Delta t$ package.
-3. Navigate to the directory containing the extracted files.
-4. Run the main script (RSVDT.sh) with appropriate input parameters to compute resolvent modes.
-5. Obtain the output data.
+1. **Install dependencies**:
+	* OpenMPI (or similar MPI package)
+	* C++ compiler
+	* PETSc and SLEPc packages (our codes are developed on versions PETSc 3.19.4 and SLEPc 3.19)
+2. **Download and extract** the $\text{RSVD}-\Delta t$ package.
+3. **Navigate** to the directory containing the extracted files.
+4. **Build the executable** using the makefile in the package.
+5. **Run the executable** with appropriate input parameters to compute resolvent modes.
+
+We've shown an example usage of our code in the [Tutorial](./Tutorial).
 
 ### Install PETSc and SLEPc
 
@@ -40,6 +41,17 @@ A suggested configuration of PETSc is as follows:\
 This configuration ensures computations with complex values, enables the use of 64-bit integer numbers, and enhances speed by disabling debugging.
 
 Note: Newer versions of PETSc and SLEPc do not change the code principles; however, syntaxes might need to be updated.
+
+### Makefile usage
+
+The Makefile is written to build the executable from the source code. You can use the following commands:
+
+* `make` to build the executable
+* `make clean` to remove the executable
+
+The executable name will be `RSVDt`.
+
+Note: By default, `PETSC_ARCH=complex-opt`. If your PETSC_ARCH name is different, you must specify it in your make command: `make PETSC_ARCH=<PETSc-arch-name>`.
 
 ## Additional resources
 
