@@ -15,4 +15,4 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” 
 
 # Contributing License Agreement
 
-If you are planning a large contribution, we encourage you to discuss the concept and interact with us frequently to ensure that your effort is well-directed.
+If you're considering a substantial contribution or seeking to broaden the scope of $\text{RSVD}-\Delta t$, we warmly invite you to connect with us. Engaging in conversations with our team ensures that your efforts are well-guided and supported.
