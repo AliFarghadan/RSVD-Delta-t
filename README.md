@@ -29,7 +29,7 @@ To use $\text{RSVD}-\Delta t$, follow these steps:
 
 We've shown an example usage of our code in the [Tutorial](./Tutorial).
 
-### Install PETSc and SLEPc
+## Install PETSc and SLEPc
 
 You can follow the instructions from the official websites:
 
@@ -42,7 +42,7 @@ This configuration ensures computations with complex values, enables the use of 
 
 Note: Newer versions of PETSc and SLEPc do not change the code principles; however, syntaxes might need to be updated.
 
-### Makefile usage
+## Makefile usage
 
 The `makefile` is written to build the executable from the source code. You can use the following commands:
 
@@ -52,6 +52,28 @@ The `makefile` is written to build the executable from the source code. You can 
 The executable name will be `RSVDt`.
 
 Note: By default, `PETSC_ARCH=complex-opt`. If your PETSC_ARCH name is different, you must specify it in your make command: `make PETSC_ARCH=<PETSc-arch-name>`.
+
+## Example Jobfile
+
+To illustrate the usage of the $\text{RSVD}-\Delta t$ algorithm, we provide an example jobfile. This jobfile specifies the configuration for running the algorithm on a computing cluster.
+
+```bash
+#!/bin/bash
+#SBATCH --job-name=<name>
+#SBATCH --nodes=<count>
+#SBATCH --ntasks-per-node=<count>
+#SBATCH --mem=<memory>
+#SBATCH --time=<dd-hh:mm:ss>
+
+module load gcc/<version> openmpi/<version>
+
+cd /path/to/executable/
+make PETSC_ARCH=complex-opt # this will compile the source files to create the executable, or do nothing if the executable is already up-to-date
+
+mpirun RSVD-delta-t -inputs variables.yaml  # runs the algorithm for a given set of variables in variables.yaml file
+```
+
+In this jobfile, `RSVD-delta-t` is the executable for our algorithm, and `variables.yaml` contains the prerequisite variables required for running the algorithm.
 
 ## Additional resources
 
