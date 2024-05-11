@@ -97,7 +97,7 @@ beta:            0.1
 Rseed:           14
 
 # Runs the transient simulation if true, otherwise RSVD-delta-t will run (boolean)
-# All parameters below this are relevant when TransRun is true
+# All variables below this are relevant when TransRun is true
 TransRun:        false
 
 # Number of periods to integrate (integer)
@@ -129,7 +129,7 @@ Before running the actual $\text{RSVD}-\Delta t$ algorithm, it's often necessary
 
 To run the transient simulation, set the `TransRun` flag to `true` in the input file (`variables.yaml`).
 
-#### Simulation Parameters
+#### Simulation variables
 
 * `Periods` determines the length of transient simulation.
 * We define the period length as $T = 2\pi/\omega_{min}$, where $\omega_{min}$ (defined as `w`) is the base frequency.
@@ -144,7 +144,7 @@ To run the transient simulation, set the `TransRun` flag to `true` in the input 
 * In case the `TransSave` is `false`, we only save "q_transient_norms" and "q_transient_last_snapshot".
 * In case the `TransRemovalEst` is `true`, the simulation saves initial and updated transient norms to "Initial_transient_norm_period_&lt;int&gt;" and "Updated_transient_norm_period_&lt;int&gt;", respectively, at the end of each period. For instance, "Initial_transient_norm_period_1" and "Updated_transient_norm_period_1" are the norm of snapshots across the frequency range at the end of the first period.
 
-### Note: all parameters here have a default value in case you comment out variables, you will get a warning that the default values are used for those parameters that are missed in your input list. Here are the default values:
+### Note: all variables here have a default value in case you comment out variables, you will get a warning that the default values are used for those variables that are missed in your input list. Here are the default values:
 
 #### Default Values
 
@@ -160,7 +160,7 @@ To run the transient simulation, set the `TransRun` flag to `true` in the input 
 
 The executable runs the $\text{RSVD}-\Delta t$ algorithm by default unless `TransRun` is `true`. 
 
-#### Simulation Parameters
+#### Simulation variables
 
 * `RootDir` determines the root directory path for the simulation.
 * `ResultsDir` specifies the results directory path where output files will be saved. The `ResultsDir` is the folder directory that needs to exist in the `RootDir`. If it does not exist, we make directory with the path provided. 
@@ -190,9 +190,9 @@ The executable runs the $\text{RSVD}-\Delta t$ algorithm by default unless `Tran
 * We create a folder in the results directory with a fixed prename "ResolventModes_&lt;int&gt;", where &lt;int&gt; is an integer starting from 0. If "ResolventModes_i" exists, the code increments the integer until the folder name is unique, ensuring results from different simulations are not overwritten.
 * Once the computation is complete, `k` response modes (each of size `N` × `Nw`) are saved as "U_hat_k&lt;int&gt;", where &lt;int&gt; represents the kth mode. Similarly, forcing modes are saved as "V_hat_k&lt;int&gt;". Finally, gains are saved as a single matrix "S_hat" of size `k` × `Nw`.
 
-Note: not all parameters have default values. If a parameter is not specified, you will receive a warning or error message.
+Note: not all variables have default values. If a variable is not specified, you will receive a warning or error message.
 
-#### Default values are provided for the following parameters:
+#### Default values are provided for the following variables:
 
 * `k`: `3`
 * `q`: `0`
@@ -203,7 +203,7 @@ Note: not all parameters have default values. If a parameter is not specified, y
 * `Discounting`: `false`
 * `Rseed`: `1373`
 
-#### The following parameters must be specified with no default values:
+#### The following variables must be specified with no default values:
 
 * `RootDir`
 * `ResultsDir`
@@ -216,7 +216,7 @@ Note: not all parameters have default values. If a parameter is not specified, y
 ## Conclusion
 In this tutorial, we've outlined the basic steps for using the $\text{RSVD}-\Delta t$ algorithm with a Ginzburg-Landau test case. By following these instructions and adapting them to your specific problem, you can harness the power of this algorithm for your scientific or engineering simulations.
 
-Feel free to adjust the parameters and configurations as needed for your particular use case. Experimentation and iteration are often necessary for achieving optimal results.
+Feel free to adjust the variables and configurations as needed for your particular use case. Experimentation and iteration are often necessary for achieving optimal results.
 
 If you have any further questions or encounter any issues, don't hesitate to reach out for assistance.
 
