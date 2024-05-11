@@ -88,3 +88,12 @@ In this jobfile, `RSVD-delta-t` is the executable for our algorithm, and `variab
 
 Ali Farghadan, University of Michigan, aliii@umich.edu\
 Aaron Towne, University of Michigan, towne@umich.edu
+
+### Cite as
+
+@Article{Farghadan2023scalable,
+  title={Scalable resolvent analysis for three-dimensional flows},
+  author={Farghadan, A. and Martini, E. and Towne, A.},
+  journal={arXiv preprint arXiv:2309.04617},
+  year={2023}
+}
