@@ -21,25 +21,25 @@ To use $\text{RSVD}-\Delta t$, you can follow these steps:
 1. Install the required dependencies:
 	+ OpenMPI (or similar MPI package)
 	+ C++ compiler
-	+ Petsc and Slepc packages (working versions are Petsc 3.18.5, Slepc 3.18)
+	+ PETSc and SLEPc packages (working versions are PETSc 3.18.5, SLEPc 3.18)
 
 2. Download and extract the $\text{RSVD}-\Delta t$ package.
 3. Navigate to the directory containing the extracted files.
 4. Run the main script (RSVDT.sh) with appropriate input parameters to compute resolvent modes.
 5. Obtain the output data.
 
-### Install Petsc and Slepc
+### Install PETSc and SLEPc
 
 You can follow the instructions from the official websites:
 
-- [Petsc](https://petsc.org/release/install)
-- [Slepc](https://slepc.upv.es/documentation)
+- [PETSc](https://petsc.org/release/install)
+- [SLEPc](https://slpec.upv.es/documentation)
 
-A suggested configuration of Petsc is as follows:\
+A suggested configuration of PETSc is as follows:\
 ./configure --with-debugging=0 --with-scalar-type=complex --with-64-bit-indices\
 This configuration ensures computations with complex values, enables the use of 64-bit integer numbers, and enhances speed by disabling debugging.
 
-Note: Newer versions of Petsc and Slepc do not change the code principles; however, syntaxes might need to be updated.
+Note: Newer versions of PETSc and SLEPc do not change the code principles; however, syntaxes might need to be updated.
 
 ## Additional resources
 
