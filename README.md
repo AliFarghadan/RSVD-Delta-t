@@ -4,7 +4,7 @@ Copyright © 2024 The Regents of the University of Michigan
 
 Welcome to $\text{RSVD}-\Delta t$, a novel algorithm designed to address the computational challenges associated with studying coherent structures in large-scale flows using resolvent analysis. This README file provides an overview of the algorithm, its features, and instructions for usage.
 
-![Example usage of $\text{RSVD}-\Delta t$ on a three-dimensional jet](https://github.com/AliFarghadan/RSVD-Delta-t/blob/Resolvent-analysis/image.png)
+![Example usage of our algorithm on a three-dimensional jet](https://github.com/AliFarghadan/RSVD-Delta-t/blob/Resolvent-analysis/image.png)
 
 ## Overview
 
