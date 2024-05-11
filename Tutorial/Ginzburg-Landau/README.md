@@ -166,7 +166,7 @@ The executable runs the $\text{RSVD}-\Delta t$ algorithm by default unless `Tran
 #### Saving results
 
 * We create a folder in the results directory with a fixed prename "ResolventModes_&lt;int&gt;", where &lt;int&gt; is an integer starting from 0. If "ResolventModes_i" exists, the code increments the integer until the folder name is unique, ensuring results from different simulations are not overwritten.
-* Once the computation is complete, `k` response modes (each of size `N` × `Nw`) are saved as "U_hat_k&lt;int&gt;", where &lt;int&gt; represents the &lt;int&gt;th mode. Similarly, forcing modes are saved as "V_hat_k&lt;int&gt;". For instance, "U_hat_k1" and "V_hat_k1" contain the response and forcing modes, respectively, across all frequencies of interest. Finally, gains are saved as a single matrix "S_hat" of size `k` × `Nw`.
+* Once the computation is complete, `k` response modes (each of size `N` × `Nw`) are saved as "U_hat_k&lt;int&gt;", where &lt;int&gt; represents the &lt;int&gt;th mode. Similarly, forcing modes are saved as "V_hat_k&lt;int&gt;". For instance, "U_hat_k1" and "V_hat_k1" contain the optimal response and forcing modes, respectively, across all frequencies of interest. Finally, gains are saved as a single matrix "S_hat" of size `k` × `Nw`.
 
 Note: not all variables have default values. If a variable is not specified, you will receive a warning or error message.
 
