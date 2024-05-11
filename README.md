@@ -44,7 +44,7 @@ Note: Newer versions of PETSc and SLEPc do not change the code principles; howev
 
 ### Makefile usage
 
-The Makefile is written to build the executable from the source code. You can use the following commands:
+The `makefile` is written to build the executable from the source code. You can use the following commands:
 
 * `make` to build the executable
 * `make clean` to remove the executable
