@@ -34,7 +34,7 @@ ResultsDir:      /path/to/results/
 
 # The linearized operator (binary matrix - usually very sparse)
 # The operator directory is defined as RootDir + OperatorDir
-OperatorDir:     matrices/A_GL_mu038
+OperatorDir:     matrices/A_GL
 
 # Number of test vectors (integer)
 k:               2
@@ -191,8 +191,68 @@ Note: not all variables have default values. If a variable is not specified, you
 * `dt`
 * `beta` (only when `Discounting` is `true`)
 
+## Transfer Data Between MATLAB and PETSc/SLEPc Binary Format
+
+You may frequently need to transfer data between PETSc/SLEPc and MATLAB for post-processing results. This section will guide you through the process of converting data formats to ensure compatibility and seamless integration between MATLAB and PETSc/SLEPc.
+
+### Converting Data from MATLAB to PETSc/SLEPc
+
+MATLAB can save data in various formats, but for use with PETSc/SLEPc, we need to ensure the data is saved in a binary format compatible with these libraries. PETSc provides MATLAB functions to facilitate this conversion.
+
+1. **Add PETSc MATLAB Path:**
+
+    Ensure you add the PETSc MATLAB interface to your MATLAB path:
+    ```matlab
+    addpath('/path/to/PETSc/share/petsc/matlab/');
+    ```
+
+2. **Save Data in MATLAB:**
+
+    Create your matrix in MATLAB and save it using PETSc's binary write function. We have provided A_GL in both binary and .mat formats which you can test.
+    ```matlab
+    PetscBinaryWrite('/path/to/your/matrix/A', A_GL, 'complex', true, 'indices', 'int64');
+    ```
+    Note that `A` is an example name for the binary saved file. `A_GL` is the variable in MATLAB. Depending on the PETSc architecture that you have compiled, `'complex', true` and `'indices', 'int64'` can be different. Please refer to `PetscBinaryWrite` for more information.
+
+3. **Load Data in PETSc:**
+
+    Here is a general way in your PETSc/SLEPc environment, you can now load the binary file:
+    ```c
+    Mat A;
+    PetscViewer viewer;
+    
+    PetscViewerBinaryOpen(PETSC_COMM_WORLD, "/path/to/your/matrix/A", FILE_MODE_READ, &viewer);
+    MatCreate(PETSC_COMM_WORLD, &A);
+    MatSetType(A, MATSEQAIJ); // or MATMPIAIJ if parallel (depending on your matrix, you can vary the type)
+    MatLoad(A, viewer);
+    PetscViewerDestroy(&viewer);
+    ```
+
+### Converting Data from PETSc/SLEPc to MATLAB
+
+To transfer data from PETSc/SLEPc to MATLAB, follow these steps:
+
+1. **Save Data in PETSc/SLEPc:**
+
+    Save the matrix data in PETSc's binary format:
+    ```c
+    PetscViewer viewer;
+    
+    PetscViewerBinaryOpen(PETSC_COMM_WORLD, "/path/to/your/matrix/A", FILE_MODE_WRITE, &viewer);
+    MatView(A, viewer);
+    PetscViewerDestroy(&viewer);
+    ```
+
+2. **Load Data in MATLAB:**
+
+    Read the PETSc binary file in MATLAB:
+    ```matlab
+    addpath('/path/to/PETSc/share/petsc/matlab/');
+    A = PetscBinaryRead('/path/to/your/matrix/A', 'complex', true, 'indices', 'int64');
+    ```
+
 ## Conclusion
-In this tutorial, we've outlined the basic steps for using the $\text{RSVD}-\Delta t$ algorithm with a Ginzburg-Landau test case. By following these instructions and adapting them to your specific problem, you can harness the power of this algorithm for your scientific or engineering simulations.
+In this tutorial, we've outlined the basic steps for using the $\text{RSVD}-\Delta t$ algorithm with a Ginzburg-Landau test case and transferring data between MATLAB and PETSc/SLEPc. By following these instructions and adapting them to your specific problem, you can harness the power of this algorithm for your scientific or engineering simulations.
 
 Feel free to adjust the variables and configurations as needed for your particular use case. Experimentation and iteration are often necessary for achieving optimal results.
 
