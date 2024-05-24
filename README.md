@@ -36,11 +36,11 @@ We've shown an example usage of our code in the [Tutorial](./Tutorial).
 You can follow the instructions from the official websites:
 
 - [PETSc](https://petsc.org/release/install)
-- [SLEPc](https://slpec.upv.es/documentation)
+- [SLEPc](https://slepc.upv.es/documentation/)
 
 A suggested configuration of PETSc is as follows:\
-./configure --with-debugging=0 --with-scalar-type=complex --with-64-bit-indices\
-This configuration ensures computations with complex values, enables the use of 64-bit integer numbers, and enhances speed by disabling debugging.
+./configure --with-debugging=0 --with-scalar-type=complex --with-64-bit-indices --PETSC_ARCH=complex-opt\
+This configuration ensures computations with complex values, enables the use of 64-bit integer numbers, and enhances speed by disabling debugging. `PETSC_ARCH=<PETSc-arch-name>` can be chosen differently.
 
 Note: Newer versions of PETSc and SLEPc do not change the code principles; however, syntaxes might need to be updated.
 
