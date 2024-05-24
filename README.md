@@ -44,7 +44,7 @@ This configuration ensures computations with complex values, enables the use of 
 
 Note 1: Newer versions of PETSc and SLEPc do not change the core principles of the code; however, syntax updates might be required. \
 Note 2: If you do not have MPICH installed locally, you can add `--download-mpich` to the configuration options. Please read the [PETSc configuration](https://petsc.org/main/install/install/) guide for more information. \
-Note 3: If you need additional packages such as MUMPS, you can add `--download-mumps`.
+Note 3: If you need additional packages such as MUMPS, you can add `--download-mumps`. In that case, you need to update the makefile accordingly.
 
 ## Makefile usage
 
