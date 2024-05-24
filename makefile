@@ -6,7 +6,7 @@ SRCDIR = ./SourceCode
 
 SRCS := $(wildcard $(SRCDIR)/*.c)
 
-TARGET = RSVDt_clean
+TARGET = RSVDt
 
 CC = mpicc
 
