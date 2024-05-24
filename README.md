@@ -39,7 +39,7 @@ You can follow the instructions from the official websites:
 - [SLEPc](https://slepc.upv.es/documentation/)
 
 A suggested configuration of PETSc is as follows:\
-./configure --with-debugging=0 --with-scalar-type=complex --with-64-bit-indices --PETSC_ARCH=complex-opt\
+./configure --with-debugging=0 --with-scalar-type=complex --with-64-bit-indices PETSC_ARCH=complex-opt\
 This configuration ensures computations with complex values, enables the use of 64-bit integer numbers, and enhances speed by disabling debugging. `PETSC_ARCH=<PETSc-arch-name>` can be chosen differently.
 
 Note: Newer versions of PETSc and SLEPc do not change the code principles; however, syntaxes might need to be updated.
@@ -72,10 +72,10 @@ module load gcc/<version> openmpi/<version>
 cd /path/to/executable/
 make PETSC_ARCH=complex-opt # this will compile the source files to create the executable, or do nothing if the executable is already up-to-date
 
-mpirun RSVD-delta-t -inputs variables.yaml  # runs the algorithm for a given set of variables in variables.yaml file
+mpirun RSVDt -inputs variables.yaml  # runs the algorithm for a given set of variables in variables.yaml file
 ```
 
-In this jobfile, `RSVD-delta-t` is the executable for our algorithm, and `variables.yaml` contains the prerequisite variables required for running the algorithm.
+In this jobfile, `RSVDt` is the executable for our algorithm, and `variables.yaml` contains the prerequisite variables required for running the algorithm.
 
 ## Additional resources
 
