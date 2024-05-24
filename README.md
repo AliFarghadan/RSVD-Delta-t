@@ -36,7 +36,7 @@ We've shown an example usage of our code in the [Tutorial](./Tutorial).
 You can follow the instructions from the official websites:
 
 - [PETSc](https://petsc.org/release/install)
-- [SLEPc](https://slepc.upv.es/documentation/)
+- [SLEPc](https://slepc.upv.es/documentation/instal.htm)
 
 A suggested configuration of PETSc is as follows:\
 ./configure --with-debugging=0 --with-scalar-type=complex --with-64-bit-indices PETSC_ARCH=complex-opt\
