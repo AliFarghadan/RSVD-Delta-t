@@ -42,7 +42,9 @@ A suggested configuration of PETSc is as follows:\
 ./configure --with-debugging=0 --with-scalar-type=complex --with-64-bit-indices PETSC_ARCH=complex-opt\
 This configuration ensures computations with complex values, enables the use of 64-bit integer numbers, and enhances speed by disabling debugging. `PETSC_ARCH=<PETSc-arch-name>` can be chosen differently.
 
-Note: Newer versions of PETSc and SLEPc do not change the code principles; however, syntaxes might need to be updated.
+Note 1: Newer versions of PETSc and SLEPc do not change the core principles of the code; however, syntax updates might be required. \
+Note 2: If you do not have MPICH installed locally, you can add `--download-mpich` to the configuration options. Please read the [PETSc configuration](https://petsc.org/main/install/install/) guide for more information. \
+Note 3: If you need additional packages such as MUMPS, you can add `--download-mumps`.
 
 ## Makefile usage
 
