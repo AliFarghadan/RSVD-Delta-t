@@ -39,12 +39,13 @@ You can follow the instructions from the official websites:
 - [SLEPc](https://slepc.upv.es/documentation/instal.htm)
 
 A suggested configuration of PETSc is as follows:\
-./configure --with-debugging=0 --with-scalar-type=complex --with-64-bit-indices PETSC_ARCH=complex-opt\
-This configuration ensures computations with complex values, enables the use of 64-bit integer numbers, and enhances speed by disabling debugging. `PETSC_ARCH=<PETSc-arch-name>` can be chosen differently. Here are a few notes:
+`./configure --with-debugging=0 --with-scalar-type=complex --with-64-bit-indices PETSC_ARCH=complex-opt`\
+This configuration ensures computations with complex values, enables the use of 64-bit integer numbers, and enhances speed by disabling debugging. Here are a few notes:
 
 1. Newer versions of PETSc and SLEPc do not change the core principles of the code; however, syntax updates might be required.
-2. If you do not have MPICH installed locally, you can add `--download-mpich` to the configuration options. Please read the [PETSc configuration](https://petsc.org/main/install/install/) guide for more information.
-3. If you need additional packages such as MUMPS, you can add `--download-mumps`. In that case, you need to update the makefile accordingly.
+2. `PETSC_ARCH=<PETSc-arch-name>` can be chosen differently.
+3. If you do not have MPICH installed locally, you can add `--download-mpich` to the configuration options. Please read the [PETSc configuration](https://petsc.org/main/install/install/) guide for more information.
+4. If you need additional packages such as MUMPS, you can add `--download-mumps`. In that case, you need to update the makefile accordingly.
 
 ## Setting up environment variables for PETSc and SLEPc
 
@@ -106,7 +107,8 @@ module load gcc/<version> openmpi/<version>
 cd /path/to/executable/
 make PETSC_ARCH=complex-opt # this will compile the source files to create the executable, or do nothing if the executable is already up-to-date
 
-mpirun RSVDt -inputs variables.yaml  # runs the algorithm for a given set of variables in variables.yaml file
+mpiexec RSVDt -inputs variables.yaml  # runs the algorithm for a given set of variables in variables.yaml file
+# Note: You may need to use "srun" or "mpirun" instead of "mpiexec" depending on your installation and cluster configurations.
 ```
 
 In this jobfile, `RSVDt` is the executable for our algorithm, and `variables.yaml` contains the prerequisite variables required for running the algorithm.
