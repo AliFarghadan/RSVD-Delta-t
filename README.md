@@ -40,11 +40,43 @@ You can follow the instructions from the official websites:
 
 A suggested configuration of PETSc is as follows:\
 ./configure --with-debugging=0 --with-scalar-type=complex --with-64-bit-indices PETSC_ARCH=complex-opt\
-This configuration ensures computations with complex values, enables the use of 64-bit integer numbers, and enhances speed by disabling debugging. `PETSC_ARCH=<PETSc-arch-name>` can be chosen differently.
+This configuration ensures computations with complex values, enables the use of 64-bit integer numbers, and enhances speed by disabling debugging. `PETSC_ARCH=<PETSc-arch-name>` can be chosen differently. Here are a few notes:
 
-Note 1: Newer versions of PETSc and SLEPc do not change the core principles of the code; however, syntax updates might be required. \
-Note 2: If you do not have MPICH installed locally, you can add `--download-mpich` to the configuration options. Please read the [PETSc configuration](https://petsc.org/main/install/install/) guide for more information. \
-Note 3: If you need additional packages such as MUMPS, you can add `--download-mumps`. In that case, you need to update the makefile accordingly.
+1. Newer versions of PETSc and SLEPc do not change the core principles of the code; however, syntax updates might be required.
+2. If you do not have MPICH installed locally, you can add `--download-mpich` to the configuration options. Please read the [PETSc configuration](https://petsc.org/main/install/install/) guide for more information.
+3. If you need additional packages such as MUMPS, you can add `--download-mumps`. In that case, you need to update the makefile accordingly.
+
+## Setting up environment variables for PETSc and SLEPc
+
+After you have completed the installation of PETSc and SLEPc, you need to define the environment variables `PETSC_DIR` and `SLEPC_DIR` to point to the installation directories of these packages. This is necessary for the proper functioning of your applications that rely on PETSc and SLEPc.
+
+### Steps to Define Environment Variables
+
+1. **Identify the Installation Paths**:
+   - Determine the directories where PETSc and SLEPc are installed. For example, if PETSc is installed in `/path/to/PETSC` and SLEPc is installed in `/path/to/SLEPC`, you will use these paths in the following steps.
+
+2. **Export the Environment Variables**:
+   - Open a terminal and export the environment variables by running the following commands:
+     ```sh
+     export PETSC_DIR=/path/to/PETSC
+     export SLEPC_DIR=/path/to/SLEPC
+     ```
+
+3. **Persist the Environment Variables**:
+   - To avoid setting these variables every time you open a new terminal, add the export commands to your shell configuration file. If you are using a Linux environment with Bash, you can add these lines to your `~/.bashrc` file:
+     ```sh
+     echo 'export PETSC_DIR=/path/to/PETSC' >> ~/.bashrc
+     echo 'export SLEPC_DIR=/path/to/SLEPC' >> ~/.bashrc
+     ```
+   - After adding these lines, apply the changes by running:
+     ```sh
+     source ~/.bashrc
+     ```
+
+   - For other environments (e.g., Windows or macOS), you can add the equivalent commands to your respective shell configuration files (e.g., `.bash_profile`, `.zshrc`).
+
+By setting these environment variables, you ensure that the paths to PETSc and SLEPc are correctly defined, allowing you to compile and run your applications without needing to manually set the paths each time.
+
 
 ## Makefile usage
 
