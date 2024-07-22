@@ -29,7 +29,7 @@ Important: For boolean flags, the following values are equivalent:
 RootDir:          /path/to/root/directory/
 
 # Results directory (string)
-# The resolvent modes/gains will be saved in RootDir/ResultsDir/ResolventModes_i
+# The resolvent modes/gains will be saved in RootDir/ResultsDir/ResolventModes_<int>
 ResultsDir:       /path/to/results/
 
 # The linearized operator (matrix - usually very sparse and saved in binary format)
