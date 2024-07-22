@@ -42,14 +42,14 @@ k:               2
 # Number of power iterations (integer)
 q:               0
 
-# Base frequency (real)
-# The resolvent modes will be computed at freuqency range -Nw/2*w:w:Nw/2*w
-w:               0.05
-
 # Number of frequencies to resolve (integer - even number)
 Nw:              42
 
-# Convert frequencies to angular frequencies, if true: w_angular = 2*pi*w, otherwise, w_angular = w (boolean)
+# Base frequency (real)
+# The resolvent modes will be computed at freuqency range (-Nw/2-1:1:Nw/2)*w
+w:               0.05
+
+# Convert frequencies to angular frequencies? if true: w <-- 2*pi*w, otherwise, w <-- w (boolean)
 TwoPI:           false
 
 # Transient length (real)
