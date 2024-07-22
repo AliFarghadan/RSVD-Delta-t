@@ -59,7 +59,7 @@ TransLen:        10
 dt:              0.003
 
 # Transient removal flag (boolean)
-TransRemoval:    True
+TransRemoval:    true
 
 # Display option (integer 0 <= Display <= 2)
 Display:         2
