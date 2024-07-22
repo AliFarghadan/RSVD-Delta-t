@@ -26,76 +26,76 @@ Important: For boolean flags, the following values are equivalent:
 
 ```yaml
 # Root directory (string) 
-RootDir:         /path/to/root/directory/
+RootDir:          /path/to/root/directory/
 
 # Results directory (string)
 # The resolvent modes/gains will be saved in RootDir/ResultsDir/ResolventModes_i
-ResultsDir:      /path/to/results/
+ResultsDir:       /path/to/results/
 
 # The linearized operator (matrix - usually very sparse and saved in binary format)
 # The operator directory is defined as RootDir/OperatorDir
 OperatorDir:     matrices/A_GL
 
 # Number of test vectors (integer)
-k:               2
+k:                2
 
 # Number of power iterations (integer)
-q:               0
+q:                0
 
 # Number of frequencies to resolve (integer - even number)
-Nw:              42
+Nw:               42
 
 # Base frequency (real)
 # The resolvent modes will be computed at freuqency range (-Nw/2-1:1:Nw/2)*w
-w:               0.05
+w:                0.05
 
 # Convert frequencies to angular frequencies? if true: w <-- 2*pi*w, otherwise, w <-- w (boolean)
-TwoPI:           false
+TwoPI:            false
 
 # Transient length (real)
-TransLen:        10
+TransientLength:  10
 
 # Time step (real)
-dt:              0.003
+dt:               0.003
 
 # Transient removal flag (boolean)
-TransRemoval:    true
+TransientRemoval: true
 
 # Display option (integer 0 <= Display <= 2)
-Display:         2
+Display:          2
 
 # Discounting flag (boolean)
 # Applies discounting for unstable linear systems, A_discounted = A - beta I
-Discounting:     false
+Discounting:      false
 
 # beta value when "Discounting = True", otherwise beta is ignored (real > 0)
-beta:            0.1
+beta:             0.1
 
 # Seeding random number to replicate data if needed (integer)
-Rseed:           14
+RandSeed:         14
 
 # Runs the transient simulation if true, otherwise RSVD-delta-t will run (boolean)
 # All variables below this are relevant when TransRun is true
-TransRun:        false
+TransRun:         false
 
 # Number of periods to integrate (integer)
-Periods:         3
+TransPeriods:     3
 
 # Saves the transient outputs if true (boolean)
 # The snapshots will be saved in RootDir + ResultsDir + TransientSnapshots_i
-TransSave:       false
+TransSave:        false
 
-# Saves the snapshots every mod number (integer)
-mod:             500
+# Saves the snapshots every "TransSaveMod" number (integer)
+TransSaveMod:     500
 
 # Estimates the transient error using our strategy if true (boolean)
-TransRemovalEst: false
+TransRemovalEst:  false
 
 # Divergence value, the transient simulaton will stop when reached it (real)
-DivVal:          1e3
+TransDivVal:      1e3
 
 # Convergence value, the transient simulaton will stop when reached it (real)
-ConVal:          1e-6
+TransConVal:      1e-6
 ```
 
 ## Running the Algorithm
