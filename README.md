@@ -29,7 +29,7 @@ To use $\text{RSVD}-\Delta t$, follow these steps:
 4. **Build the executable** using the makefile in the package.
 5. **Run the executable** with appropriate input parameters to compute resolvent modes.
 
-We've shown an example usage of our code in the [Tutorial](./Tutorial).
+We've shown an example usage of our code in the [Tutorial](./Tutorial/Ginzburg-Landau).
 
 ## Install PETSc and SLEPc
 
