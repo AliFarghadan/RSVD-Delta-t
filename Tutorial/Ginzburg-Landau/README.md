@@ -32,7 +32,7 @@ RootDir:         /path/to/root/directory/
 # The resolvent modes/gains will be saved in RootDir + ResultsDir + ResolventModes_i
 ResultsDir:      /path/to/results/
 
-# The linearized operator (binary matrix - usually very sparse)
+# The linearized operator (matrix - usually very sparse and saved in binary format)
 # The operator directory is defined as RootDir + OperatorDir
 OperatorDir:     matrices/A_GL
 
