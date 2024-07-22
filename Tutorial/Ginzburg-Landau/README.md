@@ -68,7 +68,7 @@ Display:         2
 # Applies discounting for unstable linear systems, A_discounted = A - beta I
 Discounting:     false
 
-# beta value for discounting if true (real > 0)
+# beta value when "Discounting = True", otherwise beta is ignored (real > 0)
 beta:            0.1
 
 # Seeding random number to replicate data if needed (integer)
