@@ -49,7 +49,7 @@ w:               0.05
 # Number of frequencies to resolve (integer - even number)
 Nw:              42
 
-# Convert frequencies to angular frequencies, w_angular = 2*pi*w (boolean)
+# Convert frequencies to angular frequencies, if true: w_angular = 2*pi*w, otherwise, w_angular = w (boolean)
 TwoPI:           false
 
 # Transient length (real)
