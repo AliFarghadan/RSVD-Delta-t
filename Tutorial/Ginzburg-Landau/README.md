@@ -29,11 +29,11 @@ Important: For boolean flags, the following values are equivalent:
 RootDir:         /path/to/root/directory/
 
 # Results directory (string)
-# The resolvent modes/gains will be saved in RootDir + ResultsDir + ResolventModes_i
+# The resolvent modes/gains will be saved in RootDir/ResultsDir/ResolventModes_i
 ResultsDir:      /path/to/results/
 
 # The linearized operator (matrix - usually very sparse and saved in binary format)
-# The operator directory is defined as RootDir + OperatorDir
+# The operator directory is defined as RootDir/OperatorDir
 OperatorDir:     matrices/A_GL
 
 # Number of test vectors (integer)
