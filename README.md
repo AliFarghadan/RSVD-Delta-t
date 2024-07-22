@@ -1,4 +1,4 @@
-# $\text{RSVD}-\Delta t$: Randomized Singular Value Decomposition with Time-stepping
+# $\text{RSVD}-\Delta t$: Randomized Singular Value Decomposition with Time-stepping for large-scale resolvent analysis
 
 Copyright © 2024 The Regents of the University of Michigan
 
