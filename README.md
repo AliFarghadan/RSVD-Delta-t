@@ -108,7 +108,7 @@ cd /path/to/executable/
 make PETSC_ARCH=complex-opt # this will compile the source files to create the executable, or do nothing if the executable is already up-to-date
 
 mpiexec RSVDt -inputs variables.yaml  # runs the algorithm for a given set of variables in variables.yaml file
-# Note: You may need to use "srun" or "mpirun" instead of "mpiexec" depending on your installation and cluster configurations.
+# Note: You may need to use "srun" or "mpirun" instead of "mpiexec" depending on your installation and/or cluster configurations.
 ```
 
 In this jobfile, `RSVDt` is the executable for our algorithm, and `variables.yaml` contains the prerequisite variables required for running the algorithm.
