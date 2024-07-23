@@ -113,16 +113,16 @@ To run the transient simulation, set the `TransRun` flag to `true` in the input 
 
 #### Simulation variables
 
-* `Periods` determines the length of transient simulation.
+* `TransPeriods` determines the length of transient simulation.
 * We define the period length as $T = 2\pi/\omega_{min}$, where $\omega_{min}$ (defined as `w`) is the base frequency.
 * `TransRemovalEst`, if `true`, applies the transient removal strategy we developed for slowly decaying systems. It estimates the updated transient residual at the end of each period.
-* `DivVal` and `ConVal` are divergence and convergence values, respectively, which stops the simulation if the transient norm reaches either of them.
-* `Rseed` is the seeding number.
+* `TransDivVal` and `TransConVal` are divergence and convergence values, respectively, which stops the simulation if the transient norm reaches either of them.
+* `RandSeed` is the seeding number.
 
 #### Saving results
 
 * We create a folder in the results directory with a fixed prename "TransientSnapshots_&lt;int&gt;", where &lt;int&gt; is an integer starting from 0. If "TransientSnapshots_i" exists, the code increments the integer until the folder name is unique, ensuring results from different simulations are not overwritten.
-* `TransSave`, if `true`, saves the snapshots "q_transient_&lt;int&gt;" every `mod` time step in the results directory. It also saves the norm of snapshots in a vector "q_transient_norms" and the last snapshot "q_transient_last_snapshot".
+* `TransSave`, if `true`, saves the snapshots "q_transient_&lt;int&gt;" every `TransSaveMod` time step in the results directory. It also saves the norm of snapshots in a vector "q_transient_norms" and the last snapshot "q_transient_last_snapshot".
 * In case the `TransSave` is `false`, we only save "q_transient_norms" and "q_transient_last_snapshot".
 * In case the `TransRemovalEst` is `true`, the simulation saves initial and updated transient norms to "Initial_transient_norm_period_&lt;int&gt;" and "Updated_transient_norm_period_&lt;int&gt;", respectively, at the end of each period. For instance, "Initial_transient_norm_period_1" and "Updated_transient_norm_period_1" are the norm of snapshots across the frequency range at the end of the first period.
 
@@ -131,12 +131,12 @@ To run the transient simulation, set the `TransRun` flag to `true` in the input 
 #### Default Values
 
 * `TransRun`: `false`
-* `Periods`: `1`
+* `TransPeriods`: `1`
 * `TransSave`: `false`
 * `TransRemovalEst`: `false`
-* `DivVal`: `1e-6`
-* `ConVal`: `1e3`
-* `Rseed`: `1373`
+* `TransDivVal`: `1e-6`
+* `TransConVal`: `1e3`
+* `RandSeed`: `1373`
 
 2. ### $\text{RSVD}-\Delta t$ Algorithm
 
@@ -152,11 +152,11 @@ The executable runs the $\text{RSVD}-\Delta t$ algorithm by default unless `Tran
 * `w` is the base frequency.
 * `Nw` determines the number of frequencies to resolve.
 * `TwoPI` is a boolean flag that converts frequencies to angular frequencies by multiplying with 2*pi.
-* `TransLen` sets the transient length. We usually get an estimation of the `TransLen` from the transient simulation.
+* `TransientLength` sets the transient length. We usually get an estimation of the `TransientLength` from the transient simulation.
 * `dt` specifies the time step.
-* `TransRemoval` is a boolean flag that toggles the transient removal strategy on or off. When set to `true`, this flag enables the transient removal strategy to be performed at the end of each time step, refining the steady-state snapshots for improved accuracy.
-* `Discounting` is a boolean flag that applies discounting for unstable linear systems. `beta` is the beta value used for discounting when `Discounting` is `true`. You must specify a positive real value for `beta`; otherwise, the algorithm will exit with an error message.
-* `Rseed` is the seeding random number used to replicate data.
+* `TransientRemoval` is a boolean flag that toggles the transient removal strategy on or off. When set to `true`, this flag enables the transient removal strategy to be performed at the end of each time step, refining the steady-state snapshots for improved accuracy.
+* `DiscFlag` is a boolean flag that applies discounting for unstable linear systems. `beta` is the beta value used for discounting when `DiscFlag` is `true`. You must specify a positive real value for `beta`; otherwise, the algorithm will exit with an error message.
+* `RandSeed` is the seeding random number used to replicate data.
 * `Display` is an integer option that controls the level of output display, with three possible values: 0, 1, and 2.
 	+ `Display = 0`: Minimal output, with no information displayed.
 	+ `Display = 1`: Standard output, displaying:
@@ -166,7 +166,9 @@ The executable runs the $\text{RSVD}-\Delta t$ algorithm by default unless `Tran
 		- Estimated remaining time
 	+ `Display = 2`: Detailed output, including everything from `Display = 1`, plus:
 		- Progress percentage of the first test vector
-
+* `SaveResultsOpt` is an integer option that controls the saving results format (shape), with two possible values: 1 and 2.
+	+ `SaveResultsOpt = 1`: Saves resolvent modes as `k`  matrices of size `N x Nw`
+	+ `SaveResultsOpt = 2`: Saves resolvent modes as `Nw`  matrices of size `N x k`
 #### Saving results
 
 * We create a folder in the results directory with a fixed prename "ResolventModes_&lt;int&gt;", where &lt;int&gt; is an integer starting from 0. If "ResolventModes_i" exists, the code increments the integer until the folder name is unique, ensuring results from different simulations are not overwritten.
