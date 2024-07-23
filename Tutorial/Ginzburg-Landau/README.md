@@ -62,7 +62,7 @@ dt:               0.003
 # Transient removal flag (boolean)
 TransientRemoval: true
 
-# Display option (integer 0 <= Display <= 2)
+# Display options (integer 0 <= Display <= 2)
 Display:          2
 
 # Discounting flag (boolean)
@@ -75,7 +75,7 @@ beta:             0.1
 # Seeding random number to replicate data if needed (integer)
 RandSeed:         14
 
-# Saving resolvent modes option (integer 1 <= SaveResultsOpt <= 2)
+# Saving resolvent modes options (integer 1 <= SaveResultsOpt <= 2)
 SaveResultsOpt:   1
 
 # Runs the transient simulation if true, otherwise RSVD-delta-t will run (boolean)
