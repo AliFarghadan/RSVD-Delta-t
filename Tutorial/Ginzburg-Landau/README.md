@@ -49,7 +49,8 @@ Nw:               42
 # The resolvent modes will be computed at freuqency range (-Nw/2-1:1:Nw/2)*w
 w:                0.05
 
-# Convert frequencies to angular frequencies? if true: w <-- 2*pi*w, otherwise, w <-- w (boolean)
+# Convert frequencies to angular frequencies (boolean)
+# if true: w <-- 2*pi*w, otherwise, w <-- w
 TwoPI:            false
 
 # Transient length (real)
