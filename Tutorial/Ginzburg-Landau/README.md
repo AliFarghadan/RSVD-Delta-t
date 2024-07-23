@@ -69,7 +69,7 @@ Display:          2
 # Applies discounting for unstable linear systems, A <-- A - beta I
 DiscFlg:          false
 
-# beta value when "Discounting = True", otherwise beta is ignored (real > 0)
+# beta value when "DiscFlg = True", otherwise beta is ignored (real > 0)
 beta:             0.1
 
 # Seeding random number to replicate data if needed (integer)
