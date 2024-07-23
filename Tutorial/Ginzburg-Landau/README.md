@@ -141,7 +141,7 @@ Note: If a transient variable is not specified, you will receive a warning messa
 
 2. ### $\text{RSVD}-\Delta t$ Algorithm
 
-The executable runs the $\text{RSVD}-\Delta t$ algorithm by default unless `TransRun` is `true`. 
+Setting `TransRun = false` runs the $\text{RSVD}-\Delta t$ algorithm by default.
 
 #### Simulation variables
 
