@@ -29,7 +29,7 @@ Important: For boolean flags, the following values are equivalent:
 RootDir:          /path/to/root/directory/
 
 # Results directory (string)
-# The resolvent modes/gains will be saved in RootDir/ResultsDir/ResolventModes_<int>
+# The resolvent modes/gains will be saved in RootDir/ResultsDir/ResolventModes_&lt;int&gt;
 ResultsDir:       /path/to/results/
 
 # The linearized operator (matrix - usually very sparse and saved in binary format)
@@ -172,7 +172,23 @@ The executable runs the $\text{RSVD}-\Delta t$ algorithm by default unless `Tran
 #### Saving results
 
 * We create a folder in the results directory with a fixed prename "ResolventModes_&lt;int&gt;", where &lt;int&gt; is an integer starting from 0. If "ResolventModes_i" exists, the code increments the integer until the folder name is unique, ensuring results from different simulations are not overwritten.
-* Once the computation is complete, `k` response modes (each of size `N` × `Nw`) are saved as "U_hat_k&lt;int&gt;", where &lt;int&gt; represents the &lt;int&gt;th mode. Similarly, forcing modes are saved as "V_hat_k&lt;int&gt;". For instance, "U_hat_k1" and "V_hat_k1" contain the optimal response and forcing modes, respectively, across all frequencies of interest. Finally, gains are saved as a single matrix "S_hat" of size `k` × `Nw`.
+
+* Once the computation is complete, two saving formats are available:
+
+    + **Option 1 when `SaveResultsOpt = 1`**: 
+        - `k` response modes (each of size `N` × `Nw`) are saved as "U_hat_k&lt;int&gt;_allFreqs", where &lt;int&gt; represents the integer index of the mode.
+        - Similarly, forcing modes are saved as "V_hat_k&lt;int&gt;_allFreqs".
+        - For instance, "U_hat_k1_allFreqs" and "V_hat_k1_allFreqs" contain the optimal response and forcing modes, respectively, across all frequencies of interest.
+        - Note that the order of columns corresponds to the optimality of the test vectors: column 1 contains the optimal mode, column 2 contains the first suboptimal mode, and so on.
+
+    + **Option 2 when `SaveResultsOpt = 2`**: 
+        - `Nw` response modes (each of size `N` × `k`) are saved as "U_hat_Freq&lt;int&gt;_allK", where &lt;int&gt; represents the integer index of the frequency.
+        - Similarly, forcing modes are saved as "V_hat_Freq&lt;int&gt;_allK".
+        - For instance, "U_hat_Freq1_allK" and "V_hat_Freq1_allK" contain the response and forcing modes, respectively, associated with the first frequency.
+        - Note that the order of frequencies starts with column 1 (frequency 0), column 2 (frequency w), up to frequency (Nw/2) * w, and then from (-Nw/2-1) * w up to the last column that contains the -w frequency (similar to Matlab ordering).
+
+* Finally, gains are saved as a single matrix "S_hat" of size `k` × `Nw` in either case.
+
 
 Note: Not all variables have default values. If a variable is not specified, you will receive a warning or error message.
 
