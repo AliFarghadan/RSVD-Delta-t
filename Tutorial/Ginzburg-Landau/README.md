@@ -121,10 +121,11 @@ To run the transient simulation, set the `TransRun` flag to `true` in the input 
 
 #### Saving results
 
-* We create a folder in the results directory with a fixed prename "TransientSnapshots_&lt;int&gt;", where &lt;int&gt; is an integer starting from 0. If "TransientSnapshots_i" exists, the code increments the integer until the folder name is unique, ensuring results from different simulations are not overwritten.
-* `TransSave`, if `true`, saves the snapshots "q_transient_&lt;int&gt;" every `TransSaveMod` time step in the results directory. It also saves the norm of snapshots in a vector "q_transient_norms" and the last snapshot "q_transient_last_snapshot".
-* In case the `TransSave` is `false`, we only save "q_transient_norms" and "q_transient_last_snapshot".
-* In case the `TransRemovalEst` is `true`, the simulation saves initial and updated transient norms to "Initial_transient_norm_period_&lt;int&gt;" and "Updated_transient_norm_period_&lt;int&gt;", respectively, at the end of each period. For instance, "Initial_transient_norm_period_1" and "Updated_transient_norm_period_1" are the norm of snapshots across the frequency range at the end of the first period.
+* A folder is created in the results directory with the prefix "TransientSnapshots_&lt;int&gt;", where &lt;int&gt; is an integer starting from 0. If "TransientSnapshots_i" already exists, the code increments the integer until a unique folder name is found, ensuring that results from different simulations are not overwritten.
+* If `TransSave` is `true`, snapshots are saved as "q_transient_&lt;int&gt;" every `TransSaveMod` time steps in the results directory. Additionally, the norm of the snapshots is saved in a vector "q_transient_norms", and the last snapshot is saved as "q_transient_last_snapshot".
+* If `TransSave` is `false`, only "q_transient_norms" and "q_transient_last_snapshot" are saved.
+* If `TransRemovalEst` is `true`, the simulation saves the initial and updated transient norms to "Initial_transient_norm_period_&lt;int&gt;" and "Updated_transient_norm_period_&lt;int&gt;", respectively, at the end of each period. For instance, "Initial_transient_norm_period_1" and "Updated_transient_norm_period_1" contain the norm of snapshots across the frequency range at the end of the first period.
+* Note that the order of frequencies starts with column 1 (frequency 0), column 2 (frequency w), up to frequency (Nw/2) * w, and then from (-Nw/2-1) * w up to the last column that contains the -w frequency (similar to Matlab ordering).
 
 Note: If a transient variable is not specified, you will receive a warning message and the default value is used instead.
 
