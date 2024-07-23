@@ -65,8 +65,8 @@ TransientRemoval: true
 Display:          2
 
 # Discounting flag (boolean)
-# Applies discounting for unstable linear systems, A_discounted = A - beta I
-Discounting:      false
+# Applies discounting for unstable linear systems, A <-- A - beta I
+DiscFlg:          false
 
 # beta value when "Discounting = True", otherwise beta is ignored (real > 0)
 beta:             0.1
