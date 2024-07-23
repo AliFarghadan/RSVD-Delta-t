@@ -134,8 +134,8 @@ Note: If a transient variable is not specified, you will receive a warning messa
 * `TransPeriods`: `1`
 * `TransSave`: `false`
 * `TransRemovalEst`: `false`
-* `TransDivVal`: `1e-6`
-* `TransConVal`: `1e3`
+* `TransDivVal`: `1e3`
+* `TransConVal`: `1e-6`
 * `RandSeed`: `1373`
 
 2. ### $\text{RSVD}-\Delta t$ Algorithm
