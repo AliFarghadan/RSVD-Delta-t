@@ -34,7 +34,7 @@ ResultsDir:       /path/to/results/
 
 # The linearized operator (matrix - usually very sparse and saved in binary format)
 # The operator directory is defined as RootDir/OperatorDir
-OperatorDir:     matrices/A_GL
+OperatorDir:      /path/to/A_GL
 
 # Number of test vectors (integer)
 k:                2
