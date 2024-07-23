@@ -88,7 +88,7 @@ The `makefile` is written to build the executable from the source code. You can 
 
 The executable name will be `RSVDt`.
 
-Note: By default, `PETSC_ARCH=complex-opt`. If your PETSC_ARCH name is different, you must specify it in your make command: `make PETSC_ARCH=<PETSc-arch-name>`.
+Note: When making the executable via `make` command, by default, `PETSC_ARCH=complex-opt` is assumed. If your PETSC_ARCH name is different, you must specify it in your make command: `make PETSC_ARCH=<PETSc-arch-name>`.
 
 ## Example Jobfile
 
