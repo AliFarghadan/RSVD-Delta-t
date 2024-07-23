@@ -126,7 +126,7 @@ To run the transient simulation, set the `TransRun` flag to `true` in the input 
 * In case the `TransSave` is `false`, we only save "q_transient_norms" and "q_transient_last_snapshot".
 * In case the `TransRemovalEst` is `true`, the simulation saves initial and updated transient norms to "Initial_transient_norm_period_&lt;int&gt;" and "Updated_transient_norm_period_&lt;int&gt;", respectively, at the end of each period. For instance, "Initial_transient_norm_period_1" and "Updated_transient_norm_period_1" are the norm of snapshots across the frequency range at the end of the first period.
 
-### Note: all variables here have a default value in case you comment out variables, you will get a warning that the default values are used for those variables that are missed in your input list. Here are the default values:
+Note: If a transient variable is not specified, you will receive a warning message and the default value is used instead.
 
 #### Default Values
 
@@ -174,28 +174,28 @@ The executable runs the $\text{RSVD}-\Delta t$ algorithm by default unless `Tran
 * We create a folder in the results directory with a fixed prename "ResolventModes_&lt;int&gt;", where &lt;int&gt; is an integer starting from 0. If "ResolventModes_i" exists, the code increments the integer until the folder name is unique, ensuring results from different simulations are not overwritten.
 * Once the computation is complete, `k` response modes (each of size `N` × `Nw`) are saved as "U_hat_k&lt;int&gt;", where &lt;int&gt; represents the &lt;int&gt;th mode. Similarly, forcing modes are saved as "V_hat_k&lt;int&gt;". For instance, "U_hat_k1" and "V_hat_k1" contain the optimal response and forcing modes, respectively, across all frequencies of interest. Finally, gains are saved as a single matrix "S_hat" of size `k` × `Nw`.
 
-Note: not all variables have default values. If a variable is not specified, you will receive a warning or error message.
+Note: Not all variables have default values. If a variable is not specified, you will receive a warning or error message.
 
 #### Default values are provided for the following variables:
 
 * `k`: `3`
 * `q`: `0`
 * `TwoPI`: `false`
-* `TransLen`: `100`
-* `TransRemoval`: `false`
+* `TransientRemoval`: `false`
 * `Display`: `2`
-* `Discounting`: `false`
-* `Rseed`: `1373`
+* `DiscFlg`: `false`
+* `Randseed`: `1373`
 
 #### The following variables must be specified with no default values:
 
 * `RootDir`
 * `ResultsDir`
 * `OperatorDir`
+* `TransientLength`
 * `w`
 * `Nw`
 * `dt`
-* `beta` (only when `Discounting` is `true`)
+* `beta` (only when `DiscFlg` is `true`)
 
 ## Transfer Data Between MATLAB and PETSc/SLEPc Binary Format
 
