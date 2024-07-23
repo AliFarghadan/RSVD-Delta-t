@@ -83,7 +83,7 @@ TransRun:         false
 TransPeriods:     3
 
 # Saves the transient outputs if true (boolean)
-# The snapshots will be saved in RootDir + ResultsDir + TransientSnapshots_i
+# The snapshots will be saved in RootDir/ResultsDir/TransientSnapshots_i
 TransSave:        false
 
 # Saves the snapshots every "TransSaveMod" number (integer)
