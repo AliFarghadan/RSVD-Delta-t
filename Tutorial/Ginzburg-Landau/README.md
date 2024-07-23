@@ -75,6 +75,9 @@ beta:             0.1
 # Seeding random number to replicate data if needed (integer)
 RandSeed:         14
 
+# Saving resolvent modes option (integer 1 <= SaveResultsOpt <= 2)
+SaveResultsOpt:   1
+
 # Runs the transient simulation if true, otherwise RSVD-delta-t will run (boolean)
 # All variables below this are relevant when TransRun is true
 TransRun:         false
