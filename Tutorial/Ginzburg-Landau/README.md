@@ -29,7 +29,7 @@ Important: For boolean flags, the following values are equivalent:
 RootDir:          /path/to/root/directory/
 
 # Results directory (string)
-# The resolvent modes/gains will be saved in RootDir/ResultsDir/ResolventModes_&lt;int&gt;
+# The resolvent modes/gains will be saved in RootDir/ResultsDir/ResolventModes_<int>;
 ResultsDir:       /path/to/results/
 
 # The linearized operator (matrix - usually very sparse and saved in binary format)
@@ -86,7 +86,7 @@ TransRun:         false
 TransPeriods:     3
 
 # Saves the transient outputs if true (boolean)
-# The snapshots will be saved in RootDir/ResultsDir/TransientSnapshots_i
+# The snapshots will be saved in RootDir/ResultsDir/TransientSnapshots_<int>
 TransSave:        false
 
 # Saves the snapshots every "TransSaveMod" number (integer)
