@@ -12,9 +12,11 @@ Resolvent analysis is a valuable tool for studying coherent structures in turbul
 
 ## Features
 
-* CPU time scales linearly with problem dimension: $\text{RSVD}-\Delta t$ offers linear scalability with the number of discrete degrees of freedom $O(N)$, significantly reducing computational overhead for large systems compared to existing algorithms.
-* Memory usage scales linearly with problem dimension: $\text{RSVD}-\Delta t$ minimizes memory usage via streaming Fourier sums, enabling the study of high-dimensional systems.
-* Error control strategies: $\text{RSVD}-\Delta t$ incorporates strategies such as power iteration and transient removal to control errors and ensure the reliability of computed resolvent modes.
+- **Linear CPU time scalability**: Computational complexity scales linearly with the number of discrete degrees of freedom, $O(N)$, which significantly reduces computational overhead for large systems compared to existing algorithms.
+- **Linear memory usage scalability**: Memory usage also scales linearly with the number of discrete degrees of freedom, $O(N)$, and further minimizes memory usage through streaming Fourier sums, facilitating the study of high-dimensional systems.
+- **Error control strategies**: The tool incorporates strategies such as power iteration and transient removal to manage errors and ensure the reliability of computed resolvent and harmonic resolvent modes.
+- **User-friendly interface**: $\text{RSVD}-\Delta t$ features an input list for specifying directories and parameters, as outlined in this README. Computations are managed by an executable that leverages parallel processing via PETSc and SLEPc libraries, allowing researchers to focus on analysis rather than computational complexities.
+
 
 ## Usage
 
@@ -29,23 +31,91 @@ To use $\text{RSVD}-\Delta t$, follow these steps:
 4. **Build the executable** using the makefile in the package.
 5. **Run the executable** with appropriate input parameters to compute resolvent modes.
 
+The installation process for both resolvent and harmonic resolvent analyses follows the same procedure. However, the source codes and input variables vary due to the fundamental differences between the two types of analyses. In the following sections, we will guide you through these steps in detail.
+
 We've shown an example usage of our code in the [Tutorial](./Tutorial/Ginzburg-Landau).
 
 ## Install PETSc and SLEPc
 
+Proper installation of the PETSc and SLEPc libraries is crucial for setting up our package. For detailed instructions, please refer to the official installation guides:
+
 You can follow the instructions from the official websites:
 
-- [PETSc](https://petsc.org/release/install)
-- [SLEPc](https://slepc.upv.es/documentation/instal.htm)
+- [PETSc official installation guide](https://petsc.org/release/install)
+- [SLEPc official installation guide](https://slepc.upv.es/documentation/instal.htm)
 
-A suggested configuration of PETSc is as follows:\
-`./configure --with-debugging=0 --with-scalar-type=complex --with-64-bit-indices PETSC_ARCH=complex-opt`\
-This configuration ensures computations with complex values, enables the use of 64-bit integer numbers, and enhances speed by disabling debugging. Here are a few notes:
+### PETSc
+Starting with PETSc, once the package is downloaded and unzipped on your local machine or cluster, navigate to the unzipped PETSc directory. Ensure that all your dependencies (including MPI and C++ compiler) are accessible:
 
-1. Newer versions of PETSc and SLEPc do not change the core principles of the code; however, syntax updates might be required.
-2. `PETSC_ARCH=<PETSc-arch-name>` can be chosen differently.
-3. If you do not have MPICH installed locally, you can add `--download-mpich` to the configuration options. Please read the [PETSc configuration](https://petsc.org/main/install/install/) guide for more information.
-4. If you need additional packages such as MUMPS, you can add `--download-mumps`. In that case, you need to update the makefile accordingly.
+- **On an HPC cluster**, ensure that dependencies are accessible by using the appropriate commands in your Linux environment:
+    ```bash
+    module load <your C++ compiler>
+    module load <your MPI package>
+    ```
+    For example, on the Great Lakes cluster at the University of Michigan, we use:
+    ```bash
+    module load gcc/10.3.0 openmpi/4.1.6
+    ```
+
+- **On your laptop**, when configuring PETSc, either navigate to your local MPI directory with:
+    ```bash
+    --with-mpi-dir=/usr/local/mpich
+    ```
+    or allow PETSc to download it with:
+    ```bash
+    --download-openmpi or --download-mpich
+    ```
+
+- If using a local MPI directory, ensure that BLAS/LAPACK are also configured with:
+    ```bash
+    --with-blaslapack-dir=/usr/local/blaslapack
+    ```
+
+- **IMPORTANT NOTE:** If MPI is not properly accessible or downloaded, PETSc will not use the MPI package, limiting the installation to a single core.
+
+For additional details on configuring PETSc, please refer to the [configuring PETSc page](https://petsc.org/release/install/install/). Now, you can configure PETSc.
+
+After navigating to your PETSc directory, you must configure your PETSc package. A recommended configuration for PETSc is as follows:
+```bash
+./configure --with-debugging=0 --with-scalar-type=complex 
+--with-64-bit-indices PETSC_ARCH=complex-opt
+```
+
+This configuration ensures that computations use complex values, as resolvent modes are inherently complex numbers. It also enables 64-bit integer numbers, allowing matrices to have sizes up to $2^{64} - 1$. While this increases memory usage by a factor of two compared to 32-bit integers, it is necessary for matrices larger than $2^{32} - 1 = 2,147,483,647$, beyond which matrices would become unusable. In addition, performance is enhanced by disabling debugging, which is only needed when errors arise and their source cannot be pinpointed. Since our package has been thoroughly tested, debugging should not be necessary. The name of `PETSC_ARCH` is arbitrary, but `complex-opt` is used here as a default convention. You may include additional options as needed. For example:
+
+```bash
+./configure --with-debugging=0 --with-scalar-type=complex 
+--with-64-bit-indices PETSC_ARCH=complex-opt --download-openmpi
+```
+
+which downloads OpenMPI and installs PETSc on top of it. Here are a few notes on the installation process:
+
+1. Follow PETSc's instructions to ensure a successful installation. The process usually takes less than 10 minutes.
+2. The order of configuration options does not affect the installation.
+3. You can have multiple PETSc installations with different `PETSC_ARCH` names. For instance, you might have one installation for real values with debugging enabled:
+    ```bash
+    ./configure --with-scalar-type=complex --with-debugging=1 
+    PETSC_ARCH=real-debug
+    ```
+4. While newer versions of PETSc and SLEPc generally retain the same core principles, syntax updates in the source code may be necessary.
+5. The `PETSC_ARCH=<PETSc-arch-name>` can be customized as needed.
+6. If additional packages are desired, include `--download-<package>` in the configuration command. For instance, `--download-mumps` will include MUMPS in your architecture. Ensure that the makefile is updated accordingly.
+
+Before proceeding with the SLEPc installation, ensure that you have defined `PETSC_DIR` and `PETSC_ARCH` as follows:
+
+```bash
+export PETSC_DIR=/path/to/petsc
+export PETSC_ARCH=<PETSc-arch-name>
+```
+
+### SLEPc
+
+SLEPc, the Scalable Library for Eigenvalue Problem Computations, is a powerful tool designed for solving large-scale eigenvalue and SVD problems. Built on PETSc, SLEPc provides scalable and efficient algorithms, making it ideal for high-performance scientific computing.
+
+In our implementation, SLEPc is crucial for performing QR decomposition and SVD. Its advanced capabilities enable efficient handling of these operations, even with large matrices, ensuring our code operates effectively and accurately.
+
+After navigating to your SLEPc directory and setting up the variables `PETSC_DIR` and `PETSC_ARCH`, configure the SLEPc package using the `./configure` command. After configuration, wait for the installation to complete, follow the provided instructions, and ensure that all tests pass successfully. Note that you need to use the same C++ compiler and MPI module for proper installation.
+
 
 ## Setting up environment variables for PETSc and SLEPc
 
@@ -81,18 +151,36 @@ By setting these environment variables, you ensure that the paths to PETSc and S
 
 ## Makefile usage
 
-The `makefile` is written to build the executable from the source code. You can use the following commands:
+The `makefile` is used to build the executable from the source code. First, navigate to the directory of the $\text{RSVD}-\Delta t$ package, where you will find the `makefile`, `inputs.yaml`, and a `SourceCodes` folder. 
 
-* `make` to build the executable
-* `make clean` to remove the executable
+The `inputs.yaml` file serves as the interface for defining all parameters before computing the modes. Note that the input list for harmonic resolvent analysis differs from that for resolvent analysis. 
 
-The executable name will be `RSVDt`.
+The `SourceCodes` directory contains all the functions implemented for our algorithm. These files do not need to be modified unless you wish to contribute or add new features. Do not alter the relative path between the `makefile` and the `SourceCodes` folder, as this will prevent the executable from being created.
 
-Note: When making the executable via `make` command, by default, `PETSC_ARCH=complex-opt` is assumed. If your PETSC_ARCH name is different, you must specify it in your make command: `make PETSC_ARCH=<PETSc-arch-name>`.
+You can now use the following commands:
+
+- `make` to build the executable
+- `make clean` to remove the executable
+
+If your `PETSC_ARCH` name differs from `complex-opt`, specify it in the `make` command as follows:
+
+```bash
+make PETSC_ARCH=<PETSc-arch-name>
+```
+
+**Note:** The default `make` command assumes `PETSC_ARCH=complex-opt`. If using a different name, you must include it in the command.
+
+This step creates the executable, allowing you to run the $\text{RSVD}-\Delta t$ algorithm on your local machine or HPC cluster. You will now find the `RSVDt` executable ready to use in the same directory.
 
 ## Example Jobfile
 
-To illustrate the usage of the $\text{RSVD}-\Delta t$ algorithm, we provide an example jobfile. This jobfile specifies the configuration for running the algorithm on a computing cluster.
+If you are running on your local machine, first navigate to the directory containing the executable, then you can run the job using the following command:
+
+```bash
+mpiexec RSVDt -inputs variables.yaml
+```
+
+To illustrate the usage of the $\text{RSVD}-\Delta t$ algorithm on an HPC cluster, we provide an example jobfile script below.
 
 ```bash
 #!/bin/bash
@@ -105,13 +193,16 @@ To illustrate the usage of the $\text{RSVD}-\Delta t$ algorithm, we provide an e
 module load gcc/<version> openmpi/<version>
 
 cd /path/to/executable/
-make PETSC_ARCH=complex-opt # this will compile the source files to create the executable, or do nothing if the executable is already up-to-date
+make PETSC\_ARCH=complex-opt
 
-mpiexec RSVDt -inputs variables.yaml  # runs the algorithm for a given set of variables in variables.yaml file
-# Note: You may need to use "srun" or "mpirun" instead of "mpiexec" depending on your installation and/or cluster configurations.
+mpiexec RSVDt -inputs variables.yaml 
 ```
 
-In this jobfile, `RSVDt` is the executable for our algorithm, and `variables.yaml` contains the prerequisite variables required for running the algorithm.
+Note that you may need to use `srun` or `mpirun` instead of `mpiexec` depending on your installation and cluster configurations. Moreover, `make PETSC_ARCH=complex-opt` is required only once; it compiles the source files to create the executable or does nothing if the executable is already compiled. Finally, you might encounter slight differences in defining the number of nodes, tasks, CPUs, memory, etc., based on your cluster specifications. This jobfile serves as a sample case.
+
+The installation of PETSc and SLEPc packages is required only once. To perform resolvent analysis, download the package from the `resolvent-analysis` branch on our [GitHub page](https://github.com/AliFarghadan/RSVD-Delta-t) and compile it to generate the executable. For harmonic resolvent analysis, use the package available in the `harmonic-resolvent-analysis` branch on the same [GitHub page](https://github.com/AliFarghadan/RSVD-Delta-t). Please note that the source codes and input variables differ between these two types of analyses.
+
+We provide detailed explanations of the parameters for resolvent analysis and thoroughly describe the procedure using a Ginzburg-Landau system, which we used to validate our algorithm, in the [Tutorial](./Tutorial/Ginzburg-Landau).
 
 ## Additional resources
 
