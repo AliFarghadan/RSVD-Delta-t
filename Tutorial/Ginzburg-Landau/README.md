@@ -108,7 +108,7 @@ Make sure you have the following prerequisite modules loaded/installed:
 - A C++ compiler
 - PETSc and SLEPc packages
 
-Note that the same versions of the C++ compiler and MPI module are used to compile PETSc and SLEPc as those used to build the executable. Please refer to [README](https://github.com/AliFarghadan/RSVD-Delta-t) for instructions on installing PETSc and SLEPc.
+Note that the same versions of the C++ compiler and MPI module are used to compile PETSc and SLEPc as those used to build the executable. Please refer to [README](./../../README.md) for instructions on installing PETSc and SLEPc.
 
 The process of running the $\text{RSVD}-\Delta t$ algorithm can be divided into two main parts: the transient simulation and the $\text{RSVD}-\Delta t$ algorithm. Before defining the variables specific to each part, we will first cover the variables that are common to both.
 
