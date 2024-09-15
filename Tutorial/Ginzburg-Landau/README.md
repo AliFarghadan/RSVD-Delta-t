@@ -155,11 +155,11 @@ If a transient variable is not specified or is commented out (using `#` before i
 
 For consistency and to avoid confusion, all variables starting with `Trans` are used exclusively in the transient part of the analysis.
 
-### RSVD-\Delta t Algorithm
+### $\text{RSVD}-\Delta t$ Algorithm
 
-Setting `TransRun = false` runs the RSVD-\Delta t algorithm by default.
+Setting `TransRun = false` runs the $\text{RSVD}-\Delta t$ algorithm by default.
 
-### RSVD-\Delta t Variables
+### $\text{RSVD}-\Delta t$ Variables
 
 - `k`: Indicates the number of test vectors.
 - `q`: Specifies the number of power iterations.
