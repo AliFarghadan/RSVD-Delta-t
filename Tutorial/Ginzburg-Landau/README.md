@@ -129,7 +129,7 @@ To run the transient simulation, set the `TransRun` flag to `true` in the input 
 
 ### Transient variables
 
-- `TransPeriods`: Determines the length of the transient simulation. We define the period length as \( T = \frac{2\pi}{\omega_{min}} \), where \(\omega_{min}\) (defined as `w`) is the base frequency.
+- `TransPeriods`: Determines the length of the transient simulation. We define the period length as $T = \frac{2\pi}{\omega_{min}}$, where $\omega_{min}$ (defined as `w`) is the base frequency.
 - `TransRemovalEst`: If `true`, applies the transient removal strategy we developed for slowly decaying systems. It estimates the updated transient residual at the end of each period.
 - `TransDivVal` and `TransConVal`: Divergence and convergence values, respectively, which stop the simulation if the transient norm reaches either of them.
 
@@ -139,7 +139,7 @@ To run the transient simulation, set the `TransRun` flag to `true` in the input 
 - If `TransSave` is `true`, snapshots are saved as `q_transient_<int>` every `TransSaveMod` time steps in the results directory. In addition, the norm of the snapshots is saved in a vector `q_transient_norms`, and the last snapshot is saved as `q_transient_last_snapshot`.
 - If `TransSave` is `false`, only `q_transient_norms` and `q_transient_last_snapshot` are saved.
 - If `TransRemovalEst` is `true`, the simulation saves the initial and updated transient norms to `Initial_transient_norm_period_<int>` and `Updated_transient_norm_period_<int>`, respectively, at the end of each period. For instance, `Initial_transient_norm_period_1` and `Updated_transient_norm_period_1` contain the norm of snapshots across the frequency range at the end of the first period.
-- Note that the order of frequencies is as follows: column 1 corresponds to frequency 0, column 2 to frequency \(\omega\), and so on up to frequency \(\frac{N_{\omega}}{2} \times \omega\). After this, the frequencies continue from \(-\left(\frac{N_{\omega}}{2} + 1\right) \times \omega\) up to the last column, which represents the \(-\omega\) frequency. This ordering is similar to MATLAB's frequency arrangement.
+- Note that the order of frequencies is as follows: column 1 corresponds to frequency 0, column 2 to frequency $\omega$, and so on up to frequency $\frac{N_{\omega}}{2} \times \omega$. After this, the frequencies continue from $-\left(\frac{N_{\omega}}{2} + 1\right) \times \omega$ up to the last column, which represents the $-\omega$ frequency. This ordering is similar to MATLAB's frequency arrangement.
 
 ### Default values
 
@@ -196,7 +196,7 @@ Setting `TransRun = false` runs the $\text{RSVD}-\Delta t$ algorithm by default.
     - `Nw` response modes (each of size `N × k`) are saved as `U_hat_Freq<int>_allK`, where `<int>` represents the integer index of the frequency.
     - Forcing modes are similarly saved as `V_hat_Freq<int>_allK`.
     - For instance, `U_hat_Freq1_allK` and `V_hat_Freq1_allK` contain the response and forcing modes, respectively, associated with the first frequency.
-    - The order of frequencies starts with column 1 (frequency 0), column 2 (frequency \(\omega\)), up to frequency \(\frac{N_{\omega}}{2} \times \omega\), and then from \(-\left(\frac{N_{\omega}}{2} + 1\right) \times \omega\) up to the last column that contains the \(-\omega\) frequency (similar to MATLAB ordering).
+    - The order of frequencies starts with column 1 (frequency 0), column 2 (frequency $\omega$), up to frequency $\frac{N_{\omega}}{2} \times \omega$, and then from $-\left(\frac{N_{\omega}}{2} + 1\right) \times \omega$ up to the last column that contains the $-\omega$ frequency (similar to MATLAB ordering).
 
 - Finally, gains are saved as a single matrix `S_hat` of size `k × Nw` in either case.
 
@@ -287,7 +287,7 @@ To transfer data from PETSc/SLEPc to MATLAB, follow these steps:
     A = PetscBinaryRead('/path/to/your/matrix/A', 'complex', true, 'indices', 'int64');
     ```
 
-You do not need to be concerned with coding in the PETSc environment. Your primary task is to save your operator in binary format (from `.mat` to `.bin`) and to read your data from binary format into MATLAB (from `.bin` to `.mat`). For completeness, we have provided explanations for both processes below.
+You do not need to be concerned with coding in the PETSc environment. Your primary task is to save your operator in binary format (from `.mat` to `.bin`) and to read your data from binary format into MATLAB (from `.bin` to `.mat`). For completeness, we have provided explanations for both ways.
     
 ## Conclusion
 In this tutorial, we covered the setup and execution of the $\text{RSVD}-\Delta t$ algorithm for computing resolvent modes of the Ginzburg-Landau system. We discussed input variables, the process of running the algorithm, and how to save results. For your specific problems, you may need to adjust the input variables accordingly. Experimentation and iteration are often necessary for achieving optimal results.
