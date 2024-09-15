@@ -193,7 +193,7 @@ To illustrate the usage of the $\text{RSVD}-\Delta t$ algorithm on an HPC cluste
 module load gcc/<version> openmpi/<version>
 
 cd /path/to/executable/
-make PETSC\_ARCH=complex-opt
+make PETSC_ARCH=complex-opt
 
 mpiexec RSVDt -inputs variables.yaml 
 ```
