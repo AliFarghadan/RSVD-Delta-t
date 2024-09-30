@@ -288,6 +288,39 @@ To transfer data from PETSc/SLEPc to MATLAB, follow these steps:
     ```
 
 You do not need to be concerned with coding in the PETSc environment. Your primary task is to save your operator in binary format (from `.mat` to `.bin`) and to read your data from binary format into MATLAB (from `.bin` to `.mat`). For completeness, we have provided explanations for both directions.
+
+## Installation verification: Results for the Ginzburg-Landau problem
+
+To ensure that your installation of the code is producing correct results, we provide example outputs for the Ginzburg-Landau problem using default parameters. Users can compare their results with these examples.
+
+### Transient Norm
+
+By setting `TransRun = true`, we executed the transient simulation using the provided input values. The transient norms over time are then loaded into MATLAB and plotted as follows:
+```matlab
+addpath('/path/to/PETSc/share/petsc/matlab/');
+norms_vec = PetscBinaryRead('/path/to/results/TransientSnapshots_0/q_transient_norms', 'complex', true, 'indices', 'int64');
+norms_vec = full(norms_vec);   % Convert sparse to full format
+dt        = 0.003;             % Time step for transient simulation
+mod       = 500;               % Norms computed every 'mod' iterations including the initial condition at t = 0, always norms_vec(1) = 1 
+delta_t   = mod * dt;          % Time distance between norms
+plot((1:length(norms_vec)) * delta_t, norms_vec, 'linewidth', 2);
+```
+Figure 1 shows the transient norm for the Ginzburg-Landau problem. The norm is expected to decay over time, but the decay trajectory may vary based on the random initial conditions. Thus, slight deviations from the plotted results are within the realm of expectation.
+
+![Transient Norm](path/to/transient_norm.png)
+
+### Gain Curve
+The gain curve for the default parameters is illustrated in Figure 2. This curve reflects [brief explanation of what the gain curve represents].
+
+![Gain Curve](path/to/gain_curve.png)  <!-- Replace with the actual path to your image -->
+
+### Mode Shapes
+Here are the mode shapes obtained for the Ginzburg-Landau problem under default parameters. The first few modes are displayed in Figures 3 and 4.
+
+![Mode Shape 1](path/to/mode_shape_1.png)  <!-- Replace with the actual path to your image -->
+![Mode Shape 2](path/to/mode_shape_2.png)  <!-- Replace with the actual path to your image -->
+
+These results should serve as a benchmark for your implementation. If your outputs differ significantly, please check your setup and parameters.
     
 ## Conclusion
 In this tutorial, we covered the setup and execution of the $\text{RSVD}-\Delta t$ algorithm for computing resolvent modes of the Ginzburg-Landau system. We discussed input variables, the process of running the algorithm, and how to save results. For your specific problems, you may need to adjust the input variables accordingly. Experimentation and iteration are often necessary for achieving optimal results.
