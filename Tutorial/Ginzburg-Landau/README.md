@@ -76,10 +76,10 @@ TransSaveMod:     500
 # Estimates the transient error using our strategy if true (boolean)
 TransRemovalEst:  false
 
-# Divergence value, the transient simulaton will stop when reached it (real)
+# Divergence value, the transient simulation will stop when reached (real)
 TransDivVal:      1e3
 
-# Convergence value, the transient simulaton will stop when reached it (real)
+# Convergence value, the transient simulation will stop when reached (real)
 TransConVal:      1e-6
 ```
 
@@ -108,9 +108,9 @@ Make sure you have the following prerequisite modules loaded/installed:
 - A C++ compiler
 - PETSc and SLEPc packages
 
-Note that the same versions of the C++ compiler and MPI module are used to compile PETSc and SLEPc as those used to build the executable. Please refer to [README](./../../README.md) for instructions on installing PETSc and SLEPc.
+Note that the same versions of the C++ compiler and MPI module that were used to compile PETSc and SLEPc must be used to build the executable. Please refer to [README](./../../README.md) for instructions on installing PETSc and SLEPc.
 
-The process of running the $\text{RSVD}-\Delta t$ algorithm can be divided into two main parts: the transient simulation and the $\text{RSVD}-\Delta t$ algorithm. Before defining the variables specific to each part, we will first cover the variables that are common to both.
+The process of running the $\text{RSVD}-\Delta t$ algorithm can be divided into two main parts: the transient simulation and the main $\text{RSVD}-\Delta t$ algorithm. Before defining the variables specific to each part, we will first cover the variables that are common to both.
 
 ### Common variables between transient and $\text{RSVD}-\Delta t$
 
@@ -123,15 +123,15 @@ The process of running the $\text{RSVD}-\Delta t$ algorithm can be divided into 
 
 ### Transient simulation
 
-Before running the actual RSVD-\Delta t algorithm, it is often necessary to perform a transient simulation to ensure the stability of the system and visualize the transient decay rate.
+Before running the actual RSVD-\Delta t algorithm, it is often necessary to perform a transient simulation to ensure the stability of the system and determine the transient decay rate.
 
 To run the transient simulation, set the `TransRun` flag to `true` in the input file (`variables.yaml`).
 
 ### Transient variables
 
-- `TransPeriods`: Determines the length of the transient simulation. We define the period length as $T = \frac{2\pi}{\omega_{min}}$, where $\omega_{min}$ (defined as `w`) is the base frequency.
+- `TransPeriods`: Determines the length of the transient simulation. We define the period length as $T = \frac{2\pi}{\omega_{min}}$, where $\omega_{min}$ (defined by the variable `w`) is the base frequency.
 - `TransRemovalEst`: If `true`, applies the transient removal strategy we developed for slowly decaying systems. It estimates the updated transient residual at the end of each period.
-- `TransDivVal` and `TransConVal`: Divergence and convergence values, respectively, which stop the simulation if the transient norm reaches either of them.
+- `TransDivVal` and `TransConVal`: Divergence and convergence values, respectively, which stop the simulation if the transient norm reaches either value.
 
 ### Saving transient results
 
@@ -139,7 +139,7 @@ To run the transient simulation, set the `TransRun` flag to `true` in the input 
 - If `TransSave` is `true`, snapshots are saved as `q_transient_<int>` every `TransSaveMod` time steps in the results directory. In addition, the norm of the snapshots is saved in a vector `q_transient_norms`, and the last snapshot is saved as `q_transient_last_snapshot`.
 - If `TransSave` is `false`, only `q_transient_norms` and `q_transient_last_snapshot` are saved.
 - If `TransRemovalEst` is `true`, the simulation saves the initial and updated transient norms to `Initial_transient_norm_period_<int>` and `Updated_transient_norm_period_<int>`, respectively, at the end of each period. For instance, `Initial_transient_norm_period_1` and `Updated_transient_norm_period_1` contain the norm of snapshots across the frequency range at the end of the first period.
-- Note that the order of frequencies is as follows: column 1 corresponds to frequency 0, column 2 to frequency $\omega$, and so on up to frequency $\frac{N_{\omega}}{2} \times \omega$. After this, the frequencies continue from $-\left(\frac{N_{\omega}}{2} + 1\right) \times \omega$ up to the last column, which represents the $-\omega$ frequency. This ordering is similar to MATLAB's frequency arrangement.
+- Note that the order of frequencies is as follows: column 1 corresponds to frequency 0, column 2 to frequency $\omega$, and so on up to frequency $\frac{N_{\omega}}{2} \times \omega$. After this, the frequencies continue from $-\left(\frac{N_{\omega}}{2} + 1\right) \times \omega$ up to the last column, which represents the $-\omega$ frequency. This ordering is the same as that obtained from MATLAB's FFT function.
 
 ### Default values
 
@@ -161,13 +161,13 @@ Setting `TransRun = false` runs the $\text{RSVD}-\Delta t$ algorithm by default.
 
 ### $\text{RSVD}-\Delta t$ Variables
 
-- `k`: Indicates the number of test vectors.
-- `q`: Specifies the number of power iterations.
-- `Nw`: Represents the number of frequencies to resolve.
-- `w`: Specifies the base frequency.
-- `TwoPI`: Indicates whether to convert frequencies to angular frequencies. If `true`, the output frequencies are converted to angular frequencies by multiplying with \(2\pi\).
-- `TransientLength`: Defines the length of the transient simulation.
-- `dt`: Time step for transient simulations.
+- `k`: The number of test vectors.
+- `q`: The number of power iterations.
+- `Nw`: The number of frequencies to resolve.
+- `w`: The base frequency.
+- `TwoPI`: Indicates whether to convert frequencies to angular frequencies. If `true`, the output frequencies are converted to angular frequencies by multiplying by \(2\pi\).
+- `TransientLength`: The length of the transient simulation.
+- `dt`: The time step for transient simulations.
 - `TransientRemoval`: Determines whether the transient removal strategy is used.
 - `Display`: Controls the amount of information printed during computation, ranging from 0 (no output) to 2 (verbose output).
   - `Display = 0`: Minimal output, with no information displayed.
@@ -196,7 +196,7 @@ Setting `TransRun = false` runs the $\text{RSVD}-\Delta t$ algorithm by default.
     - `Nw` response modes (each of size `N × k`) are saved as `U_hat_Freq<int>_allK`, where `<int>` represents the integer index of the frequency.
     - Forcing modes are similarly saved as `V_hat_Freq<int>_allK`.
     - For instance, `U_hat_Freq1_allK` and `V_hat_Freq1_allK` contain the response and forcing modes, respectively, associated with the first frequency.
-    - The order of frequencies starts with column 1 (frequency 0), column 2 (frequency $\omega$), up to frequency $\frac{N_{\omega}}{2} \times \omega$, and then from $-\left(\frac{N_{\omega}}{2} + 1\right) \times \omega$ up to the last column that contains the $-\omega$ frequency (similar to MATLAB ordering).
+    - The order of frequencies starts with column 1 (frequency 0), column 2 (frequency $\omega$), up to frequency $\frac{N_{\omega}}{2} \times \omega$, and then from $-\left(\frac{N_{\omega}}{2} + 1\right) \times \omega$ up to the last column that contains the $-\omega$ frequency (equivalent to MATLAB ordering).
 
 - Finally, gains are saved as a single matrix `S_hat` of size `k × Nw` in either case.
 
@@ -252,7 +252,7 @@ MATLAB can save data in various formats, but for use with PETSc/SLEPc, we need t
 
 3. **Load Data in PETSc:**
 
-    Here is a general way in your PETSc/SLEPc environment, you can now load the binary file:
+    yYou can now load the binary file in your PETSc/SLEPc environment:
     ```c
     Mat A;
     PetscViewer viewer;
@@ -287,7 +287,7 @@ To transfer data from PETSc/SLEPc to MATLAB, follow these steps:
     A = PetscBinaryRead('/path/to/your/matrix/A', 'complex', true, 'indices', 'int64');
     ```
 
-You do not need to be concerned with coding in the PETSc environment. Your primary task is to save your operator in binary format (from `.mat` to `.bin`) and to read your data from binary format into MATLAB (from `.bin` to `.mat`). For completeness, we have provided explanations for both ways.
+You do not need to be concerned with coding in the PETSc environment. Your primary task is to save your operator in binary format (from `.mat` to `.bin`) and to read your data from binary format into MATLAB (from `.bin` to `.mat`). For completeness, we have provided explanations for both directions.
     
 ## Conclusion
 In this tutorial, we covered the setup and execution of the $\text{RSVD}-\Delta t$ algorithm for computing resolvent modes of the Ginzburg-Landau system. We discussed input variables, the process of running the algorithm, and how to save results. For your specific problems, you may need to adjust the input variables accordingly. Experimentation and iteration are often necessary for achieving optimal results.
