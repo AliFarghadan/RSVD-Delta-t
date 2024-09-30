@@ -2,7 +2,7 @@
 
 Copyright © 2024 The Regents of the University of Michigan
 
-Welcome to $\text{RSVD}-\Delta t$, a novel algorithm designed to address the computational challenges associated with studying coherent structures in large-scale flows using resolvent analysis. This README file provides an overview of the algorithm, its features, and instructions for usage. Below, behold a visual representation showcasing the resolvent response modes of a three-dimensional jet, exemplifying the utility of $\text{RSVD}-\Delta t$.
+Welcome to $\text{RSVD}-\Delta t$, a novel algorithm designed to address the computational challenges associated with studying coherent structures in large-scale flows using resolvent analysis. This README file provides an overview of the algorithm, its features, and instructions for usage. The figures below show the resolvent response modes of a three-dimensional jet, exemplifying the utility of $\text{RSVD}-\Delta t$.
 
 ![ResModes](image.png)
 
@@ -13,9 +13,9 @@ Resolvent analysis is a valuable tool for studying coherent structures in turbul
 ## Features
 
 - **Linear CPU time scalability**: Computational complexity scales linearly with the number of discrete degrees of freedom, $O(N)$, which significantly reduces computational overhead for large systems compared to existing algorithms.
-- **Linear memory usage scalability**: Memory usage also scales linearly with the number of discrete degrees of freedom, $O(N)$, and further minimizes memory usage through streaming Fourier sums, facilitating the study of high-dimensional systems.
-- **Error control strategies**: The tool incorporates strategies such as power iteration and transient removal to manage errors and ensure the reliability of computed resolvent and harmonic resolvent modes.
-- **User-friendly interface**: $\text{RSVD}-\Delta t$ features an input list for specifying directories and parameters, as outlined in this README. Computations are managed by an executable that leverages parallel processing via PETSc and SLEPc libraries, allowing researchers to focus on analysis rather than computational complexities.
+- **Linear memory usage scalability**: Memory usage also scales linearly with the number of discrete degrees of freedom, $O(N)$, and the total required memory is further minimized using streaming Fourier sums, facilitating the study of high-dimensional systems.
+- **Error control strategies**: The tool incorporates strategies such as power iteration and transient removal to manage errors and ensure the reliability of the results.
+- **User-friendly interface**: $\text{RSVD}-\Delta t$ features an input list for specifying directories and parameters, as outlined in this README. Computations are managed by an executable that leverages parallel processing via PETSc and SLEPc libraries, allowing researchers to focus on analysis rather than computational demands.
 
 
 ## Usage
@@ -38,8 +38,6 @@ We've shown an example usage of our code in the [Tutorial](./Tutorial/Ginzburg-L
 ## Install PETSc and SLEPc
 
 Proper installation of the PETSc and SLEPc libraries is crucial for setting up our package. For detailed instructions, please refer to the official installation guides:
-
-You can follow the instructions from the official websites:
 
 - [PETSc official installation guide](https://petsc.org/release/install)
 - [SLEPc official installation guide](https://slepc.upv.es/documentation/instal.htm)
@@ -81,7 +79,7 @@ After navigating to your PETSc directory, you must configure your PETSc package.
 --with-64-bit-indices PETSC_ARCH=complex-opt
 ```
 
-This configuration ensures that computations use complex values, as resolvent modes are inherently complex numbers. It also enables 64-bit integer numbers, allowing matrices to have sizes up to $2^{64} - 1$. While this increases memory usage by a factor of two compared to 32-bit integers, it is necessary for matrices larger than $2^{32} - 1 = 2,147,483,647$, beyond which matrices would become unusable. In addition, performance is enhanced by disabling debugging, which is only needed when errors arise and their source cannot be pinpointed. Since our package has been thoroughly tested, debugging should not be necessary. The name of `PETSC_ARCH` is arbitrary, but `complex-opt` is used here as a default convention. You may include additional options as needed. For example:
+This configuration ensures that computations use complex-valued numbers, as resolvent modes are inherently complex-valued. It also enables 64-bit integer numbers, allowing matrices to have sizes up to $2^{64} - 1$. While this increases memory usage by a factor of two compared to 32-bit integers, it is necessary for matrices larger than $2^{32} - 1 = 2,147,483,647$, beyond which matrices would become unusable. In addition, performance is enhanced by disabling debugging, which is only needed when errors arise and their source cannot be pinpointed. Since our package has been thoroughly tested, debugging should not be necessary. The name of `PETSC_ARCH` is arbitrary, but `complex-opt` is used here as a default convention. You may include additional options as needed. For example:
 
 ```bash
 ./configure --with-debugging=0 --with-scalar-type=complex 
@@ -92,7 +90,7 @@ which downloads OpenMPI and installs PETSc on top of it. Here are a few notes on
 
 1. Follow PETSc's instructions to ensure a successful installation. The process usually takes less than 10 minutes.
 2. The order of configuration options does not affect the installation.
-3. You can have multiple PETSc installations with different `PETSC_ARCH` names. For instance, you might have one installation for real values with debugging enabled:
+3. You can have multiple PETSc installations with different `PETSC_ARCH` names. For instance, you might have one installation for real-valued numbers with debugging enabled:
     ```bash
     ./configure --with-scalar-type=complex --with-debugging=1 
     PETSC_ARCH=real-debug
@@ -112,14 +110,14 @@ export PETSC_ARCH=<PETSc-arch-name>
 
 SLEPc, the Scalable Library for Eigenvalue Problem Computations, is a powerful tool designed for solving large-scale eigenvalue and SVD problems. Built on PETSc, SLEPc provides scalable and efficient algorithms, making it ideal for high-performance scientific computing.
 
-In our implementation, SLEPc is crucial for performing QR decomposition and SVD. Its advanced capabilities enable efficient handling of these operations, even with large matrices, ensuring our code operates effectively and accurately.
+In our implementation, SLEPc is used to perform QR decomposition and SVD. Its advanced capabilities enable efficient handling of these operations, even with large matrices, ensuring our code operates effectively and accurately.
 
 After navigating to your SLEPc directory and setting up the variables `PETSC_DIR` and `PETSC_ARCH`, configure the SLEPc package using the `./configure` command. After configuration, wait for the installation to complete, follow the provided instructions, and ensure that all tests pass successfully. Note that you need to use the same C++ compiler and MPI module for proper installation.
 
 
 ## Setting up environment variables for PETSc and SLEPc
 
-After you have completed the installation of PETSc and SLEPc, you need to define the environment variables `PETSC_DIR` and `SLEPC_DIR` to point to the installation directories of these packages. This is necessary for the proper functioning of your applications that rely on PETSc and SLEPc.
+After you have completed the installation of PETSc and SLEPc, you need to define the environment variables `PETSC_DIR` and `SLEPC_DIR` to point to the installation directories of these packages. This is necessary for the proper functioning of applications that rely on PETSc and SLEPc.
 
 ### Steps to Define Environment Variables
 
@@ -208,8 +206,9 @@ We provide detailed explanations of the parameters for resolvent analysis and th
 
 ### References
 
-* [Scalable resolvent analysis for three-dimensional flows](https://arxiv.org/pdf/2309.04617.pdf), *JCP (under review)*, 2024
+* [Scalable resolvent analysis for three-dimensional flows](https://arxiv.org/pdf/2309.04617.pdf), *Journal of Computational Physics (under review)*, 2024
 * [A randomized time-domain algorithm for efficiently computing resolvent modes](https://arc.aiaa.org/doi/10.2514/6.2021-2896), *AIAA AVIATION*, 2021
+* [Efficient harmonic resolvent analysis via time stepping](https://link.springer.com/article/10.1007/s00162-024-00694-1), *Theoretical and Computational Fluid Dynamics*, 2024
 
 ### Contact information
 
