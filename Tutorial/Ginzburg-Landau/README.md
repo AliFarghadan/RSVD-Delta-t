@@ -289,7 +289,7 @@ To transfer data from PETSc/SLEPc to MATLAB, follow these steps:
 
 You do not need to be concerned with coding in the PETSc environment. Your primary task is to save your operator in binary format (from `.mat` to `.bin`) and to read your data from binary format into MATLAB (from `.bin` to `.mat`). For completeness, we have provided explanations for both directions.
 
-## Installation verification: Results for the Ginzburg-Landau problem
+## Tutorial example results for the Ginzburg-Landau problem
 
 To ensure that your installation of the code is producing correct results, we provide example outputs for the Ginzburg-Landau problem using default parameters. Users can compare their results with these examples.
 
