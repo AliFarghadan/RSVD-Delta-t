@@ -310,15 +310,15 @@ Figure 1 shows the transient norm for the Ginzburg-Landau problem. The norm is e
 ![Transient Norm](path/to/transient_norm.png)
 
 ### Gain Curve
-The gain curve for the default parameters is illustrated in Figure 2. This curve reflects [brief explanation of what the gain curve represents].
+By setting `TransRun = false`, we executed the $\text{RSVD}-\Delta t$ simulation using the provided input values. Since we set `q = 1`, we expect the gain plots to converge, so small to none deviation from the gain plot in figure 2 is expected. 
 
-![Gain Curve](path/to/gain_curve.png)  <!-- Replace with the actual path to your image -->
+![Gain Curve](path/to/gain_curve.png)
 
 ### Mode Shapes
-Here are the mode shapes obtained for the Ginzburg-Landau problem under default parameters. The first few modes are displayed in Figures 3 and 4.
+To complete the process, we also show the forcing and response modes at various frequencies. From the gain plot, the peak frequency is at `$\omega$ = -0.6`. We can plot the optimal forcing and repsonse and one suboptimal forcing and response at that freuqnecy, mainly to show how the modes are ordered in the results matrices.
 
-![Mode Shape 1](path/to/mode_shape_1.png)  <!-- Replace with the actual path to your image -->
-![Mode Shape 2](path/to/mode_shape_2.png)  <!-- Replace with the actual path to your image -->
+![Mode Shape 1](path/to/mode_shape_1.png)
+![Mode Shape 2](path/to/mode_shape_2.png)
 
 These results should serve as a benchmark for your implementation. If your outputs differ significantly, please check your setup and parameters.
     
