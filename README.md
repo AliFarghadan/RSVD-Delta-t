@@ -208,7 +208,6 @@ We provide detailed explanations of the parameters for resolvent analysis and th
 
 * [Scalable resolvent analysis for three-dimensional flows](https://arxiv.org/pdf/2309.04617.pdf), *Journal of Computational Physics (under review)*, 2024
 * [A randomized time-domain algorithm for efficiently computing resolvent modes](https://arc.aiaa.org/doi/10.2514/6.2021-2896), *AIAA AVIATION*, 2021
-* [Efficient harmonic resolvent analysis via time stepping](https://link.springer.com/article/10.1007/s00162-024-00694-1), *Theoretical and Computational Fluid Dynamics*, 2024
 
 ### Contact information
 
