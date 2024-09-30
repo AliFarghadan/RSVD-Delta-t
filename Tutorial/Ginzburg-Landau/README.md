@@ -252,7 +252,7 @@ MATLAB can save data in various formats, but for use with PETSc/SLEPc, we need t
 
 3. **Load Data in PETSc:**
 
-    yYou can now load the binary file in your PETSc/SLEPc environment:
+    You can now load the binary file in your PETSc/SLEPc environment:
     ```c
     Mat A;
     PetscViewer viewer;
