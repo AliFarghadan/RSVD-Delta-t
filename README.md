@@ -31,7 +31,7 @@ To use $\text{RSVD}-\Delta t$, follow these steps:
 4. **Build the executable** using the makefile in the package.
 5. **Run the executable** with appropriate input parameters to compute resolvent modes.
 
-The installation process for both resolvent and harmonic resolvent analyses follows the same procedure. However, the source codes and input variables vary due to the fundamental differences between the two types of analyses. In the following sections, we will guide you through these steps in detail.
+In the following sections, we will guide you through these steps in detail.
 
 We've shown an example usage of our code in the [Tutorial](./Tutorial/Ginzburg-Landau).
 
