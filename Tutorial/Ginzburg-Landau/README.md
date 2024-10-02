@@ -308,13 +308,20 @@ To ensure that your installation of the code is producing correct results, we pr
 
 By setting `TransRun = true`, we executed the transient simulation using the provided input values. The transient norms over time are then loaded into MATLAB and plotted as follows:
 ```matlab
+set(groot, 'defaultTextInterpreter','latex'); 
 addpath('/path/to/PETSc/share/petsc/matlab/');
 norms_vec = PetscBinaryRead('/path/to/results/TransientSnapshots_0/q_transient_norms', 'complex', true, 'indices', 'int64');
 norms_vec = full(norms_vec);   % Convert sparse to full format
+norms_vec = real(norms_vec);   % Convert complex-valued numbers to real-valued numbers
 dt        = 0.003;             % Time step for transient simulation
 mod       = 500;               % Norms computed every 'mod' iterations including the initial condition at t = 0, always norms_vec(1) = 1 
 delta_t   = mod * dt;          % Time distance between norms
-plot((1:length(norms_vec)) * delta_t, norms_vec, 'linewidth', 2);
+% Plotting
+semilogy((1:length(norms_vec)) * delta_t, norms_vec, 'linewidth', 2);
+set(gca, 'fontsize', 14);
+title('Decay of transient norm decay over time');
+xlabel('$t$');
+ylabel('$||q_t||$');
 ```
 Figure 1 shows the transient norm for the Ginzburg-Landau problem. The norm is expected to decay over time, but the decay trajectory may vary based on the random initial conditions. Thus, slight deviations from the plotted results are within the realm of expectation.
 
