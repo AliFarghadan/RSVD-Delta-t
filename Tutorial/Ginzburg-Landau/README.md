@@ -14,12 +14,17 @@ Here is a list of variables used for this test case. Please note that you will n
 
 ```yaml
 # Root directory (string) 
+# This directory must exist before the simulation
 RootDir:          /path/to/root/directory/
 
 # Results directory (string)
+# The resolvent modes/gains will be saved in RootDir/ResultsDir/ResolventModes_<int>
+# This directory must exist before the simulation
 ResultsDir:       /path/to/results/
 
 # The linearized operator (matrix - usually very sparse and saved in binary format)
+# The operator directory is defined as RootDir/OperatorDir
+# This directory must exist before the simulation, OperatorDir can be same as ResultsDir
 OperatorDir:      /path/to/A_GL
 
 # Number of test vectors (integer)
@@ -32,9 +37,11 @@ q:                0
 Nw:               42
 
 # Base frequency (real)
+# The resolvent modes will be computed at freuqency range (-Nw/2-1:1:Nw/2)*w
 w:                0.05
 
 # Convert frequencies to angular frequencies (boolean)
+# if true: w <-- 2*pi*w, otherwise, w <-- w
 TwoPI:            false
 
 # Transient length (real)
@@ -50,6 +57,7 @@ TransientRemoval: true
 Display:          2
 
 # Discounting flag (boolean)
+# Applies discounting for unstable linear systems, A <-- A - beta I
 DiscFlg:          false
 
 # beta value when "DiscFlg = True", otherwise beta is ignored (real > 0)
@@ -64,6 +72,8 @@ SaveResultsOpt:   1
 # Runs the transient simulation if true, otherwise RSVD-delta-t will run (boolean)
 TransRun:         false
 
+# All variables below this are relevant when TransRun is true
+
 # Number of periods to integrate (integer)
 TransPeriods:     3
 
@@ -71,6 +81,7 @@ TransPeriods:     3
 TransSave:        false
 
 # Saves the snapshots every "TransSaveMod" number (integer)
+# The snapshots will be saved in RootDir/ResultsDir/TransientSnapshots_<int>
 TransSaveMod:     500
 
 # Estimates the transient error using our strategy if true (boolean)
