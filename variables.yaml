@@ -1,32 +1,30 @@
-# Root directory (string)
+# Root directory (string) 
 # This directory must exist before the simulation
-RootDir:          /path/to/root/directory/ 
+RootDir:          /path/to/root/directory/
 
 # Results directory (string)
 # The resolvent modes/gains will be saved in RootDir/ResultsDir/ResolventModes_<int>
 # This directory must exist before the simulation
-ResultsDir:       /path/to/results/ 
+ResultsDir:       /path/to/results/
 
 # The linearized operator (matrix - usually very sparse and saved in binary format)
 # The operator directory is defined as RootDir/OperatorDir
 # This directory must exist before the simulation, OperatorDir can be same as ResultsDir
-OperatorDir:      /path/to/A_GL 
+OperatorDir:      /path/to/A_GL
 
 # Number of test vectors (integer)
-k:                10
+k:                2
 
 # Number of power iterations (integer)
-q:                1
+q:                0
 
 # Number of frequencies to resolve (integer - even number)
 Nw:               42
 
 # Base frequency (real)
-# The resolvent modes will be computed at freuqency range (-Nw/2-1:1:Nw/2)*w
 w:                0.05
 
 # Convert frequencies to angular frequencies (boolean)
-# if true: w <-- 2*pi*w, otherwise, w <-- w
 TwoPI:            false
 
 # Transient length (real)
@@ -42,7 +40,6 @@ TransientRemoval: true
 Display:          2
 
 # Discounting flag (boolean)
-# Applies discounting for unstable linear systems, A <-- A - beta I
 DiscFlg:          false
 
 # beta value when "DiscFlg = True", otherwise beta is ignored (real > 0)
@@ -55,14 +52,12 @@ RandSeed:         14
 SaveResultsOpt:   1
 
 # Runs the transient simulation if true, otherwise RSVD-delta-t will run (boolean)
-# All variables below this are relevant when TransRun is true
 TransRun:         false
 
 # Number of periods to integrate (integer)
 TransPeriods:     3
 
 # Saves the transient outputs if true (boolean)
-# The snapshots will be saved in RootDir/ResultsDir/TransientSnapshots_<int>
 TransSave:        false
 
 # Saves the snapshots every "TransSaveMod" number (integer)
@@ -71,12 +66,9 @@ TransSaveMod:     500
 # Estimates the transient error using our strategy if true (boolean)
 TransRemovalEst:  false
 
-# Divergence value, the transient simulaton will stop when reached it (real)
+# Divergence value, the transient simulation will stop when reached (real)
 TransDivVal:      1e3
 
-# Convergence value, the transient simulaton will stop when reached it (real)
+# Convergence value, the transient simulation will stop when reached (real)
 TransConVal:      1e-6
-
-
-
 
