@@ -60,7 +60,7 @@ TransRun:         false
 # All variables below this are relevant when TransRun is true
 
 # Number of periods to integrate (integer)
-TransPeriods:     3
+TransPeriods:     7
 
 # Saves the transient outputs if true (boolean)
 TransSave:        false
