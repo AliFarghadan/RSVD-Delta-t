@@ -18,7 +18,7 @@ PetscErrorCode ReadUserInput(RSVDt_vars *RSVDt, WS_matrices *WS_mat, LNS_vars *L
 	ierr = PetscPrintf(PETSC_COMM_WORLD,"\n*** Reading user inputs ***\n");CHKERRQ(ierr);
 
 	ierr = PetscOptionsGetString(NULL, NULL,"-inputs",(char*)&filename,PETSC_MAX_PATH_LEN,&flg_set);CHKERRQ(ierr);
-	// if (!flg_set) SETERRQ(PETSC_COMM_WORLD,PETSC_ERR_USER,"Must specify inputs variables via -inputs");CHKERRQ(ierr);
+	if (!flg_set) SETERRQ(PETSC_COMM_WORLD,PETSC_ERR_USER,"Must specify inputs variables via -inputs");CHKERRQ(ierr);
 
 	ierr = PetscOptionsInsertFileYAML(PETSC_COMM_WORLD, NULL, filename, PETSC_FALSE);CHKERRQ(ierr);
 	ierr = PetscOptionsGetReal(NULL,NULL,"-TransientLength",&RSVDt->TS.TransientLength,&flg_set);CHKERRQ(ierr);
