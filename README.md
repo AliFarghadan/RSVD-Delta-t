@@ -2,11 +2,16 @@
 
 Copyright © 2024 The Regents of the University of Michigan
 
-* note: For harmonic resolvent analysis please go to ... branch
-
 Welcome to $\text{RSVD}-\Delta t$, a novel algorithm designed to address the computational challenges associated with studying coherent structures in large-scale flows using resolvent analysis. This README file provides an overview of the algorithm, its features, and instructions for usage. The figures below show the resolvent response modes of a three-dimensional jet, exemplifying the utility of $\text{RSVD}-\Delta t$.
 
 ![ResModes](image.png)
+
+## Important Note
+
+For harmonic resolvent analysis, please use the package available in the **[harmonic-resolvent-analysis branch](https://github.com/AliFarghadan/RSVD-Delta-t/tree/Harmonic-resolvent-analysis)**. 
+
+> **Important:** The source codes and input variables differ between the default branch and the harmonic resolvent analysis branch, so ensure you are using the correct branch for your analysis.
+
 
 ## Overview
 
