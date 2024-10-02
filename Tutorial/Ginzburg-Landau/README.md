@@ -353,7 +353,7 @@ Since we set `q = 1`, we expect the gain plots to converge, so small to no devia
 <img src="gains.png" alt="Gain-plot" width="600"/>
 
 ### Forcing and response modes
-To complete the process, we will also present the forcing and response modes at the peak frequencies. From the gain plot, we observe that the peak frequency occurs at $\omega = -0.65$. We can plot the optimal forcing and response, primarily to illustrate how the modes are ordered in the results matrices. The modes can be loaded into MATLAB and plotted as follows:
+To complete the process, we will also present the forcing and response modes at the peak frequencies. From the gain plot, we observe that the peak frequency occurs at $\omega = -0.65$. We plot the optimal forcing and response, primarily to illustrate how the modes are ordered in the results matrices. The modes can be loaded into MATLAB and plotted as follows:
 ```matlab
 set(groot, 'defaultTextInterpreter','latex'); 
 addpath('/path/to/PETSc/share/petsc/matlab/');
