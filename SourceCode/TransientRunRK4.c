@@ -84,12 +84,12 @@ PetscErrorCode TransientRunRK4(TransRun_vars *TR_vars, RSVDt_vars *RSVDt, LNS_va
 
 	ierr = PetscOptionsGetString(NULL,NULL,"-IC",(char*)&dirs->filename,PETSC_MAX_PATH_LEN,&flg_IC);CHKERRQ(ierr);
 	if (flg_IC) {
-		ierr = PetscPrintf(PETSC_COMM_WORLD,"Reading a vector!\n");CHKERRQ(ierr);
+		ierr = PetscPrintf(PETSC_COMM_WORLD,"Reading the initial state vector without normalization\n");CHKERRQ(ierr);
 		ierr = PetscSNPrintf((char*)&dirs->IO_dir,PETSC_MAX_PATH_LEN,"%s%s%s",dirs->RootDir,dirs->ResultsDir,dirs->filename);CHKERRQ(ierr);
 		ierr = PetscViewerBinaryOpen(PETSC_COMM_WORLD,dirs->IO_dir,FILE_MODE_READ,&fd);CHKERRQ(ierr);
 		ierr = VecLoad(q0,fd);CHKERRQ(ierr);
 	} else {
-		ierr = PetscPrintf(PETSC_COMM_WORLD,"Random vector!\n\n");CHKERRQ(ierr);
+		ierr = PetscPrintf(PETSC_COMM_WORLD,"Generating a normalized random initial state vector\n\n");CHKERRQ(ierr);
 		ierr = PetscRandomCreate(PETSC_COMM_WORLD,&r);CHKERRQ(ierr);
 		ierr = PetscRandomSetSeed(r, RSVDt->RSVD.RandSeed);CHKERRQ(ierr);
 		ierr = PetscRandomSeed(r);CHKERRQ(ierr);
