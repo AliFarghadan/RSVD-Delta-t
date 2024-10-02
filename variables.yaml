@@ -1,19 +1,22 @@
-# Root directory (string) 
-RootDir:          /path/to/root/directory/
+# Root directory (string)
+# This directory must exist before the simulation
+RootDir:          /path/to/root/directory/ 
 
 # Results directory (string)
-# The resolvent modes/gains will be saved in RootDir/ResultsDir/ResolventModes_<int>;
-ResultsDir:       /path/to/results/
+# The resolvent modes/gains will be saved in RootDir/ResultsDir/ResolventModes_<int>
+# This directory must exist before the simulation
+ResultsDir:       /path/to/results/ 
 
 # The linearized operator (matrix - usually very sparse and saved in binary format)
 # The operator directory is defined as RootDir/OperatorDir
-OperatorDir:      /path/to/A_GL
+# This directory must exist before the simulation, OperatorDir can be same as ResultsDir
+OperatorDir:      /path/to/A_GL 
 
 # Number of test vectors (integer)
-k:                2
+k:                10
 
 # Number of power iterations (integer)
-q:                0
+q:                1
 
 # Number of frequencies to resolve (integer - even number)
 Nw:               42
