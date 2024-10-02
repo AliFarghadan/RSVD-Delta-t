@@ -310,7 +310,7 @@ By setting `TransRun = true`, we executed the transient simulation using the pro
 ```matlab
 set(groot, 'defaultTextInterpreter','latex'); 
 addpath('/path/to/PETSc/share/petsc/matlab/');
-norms_vec = PetscBinaryRead('/scratch/towne_root/towne0/aliii/output/TransientSnapshots_384/q_transient_norms', 'complex', true, 'indices', 'int64');
+norms_vec = PetscBinaryRead('/path/to/results/TransientSnapshots_0/q_transient_norms', 'complex', true, 'indices', 'int64');
 norms_vec = full(norms_vec);   % Convert sparse to full format
 norms_vec = real(norms_vec);   % Convert complex-valued numbers to real-valued numbers
 dt        = 0.003;             % Time step for transient simulation
