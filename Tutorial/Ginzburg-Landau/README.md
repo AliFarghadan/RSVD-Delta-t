@@ -314,7 +314,7 @@ norms_vec = PetscBinaryRead('/path/to/results/TransientSnapshots_0/q_transient_n
 norms_vec = full(norms_vec);   % Convert sparse to full format
 norms_vec = real(norms_vec);   % Convert complex-valued numbers to real-valued numbers
 dt        = 0.003;             % Time step for transient simulation
-mod       = 500;               % Norms computed every 'mod' iterations including the initial condition at t = 0, always norms_vec(1) = 1 
+mod       = 500;               % Norms computed every 'mod' iterations including the initial condition at t = 0
 delta_t   = mod * dt;          % Time distance between norms
 % Plotting
 semilogy((1:length(norms_vec)) * delta_t, norms_vec, 'linewidth', 2);
