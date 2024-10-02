@@ -325,7 +325,7 @@ ylabel('$||q_t||$');
 ```
 Figure below shows the transient norm for the Ginzburg-Landau problem. The transient norm is expected to decay over time, but the decay trajectory may vary based on the random initial condition. Thus, slight deviations from the plotted results are within the realm of expectation.
 
-<img src="transient_norm_decay.png" alt="Transient-norm" width="600"/>
+<img src="transient_norm.png" alt="Transient-norm" width="600"/>
 
 ### Gain spectrum
 By setting `TransRun = false`, we executed the $\text{RSVD}-\Delta t$ simulation using the provided input values. The gain spectrum is then loaded into MATLAB and plotted as follows:
