@@ -302,9 +302,9 @@ You do not need to be concerned with coding in the PETSc environment. Your prima
 
 ## Tutorial example results for the Ginzburg-Landau problem
 
-To ensure that your installation of the code is producing correct results, we provide example outputs for the Ginzburg-Landau problem using default parameters. Users can compare their results with these examples.
+To ensure that your installation of the code is producing correct results, we provide example outputs for the Ginzburg-Landau problem using parameters in the original `variables.yaml`. Users can compare their results with the results below.
 
-### Transient Norm
+### Transient simulation results
 
 By setting `TransRun = true`, we executed the transient simulation using the provided input values. The transient norms over time are then loaded into MATLAB and plotted as follows:
 ```matlab
@@ -323,29 +323,74 @@ title('Decay of transient norm decay over time');
 xlabel('$t$');
 ylabel('$||q_t||$');
 ```
-Figure 1 shows the transient norm for the Ginzburg-Landau problem. The norm is expected to decay over time, but the decay trajectory may vary based on the random initial conditions. Thus, slight deviations from the plotted results are within the realm of expectation.
+Figure below shows the transient norm for the Ginzburg-Landau problem. The transient norm is expected to decay over time, but the decay trajectory may vary based on the random initial condition. Thus, slight deviations from the plotted results are within the realm of expectation.
 
-![Transient Norm](path/to/transient_norm.png)
+<img src="transient_norm_decay.png" alt="Transient-norm" width="600"/>
 
-### Gain Curve
-By setting `TransRun = false`, we executed the $\text{RSVD}-\Delta t$ simulation using the provided input values. Since we set `q = 1`, we expect the gain plots to converge, so small to none deviation from the gain plot in figure 2 is expected. 
+### Gain spectrum
+By setting `TransRun = false`, we executed the $\text{RSVD}-\Delta t$ simulation using the provided input values. The gain spectrum is then loaded into MATLAB and plotted as follows:
+```matlab
+set(groot, 'defaultTextInterpreter','latex'); 
+addpath('/path/to/PETSc/share/petsc/matlab/');
+S         = PetscBinaryRead('/path/to/results/ResolventModes_0/S_hat', 'complex', true, 'indices', 'int64');
+S         = real(S);        % Convert complex-valued numbers to real-valued numbers
+S         = fftshift(S, 2); % Organize the frequencies as -w_max:w_max
+k         = 3;              % Number of modes to display
+w_min     = 0.05;           % Base frequency
+Nw        = 42;             % Number of frequencies
+% Plotting
+semilogy((-Nw/2+1:Nw/2-1)*w_min, S(1:k,2:end), 'linewidth', 2);
+set(gca, 'fontsize', 14);
+title('Gain plot');
+xlabel('$\omega$');
+ylabel('$\sigma$');
+legend('Optimal mode', 'First suboptimal mode', 'Second suboptimal mode')
+```
 
-![Gain Curve](path/to/gain_curve.png)
+Since we set `q = 1`, we expect the gain plots to converge, so small to no deviation from the gain plot in figure below is expected. 
 
-### Mode Shapes
-To complete the process, we also show the forcing and response modes at various frequencies. From the gain plot, the peak frequency is at `$\omega$ = -0.6`. We can plot the optimal forcing and repsonse and one suboptimal forcing and response at that freuqnecy, mainly to show how the modes are ordered in the results matrices.
+<img src="gains.png" alt="Gain-plot" width="600"/>
 
-![Mode Shape 1](path/to/mode_shape_1.png)
-![Mode Shape 2](path/to/mode_shape_2.png)
+### Forcing and response modes
+To complete the process, we will also present the forcing and response modes at various frequencies. From the gain plot, we observe that the peak frequency occurs at `$\omega = -0.65$`. We can plot the optimal forcing and response, primarily to illustrate how the modes are ordered in the results matrices. The modes can be loaded into MATLAB and plotted as follows:
+```matlab
+set(groot, 'defaultTextInterpreter','latex'); 
+addpath('/path/to/PETSc/share/petsc/matlab/');
+U         = PetscBinaryRead('/path/to/results/ResolventModes_0/U_hat_k1_allFreqs', 'complex', true, 'indices', 'int64');
+V         = PetscBinaryRead('/path/to/results/output/ResolventModes_0/V_hat_k1_allFreqs', 'complex', true, 'indices', 'int64');
+U         = fftshift(U, 2);             % Organize the frequencies as -w_max:w_max
+V         = fftshift(V, 2);             % Organize the frequencies as -w_max:w_max
+w_min     = 0.05;                       % Base frequency
+Nw        = 42;                         % Number of frequencies
+w         = (-Nw/2:Nw/2-1)*w_min;       % Desired range of frequency
+index     = find(abs(w-(-0.65))<1e-6);  % Find the index of the peak frequency
+U_plot    = U(:,index);                 % Response mode associated with the highest gain
+V_plot    = V(:,index);                 % Forcing mode associated with the highest gain
+x         = linspace(-100, 100, 500);   % Construct the mesh for visualization
+% Plotting
+subplot(2, 1, 1);
+plot(x, real(V_plot), 'linewidth', 2);
+set(gca, 'fontsize', 14);
+title('Optimal forcing mode at $\omega = -0.65$');
+set(gca,'XTickLabel',[])
+ylabel('$real(V_x)$');
+subplot(2, 1, 2);
+plot(x, real(U_plot), 'linewidth', 2);
+set(gca, 'fontsize', 14);
+title('Optimal response mode at $\omega = -0.65$');
+xlabel('$x$');
+ylabel('$real(U_x)$');
+```
+We expect the modes to remain qualitatively unchanged, although phase shifts may occur.
 
-These results should serve as a benchmark for your implementation. If your outputs differ significantly, please check your setup and parameters.
+<img src="OptimalUandV.png" alt="Modes-plot" width="600"/>
+
+These results should serve as a benchmark for your implementation. If your outputs differ significantly, please review your setup and parameters.
     
 ## Conclusion
-In this tutorial, we covered the setup and execution of the $\text{RSVD}-\Delta t$ algorithm for computing resolvent modes of the Ginzburg-Landau system. We discussed input variables, the process of running the algorithm, and how to save results. For your specific problems, you may need to adjust the input variables accordingly. Experimentation and iteration are often necessary for achieving optimal results.
+In this tutorial, we covered the setup and execution of the $\text{RSVD}-\Delta t$ algorithm for computing resolvent modes of the Ginzburg-Landau system. We discussed input variables, the process of running the algorithm, saving results, and provided reference results for comparison. Depending on your specific problems, you may need to adjust the input variables accordingly. Experimentation and iteration are often essential for achieving optimal results.
 
 If you have any further questions or encounter any issues, don't hesitate to reach out for assistance.
-
-
 
 
 
