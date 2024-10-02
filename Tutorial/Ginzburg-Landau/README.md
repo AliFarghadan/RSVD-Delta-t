@@ -333,6 +333,7 @@ By setting `TransRun = false`, we executed the $\text{RSVD}-\Delta t$ simulation
 set(groot, 'defaultTextInterpreter','latex'); 
 addpath('/path/to/PETSc/share/petsc/matlab/');
 S         = PetscBinaryRead('/path/to/results/ResolventModes_0/S_hat', 'complex', true, 'indices', 'int64');
+S         = full(S);        % Convert sparse to full format
 S         = real(S);        % Convert complex-valued numbers to real-valued numbers
 S         = fftshift(S, 2); % Organize the frequencies as -w_max:w_max
 k         = 3;              % Number of modes to display
@@ -358,6 +359,8 @@ set(groot, 'defaultTextInterpreter','latex');
 addpath('/path/to/PETSc/share/petsc/matlab/');
 U         = PetscBinaryRead('/path/to/results/ResolventModes_0/U_hat_k1_allFreqs', 'complex', true, 'indices', 'int64');
 V         = PetscBinaryRead('/path/to/results/output/ResolventModes_0/V_hat_k1_allFreqs', 'complex', true, 'indices', 'int64');
+U         = full(U);                    % Convert sparse to full format
+V         = full(V);                    % Convert sparse to full format
 U         = fftshift(U, 2);             % Organize the frequencies as -w_max:w_max
 V         = fftshift(V, 2);             % Organize the frequencies as -w_max:w_max
 w_min     = 0.05;                       % Base frequency
