@@ -17,7 +17,11 @@ PetscErrorCode AdjointActionRK4(RSVD_matrices *RSVD_mat, RSVDt_vars *RSVDt, LNS_
 
 	PetscFunctionBeginUser;
 
-	RSVDt->TS.flg_dir_adj = 0;
+	/*
+		1: direct action, 0: adjoint action
+	*/
+	
+	RSVDt->TS.DirAdj = 0;
 
 	ierr = ApplyWSMats(RSVD_mat, RSVDt, WS_mat, 1);CHKERRQ(ierr);
 	ierr = TSActionRK4(RSVD_mat, DFT_mat, LNS_mat, RSVDt, dirs, TSR);CHKERRQ(ierr);

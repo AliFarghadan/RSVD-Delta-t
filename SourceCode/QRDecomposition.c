@@ -1,7 +1,7 @@
 
 #include <slepcbv.h>
 
-PetscErrorCode QR_simple(Mat V)
+PetscErrorCode QRDecomposition(Mat V)
 {
 	/*
 		Performs QR decomposition on a given matrix 

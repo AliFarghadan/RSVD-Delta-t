@@ -1,10 +1,10 @@
 
 #include <petscmat.h>
 #include "Variables.h"
-#include "QR_simple.h"
+#include "QRDecomposition.h"
 #include "TSExpADeltaT.h"
 
-PetscErrorCode BuildMtilde4AllModes(Mat Y_all, LNS_vars *LNS_mat, RSVDt_vars *RSVDt, TS_removal_matrices *TSR)
+PetscErrorCode CreateMtilde(Mat Y_all, LNS_vars *LNS_mat, RSVDt_vars *RSVDt, TS_removal_matrices *TSR)
 {
 	/*
 		Creates M_tilde_all = U_i'exp(A\Delta t)U_i for i = 1,2,...,k test vectors in a loop
@@ -43,7 +43,7 @@ PetscErrorCode BuildMtilde4AllModes(Mat Y_all, LNS_vars *LNS_mat, RSVDt_vars *RS
 		ierr = MatDenseGetSubMatrix(Y_all,PETSC_DECIDE,PETSC_DECIDE,ik*Nstore,(ik+1)*Nstore,&Y_all_k);CHKERRQ(ierr);
 		ierr = MatCopy(Y_all_k,V,SAME_NONZERO_PATTERN);CHKERRQ(ierr);
 		ierr = MatDenseRestoreSubMatrix(Y_all,&Y_all_k);CHKERRQ(ierr);
-		ierr = QR_simple(V);CHKERRQ(ierr);
+		ierr = QRDecomposition(V);CHKERRQ(ierr);
 		ierr = MatCopy(V,MV,SAME_NONZERO_PATTERN);CHKERRQ(ierr);
 		ierr = TSExpADeltaT(LNS_mat, RSVDt, MV);CHKERRQ(ierr);
 		ierr = MatConjugate(V);CHKERRQ(ierr);

@@ -2,9 +2,12 @@
 #include <petscksp.h>
 #include "Variables.h"
 
-PetscErrorCode RemoveTransientProjection(Mat Y_all, Mat M_tilde, Mat V, PetscInt ik, \
+PetscErrorCode GalerkinProj(Mat Y_all, Mat M_tilde, Mat V, PetscInt ik, \
 							RSVDt_vars *RSVDt, TS_removal_matrices *TSR, DFT_matrices *DFT_mat)
 {
+	/*
+		Performs Galerkin projection to remove the transient response
+	*/
 
 	PetscErrorCode        ierr;
 	KSP                   ksp;
@@ -24,11 +27,8 @@ PetscErrorCode RemoveTransientProjection(Mat Y_all, Mat M_tilde, Mat V, PetscInt
 
 		ierr = MatDuplicate(M_tilde,MAT_COPY_VALUES,&M_temp);CHKERRQ(ierr);
 
-		if (RSVDt->TS.flg_dir_adj) {
-			ierr = MatDenseGetSubMatrix(Y_all,PETSC_DECIDE,PETSC_DECIDE,ik*Nstore,(ik+1)*Nstore-1,&Y_all_k);CHKERRQ(ierr);
-		} else {
-			ierr = MatDenseGetSubMatrix(Y_all,PETSC_DECIDE,PETSC_DECIDE,ik*Nstore+1,(ik+1)*Nstore,&Y_all_k);CHKERRQ(ierr);
-		}
+		ierr = RSVDt->TS.DirAdj ? MatDenseGetSubMatrix(Y_all,PETSC_DECIDE,PETSC_DECIDE,ik*Nstore,(ik+1)*Nstore-1,&Y_all_k) : \
+				MatDenseGetSubMatrix(Y_all,PETSC_DECIDE,PETSC_DECIDE,ik*Nstore+1,(ik+1)*Nstore,&Y_all_k);CHKERRQ(ierr);
 		ierr = MatDenseGetColumnVecRead(DFT_mat->dft,iw,&dft_iw);CHKERRQ(ierr);
 		ierr = MatDuplicate(Y_all_k,MAT_COPY_VALUES,&Y_temp);CHKERRQ(ierr);
 		ierr = MatMult(Y_temp,dft_iw,y1);CHKERRQ(ierr);
@@ -36,11 +36,8 @@ PetscErrorCode RemoveTransientProjection(Mat Y_all, Mat M_tilde, Mat V, PetscInt
 		ierr = MatDestroy(&Y_temp);CHKERRQ(ierr);
 		ierr = MatDenseRestoreSubMatrix(Y_all,&Y_all_k);CHKERRQ(ierr);
 
-		if (RSVDt->TS.flg_dir_adj) {
-			ierr = MatDenseGetSubMatrix(Y_all,PETSC_DECIDE,PETSC_DECIDE,ik*Nstore+1,(ik+1)*Nstore,&Y_all_k);CHKERRQ(ierr);
-		} else {
-			ierr = MatDenseGetSubMatrix(Y_all,PETSC_DECIDE,PETSC_DECIDE,ik*Nstore,(ik+1)*Nstore-1,&Y_all_k);CHKERRQ(ierr);
-		}
+		ierr = RSVDt->TS.DirAdj ? MatDenseGetSubMatrix(Y_all,PETSC_DECIDE,PETSC_DECIDE,ik*Nstore+1,(ik+1)*Nstore,&Y_all_k) : \
+				MatDenseGetSubMatrix(Y_all,PETSC_DECIDE,PETSC_DECIDE,ik*Nstore,(ik+1)*Nstore-1,&Y_all_k);CHKERRQ(ierr);
 		ierr = MatDuplicate(Y_all_k,MAT_COPY_VALUES,&Y_temp);CHKERRQ(ierr);
 		ierr = MatMult(Y_temp,dft_iw,y2);CHKERRQ(ierr);
 		ierr = VecScale(y2, RSVDt->TS.ResRatio);CHKERRQ(ierr);
@@ -49,18 +46,12 @@ PetscErrorCode RemoveTransientProjection(Mat Y_all, Mat M_tilde, Mat V, PetscInt
 		ierr = MatDenseRestoreSubMatrix(Y_all,&Y_all_k);CHKERRQ(ierr);
 
 		ierr = MatScale(M_temp, -1.);CHKERRQ(ierr);
-		if (RSVDt->TS.flg_dir_adj) {
-			ierr = MatShift(M_temp,PetscExpComplex(PETSC_i * RSVDt->RSVD.w * iw * deltaT));CHKERRQ(ierr);
-		} else {
-			ierr = MatShift(M_temp,PetscExpComplex(-PETSC_i * RSVDt->RSVD.w * iw * deltaT));CHKERRQ(ierr);
-		}
+		ierr = RSVDt->TS.DirAdj ? MatShift(M_temp,PetscExpComplex(PETSC_i * RSVDt->RSVD.w * iw * deltaT)) : \
+			MatShift(M_temp,PetscExpComplex(-PETSC_i * RSVDt->RSVD.w * iw * deltaT));CHKERRQ(ierr);
 		ierr = VecScale(y2, -1.);CHKERRQ(ierr);
 		ierr = VecCopy(y1, yt);CHKERRQ(ierr);
-		if (RSVDt->TS.flg_dir_adj) {
-			ierr = VecAYPX(yt,PetscExpComplex(PETSC_i * RSVDt->RSVD.w * iw * deltaT),y2);CHKERRQ(ierr);
-		} else {
-			ierr = VecAYPX(yt,PetscExpComplex(-PETSC_i * RSVDt->RSVD.w * iw * deltaT),y2);CHKERRQ(ierr);
-		}
+		ierr = RSVDt->TS.DirAdj ? VecAYPX(yt,PetscExpComplex(PETSC_i * RSVDt->RSVD.w * iw * deltaT),y2) : \
+				VecAYPX(yt,PetscExpComplex(-PETSC_i * RSVDt->RSVD.w * iw * deltaT),y2);CHKERRQ(ierr);
 		ierr = MatMultHermitianTranspose(V,yt,b);CHKERRQ(ierr);
 
 		ierr = KSPCreate(PETSC_COMM_WORLD,&ksp);CHKERRQ(ierr);

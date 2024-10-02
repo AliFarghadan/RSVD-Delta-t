@@ -1,12 +1,16 @@
 
 #include <petscmat.h>
 #include "Variables.h"
-#include "BuildMtilde4AllModes.h"
-#include "RemoveTransientProjectionAllModes.h"
+#include "CreateMtilde.h"
+#include "GalerkinProjAllModes.h"
 #include "ReversePermuteMat.h"
 
-PetscErrorCode EfficientTransientRemoval(Mat Y_all, LNS_vars *LNS_mat, RSVD_matrices *RSVD_mat, RSVDt_vars *RSVDt, TS_removal_matrices *TSR, DFT_matrices *DFT_mat)
+PetscErrorCode TransientRemovalStrategy(Mat Y_all, LNS_vars *LNS_mat, RSVD_matrices *RSVD_mat, RSVDt_vars *RSVDt, TS_removal_matrices *TSR, DFT_matrices *DFT_mat)
 {
+
+	/*
+		This code follows the efficient transient removal strategy, explained in our paper
+	*/
 
 	PetscErrorCode        ierr;
 	PetscInt              hh,mm,ss;
@@ -16,16 +20,20 @@ PetscErrorCode EfficientTransientRemoval(Mat Y_all, LNS_vars *LNS_mat, RSVD_matr
 
 	ierr = PetscTime(&t1);CHKERRQ(ierr);
 
-	ierr = PetscPrintf(PETSC_COMM_WORLD,"*** Trasnient removal strategy begins! ***\n");CHKERRQ(ierr);
-	ierr = PetscPrintf(PETSC_COMM_WORLD,"The process takes about as long as one period integration\n");CHKERRQ(ierr);
+	ierr = PetscPrintf(PETSC_COMM_WORLD,"*** Trasnient removal strategy begins! ***\n"
+					"The process takes about as long as one period integration\n");CHKERRQ(ierr);
 
 	/*
-		Build M_tilde for all test vectors
+		Creates M_tilde for all test vectors
 	*/
 
-	ierr = BuildMtilde4AllModes(Y_all,LNS_mat,RSVDt,TSR);CHKERRQ(ierr);
+	ierr = CreateMtilde(Y_all,LNS_mat,RSVDt,TSR);CHKERRQ(ierr);
 
-	ierr = RemoveTransientProjectionAllModes(Y_all,LNS_mat,RSVDt,TSR,DFT_mat);CHKERRQ(ierr);
+	/*
+		Updates the steady-state solutions by removing the transient part using Galekin projection
+	*/
+
+	ierr = GalerkinProjAllModes(Y_all,LNS_mat,RSVDt,TSR,DFT_mat);CHKERRQ(ierr);
 
 	ierr = ReversePermuteMat(TSR->Y_hat_up, RSVDt);CHKERRQ(ierr);
 	ierr = MatCreate(PETSC_COMM_WORLD,&RSVD_mat->Y_hat);CHKERRQ(ierr);
@@ -33,7 +41,7 @@ PetscErrorCode EfficientTransientRemoval(Mat Y_all, LNS_vars *LNS_mat, RSVD_matr
 	ierr = MatDestroy(&TSR->Y_hat_up);CHKERRQ(ierr);
 
 	/*
-		Printing out the elapsed time and exit
+		Prints out the elapsed time and exits
 	*/
 
 	ierr = PetscTime(&t2);CHKERRQ(ierr);

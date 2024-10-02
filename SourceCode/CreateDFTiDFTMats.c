@@ -11,7 +11,7 @@ PetscErrorCode CreateDFTiDFTMats(RSVDt_vars *RSVDt, DFT_matrices *DFT_mat, LNS_v
 	PetscErrorCode        ierr;
 	PetscInt              iw, it, Nw, Nt, start, end;
 	PetscScalar           alpha, v;
-	Vec                   V_temp, J;
+	Vec                   V, J;
 
 	PetscFunctionBeginUser;
 
@@ -42,25 +42,25 @@ PetscErrorCode CreateDFTiDFTMats(RSVDt_vars *RSVDt, DFT_matrices *DFT_mat, LNS_v
 	alpha = -2*PETSC_PI*PETSC_i/Nt;
 
 	for (iw=0; iw<Nw; iw++) {
-		ierr = MatDenseGetColumnVecWrite(DFT_mat->idft,iw,&V_temp);CHKERRQ(ierr);
-		if (RSVDt->TS.flg_real_A) {
+		ierr = MatDenseGetColumnVecWrite(DFT_mat->idft,iw,&V);CHKERRQ(ierr);
+		if (RSVDt->TS.RealOperator) {
 			v    = alpha*iw;
 		} else if (PetscFmodReal(Nw,2) == 0)  {
 			v    = (iw<=Nw/2-1) ? alpha*iw : alpha*((iw-Nw)+Nt);
 		} else {
 			v    = (iw<=(Nw-1)/2) ? alpha*iw : alpha*((iw-Nw)+Nt);
 		}
-		ierr = VecSet(V_temp,v);CHKERRQ(ierr);
-		ierr = VecPointwiseMult(V_temp,V_temp,J);CHKERRQ(ierr);
-		ierr = VecExp(V_temp);CHKERRQ(ierr);
-		ierr = VecConjugate(V_temp);CHKERRQ(ierr);
-		ierr = VecScale(V_temp, 2./Nt);CHKERRQ(ierr);
-		ierr = MatDenseRestoreColumnVecWrite(DFT_mat->idft,iw,&V_temp);CHKERRQ(ierr);
+		ierr = VecSet(V,v);CHKERRQ(ierr);
+		ierr = VecPointwiseMult(V,V,J);CHKERRQ(ierr);
+		ierr = VecExp(V);CHKERRQ(ierr);
+		ierr = VecConjugate(V);CHKERRQ(ierr);
+		ierr = VecScale(V, 2./Nt);CHKERRQ(ierr);
+		ierr = MatDenseRestoreColumnVecWrite(DFT_mat->idft,iw,&V);CHKERRQ(ierr);
 	}
 
 	ierr = VecDestroy(&J);CHKERRQ(ierr);
 	ierr = VecCreate(PETSC_COMM_WORLD, &J);CHKERRQ(ierr);
-	ierr = RSVDt->TS.flg_real_A ? VecSetSizes(J,PETSC_DECIDE,Nw*2) : \
+	ierr = RSVDt->TS.RealOperator ? VecSetSizes(J,PETSC_DECIDE,Nw*2) : \
 						VecSetSizes(J,PETSC_DECIDE,Nw);CHKERRQ(ierr);
 	ierr = VecSetUp(J);CHKERRQ(ierr);
 
@@ -73,24 +73,24 @@ PetscErrorCode CreateDFTiDFTMats(RSVDt_vars *RSVDt, DFT_matrices *DFT_mat, LNS_v
 	ierr = VecAssemblyBegin(J);CHKERRQ(ierr);
 	ierr = VecAssemblyEnd(J);CHKERRQ(ierr);
 
-	alpha = RSVDt->TS.flg_real_A ? -2*PETSC_PI*PETSC_i/(2*Nw) : -2*PETSC_PI*PETSC_i/Nw;
+	alpha = RSVDt->TS.RealOperator ? -2*PETSC_PI*PETSC_i/(2*Nw) : -2*PETSC_PI*PETSC_i/Nw;
 	
 	for (iw=0; iw<Nw; iw++) {
-		ierr = MatDenseGetColumnVecWrite(DFT_mat->dft,iw,&V_temp);CHKERRQ(ierr);
+		ierr = MatDenseGetColumnVecWrite(DFT_mat->dft,iw,&V);CHKERRQ(ierr);
 		v    = alpha*iw;
-		ierr = VecSet(V_temp,v);CHKERRQ(ierr);
-		ierr = VecPointwiseMult(V_temp,V_temp,J);CHKERRQ(ierr);
-		ierr = VecExp(V_temp);CHKERRQ(ierr);
-		ierr = MatDenseRestoreColumnVecWrite(DFT_mat->dft,iw,&V_temp);CHKERRQ(ierr);
+		ierr = VecSet(V,v);CHKERRQ(ierr);
+		ierr = VecPointwiseMult(V,V,J);CHKERRQ(ierr);
+		ierr = VecExp(V);CHKERRQ(ierr);
+		ierr = MatDenseRestoreColumnVecWrite(DFT_mat->dft,iw,&V);CHKERRQ(ierr);
 	}
+
+	ierr = VecDestroy(&J);CHKERRQ(ierr);
 
 	ierr = MatAssemblyBegin(DFT_mat->dft,MAT_FINAL_ASSEMBLY);CHKERRQ(ierr);
 	ierr = MatAssemblyEnd(DFT_mat->dft,MAT_FINAL_ASSEMBLY);CHKERRQ(ierr);
 	ierr = MatAssemblyBegin(DFT_mat->idft,MAT_FINAL_ASSEMBLY);CHKERRQ(ierr);
 	ierr = MatAssemblyEnd(DFT_mat->idft,MAT_FINAL_ASSEMBLY);CHKERRQ(ierr);
 	ierr = MatTranspose(DFT_mat->idft,MAT_INPLACE_MATRIX,&DFT_mat->idft);CHKERRQ(ierr);
-
-	ierr = VecDestroy(&J);CHKERRQ(ierr);
 
 	PetscFunctionReturn(0);
 	

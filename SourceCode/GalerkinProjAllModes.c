@@ -1,12 +1,15 @@
 
 #include <petscmat.h>
 #include "Variables.h"
-#include "QR_simple.h"
-#include "RemoveTransientProjection.h"
+#include "QRDecomposition.h"
+#include "GalerkinProj.h"
 
-PetscErrorCode RemoveTransientProjectionAllModes(Mat Y_all, LNS_vars *LNS_mat, RSVDt_vars *RSVDt, \
+PetscErrorCode GalerkinProjAllModes(Mat Y_all, LNS_vars *LNS_mat, RSVDt_vars *RSVDt, \
 								TS_removal_matrices *TSR, DFT_matrices *DFT_mat)
 {
+	/*
+		Performs Galerkin projection to remove the transient response separately for each test vector
+	*/
 
 	PetscErrorCode        ierr;
 	Mat                   V,Y_all_k,M_tilde;
@@ -27,11 +30,9 @@ PetscErrorCode RemoveTransientProjectionAllModes(Mat Y_all, LNS_vars *LNS_mat, R
 		ierr = MatDenseGetSubMatrix(Y_all,PETSC_DECIDE,PETSC_DECIDE,ik*Nstore,(ik+1)*Nstore,&Y_all_k);CHKERRQ(ierr);
 		ierr = MatDuplicate(Y_all_k,MAT_COPY_VALUES,&V);CHKERRQ(ierr);
 		ierr = MatDenseRestoreSubMatrix(Y_all,&Y_all_k);CHKERRQ(ierr);
-
-		ierr = QR_simple(V);CHKERRQ(ierr);
-
+		ierr = QRDecomposition(V);CHKERRQ(ierr);
 		ierr = MatDenseGetSubMatrix(TSR->M_tilde_all,PETSC_DECIDE,PETSC_DECIDE,ik*Nstore,(ik+1)*Nstore,&M_tilde);CHKERRQ(ierr);
-		ierr = RemoveTransientProjection(Y_all,M_tilde,V,ik,RSVDt,TSR,DFT_mat);CHKERRQ(ierr);
+		ierr = GalerkinProj(Y_all,M_tilde,V,ik,RSVDt,TSR,DFT_mat);CHKERRQ(ierr);
 		ierr = MatDenseRestoreSubMatrix(TSR->M_tilde_all,&M_tilde);CHKERRQ(ierr);
 
 		ierr = MatDestroy(&V);CHKERRQ(ierr);

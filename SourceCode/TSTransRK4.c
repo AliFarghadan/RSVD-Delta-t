@@ -12,7 +12,7 @@ PetscErrorCode TSTransRK4(LNS_vars *LNS_mat, TS_matrices *TS_mat, RSVDt_vars *RS
 
 	PetscFunctionBeginUser;
 
-	if (RSVDt->TS.flg_dir_adj) {
+	if (RSVDt->TS.DirAdj) {
 		ierr = MatMult(LNS_mat->A,y,TS_mat->k1);CHKERRQ(ierr);
 		ierr = VecWAXPY(TS_mat->y_temp,RSVDt->TS.dt/2,TS_mat->k1,y);CHKERRQ(ierr);
 		ierr = MatMult(LNS_mat->A,TS_mat->y_temp,TS_mat->k2);CHKERRQ(ierr);

@@ -3,7 +3,7 @@
 #include "Variables.h"
 #include "RecoverU.h"
 
-PetscErrorCode ReducedSVD(RSVD_matrices *RSVD_mat, RSVDt_vars *RSVDt, WS_matrices *WS_mat, Resolvent_matrices *Res_mat)
+PetscErrorCode SVDAllFreqs(RSVD_matrices *RSVD_mat, RSVDt_vars *RSVDt, WS_matrices *WS_mat, Resolvent_matrices *Res_mat)
 {
 	/*
 		Performs the economy SVD of matrices of size N \times k for Nw frequencies
@@ -76,14 +76,8 @@ PetscErrorCode ReducedSVD(RSVD_matrices *RSVD_mat, RSVDt_vars *RSVDt, WS_matrice
 	ierr = RecoverU(U_til,RSVDt,RSVD_mat,Res_mat);CHKERRQ(ierr);
 
 	if (WS_mat->flg_Wout) {
-		if (WS_mat->flg_diag) {
-			ierr = MatDiagonalScale(Res_mat->U_hat,WS_mat->W_out_vec,NULL);CHKERRQ(ierr);
-			ierr = MatDiagonalScale(Res_mat->V_hat,WS_mat->W_out_vec,NULL);CHKERRQ(ierr);
-		}
-		else {
-			ierr = MatMatMult(WS_mat->W_out,Res_mat->U_hat,MAT_REUSE_MATRIX,PETSC_DEFAULT,&Res_mat->U_hat);CHKERRQ(ierr);
-			ierr = MatMatMult(WS_mat->W_out,Res_mat->V_hat,MAT_REUSE_MATRIX,PETSC_DEFAULT,&Res_mat->V_hat);CHKERRQ(ierr);
-		}
+		ierr = MatMatMult(WS_mat->W_out,Res_mat->U_hat,MAT_REUSE_MATRIX,PETSC_DEFAULT,&Res_mat->U_hat);CHKERRQ(ierr);
+		ierr = MatMatMult(WS_mat->W_out,Res_mat->V_hat,MAT_REUSE_MATRIX,PETSC_DEFAULT,&Res_mat->V_hat);CHKERRQ(ierr);
 	}
 
 	/*

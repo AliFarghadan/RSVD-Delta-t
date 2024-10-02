@@ -1,67 +1,96 @@
 
 /* 	
-	Author: Ali Farghadan, 2020-2024
+	Author: Ali Farghadan, Sep 2024
 	Produced at the Univeristy of Michigan, Towne Lab
+	Reference: Scalable resolvent analysis for three-dimensional flows, JCP, 2024
 */
 
 /*
 
-	Inputs ****** Description ************************************ Format
+	Inputs ********** Description ************************************ Format
 
-	A             LNS operator                                     matrix (sparse N x N)
-	k             number of test vectors                           integer
-	q             number of power iterations                       integer
-	w             base frequency                                   real 
-	twopi_flg     base frequency multiplies by 2*pi                boolean 
-	Nw            number of input/output frequencies to resolve    integer
-	real_A        real-valued if true, otherwise complex           boolean
-	dt            time step                                        real
-	TransLen      transient length                                 real
-	Discounting   applies discounting for unstable linear systems  boolean
-	Beta          Beta value for discounting (A_dis = A - Beta I)  real > 0
-	TransRemoval  efficient transient removal                      boolean
-	TransRun      run transient simulation and exit                boolean
-	root_dir      root directory                                   string
-	input_dir     root_dir/input  (default is root dir)            string
-	results_dir   root_dir/output (default is root dir)            string
-	display       display options                                  integer
-		case 1) display = 0: nothing
-		case 2) display = 1: problem information + total elapsed time of each action
-		case 3) display = 2: display 1 + elapsed time of each test vector + estimated remaining time
-		case 4) display = 3: display 2 + progress percentage of the first test vector
+	RSVD-delta-t variables:
+	A                 linear (or LNS) operator                         matrix (sparse N x N)
+	B                 input matrix as defined in the reference paper   matrix
+	C                 output matrix as defined in the reference paper  matrix
+	W_q_sqrt          W_q^(1/2) as defined in the reference paper      matrix
+	W_f_sqrt_inv      W_f^(-1/2) as defined in the reference paper     matrix
+	k                 number of test vectors                           integer
+	q                 number of power iterations                       integer
+	w                 base frequency                                   real 
+	TwoPI             base frequency multiplies by 2*pi if true        boolean 
+	Nw                number of input/output frequencies to resolve    integer
+	dt                time step                                        real
+	RootDir           root directory                                   string
+	ResultsDir        results directory (RootDir/ResultsDir)           string
+	TransientLength   transient length                                 real
+	DiscFlg           applies discounting for unstable linear systems  boolean
+	beta              beta value for discounting (A <-- A - beta I)    real > 0
+	TransientRemoval  performs Galerkin transient removal if true      boolean
+	RandSeed          seeding random number                            integer
+	Display           display options                                  integer
+	 case 1) Display = 0: nothing
+	 case 2) Display = 1: problem information + elapsed time of each test vector (and total elapsed time) + estimated remaining time
+	 case 3) Display = 2: "Display = 1" information + progress percentage of the first test vector (every 10 percent)
 
-	Outputs ****** Description ************************************ Format
+	SaveResultsOpt    saving resolvent modes options                   integer
+	 case 1) SaveResultsOpt = 1: saves resolvent modes as k  matrices of size N x Nw
+	 case 2) SaveResultsOpt = 2: saves resolvent modes as Nw matrices of size N x k
 
-	U              response resolvent modes                         matrix (NkNw)
-	V              forcing resolvent modes                          matrix (NkNw)
-	Sigma          resolvent gains                                  matrix (kNw)
+	Transient simulation variables:
+	TransRun          run transient simulation and exit                boolean	
+	TransRemovalEst   estimates the transient error if true            boolean
+	TransSave         saves the transient outputs if true              boolean
+	TransPeriods      number of periods to integrate                   integer
+	TransSaveMod      saves the snapshots every "TransSaveMod" number  integer
+	TransDivVal       divergence value                                 real
+	TransConVal       convergence value                                real
+
+	Outputs ********* Description ************************************ Format
+
+	U                 response resolvent modes                         matrix (k matrices of size N x Nw)
+	V                 forcing resolvent modes                          matrix (k matrices of size N x Nw)
+	Sigma             resolvent gains                                  matrix (one matrix of size k x Nw)
 
 */
 
+/* 	
+	List of input libraries and functions
+*/
+
 #include <slepcsvd.h>
-#include "Variables.h"
-#include "PreProcessing.h"
-#include "TransientRunRK4.h"
-#include "ForwardActionRK4.h"
-#include "PowerIterationRK4.h"
-#include "ReducedQR.h"
-#include "StoreQ.h"
-#include "AdjointActionRK4.h"
-#include "ReducedSVD.h"
-#include "SaveResults.h"
+#include <Variables.h>
+#include <PreProcessing.h>
+#include <TransientRunRK4.h>
+#include <DirectActionRK4.h>
+#include <PowerIterationRK4.h>
+#include <QRAllFreqs.h>
+#include <StoreQ.h>
+#include <AdjointActionRK4.h>
+#include <SVDAllFreqs.h>
+#include <SaveResults.h>
 
 int main(int argc,char **args)
 {
+
+	/* 	
+		Defines variable types
+	*/
+
 	PetscErrorCode        ierr;                         /* Petsc error code */
 	Directories           dirs;                         /* I/O directories */
 	RSVDt_vars            RSVDt;                        /* RSVDt variables */
-	TransientRun_vars     TR_vars;                      /* transient run variables */
-	LNS_vars              LNS_mat;                      /* LNS matrices */
+	TransRun_vars         TR_vars;                      /* transient run variables */
+	LNS_vars              LNS_mat;                      /* LNS matrix */
 	DFT_matrices          DFT_mat;                      /* DFT and inverse DFT matrices */
 	TS_removal_matrices   TSR;                          /* transient removal matrices */
 	WS_matrices           WS_mat;                       /* weight and input/output matrices */
 	RSVD_matrices         RSVD_mat;                     /* RSVD matrices */
 	Resolvent_matrices    Res_mat;                      /* resolvent modes and gains */
+
+	/*
+		Initializes the SLEPc
+	*/
 
 	ierr = SlepcInitialize(&argc,&args,(char*)0,NULL); if (ierr) return ierr;
 
@@ -75,7 +104,7 @@ int main(int argc,char **args)
 		Transient simulation (if desired -- run and exit)
 	*/
 	
-	if (TR_vars.TransientRun) {
+	if (TR_vars.TransRun) {
 		ierr = TransientRunRK4(&TR_vars, &RSVDt, &LNS_mat, &DFT_mat, &dirs);CHKERRQ(ierr);
 		ierr = SlepcFinalize();
 		return ierr;
@@ -89,17 +118,17 @@ int main(int argc,char **args)
 	ierr = PetscPrintf(PETSC_COMM_WORLD,"\n********************************************\n"
 			"*************** RSVD-\\Delta t **************\n********************************************\n");CHKERRQ(ierr);
 
-	ierr = ForwardActionRK4(&RSVD_mat, &RSVDt, &LNS_mat, &DFT_mat, &WS_mat, &dirs, &TSR);CHKERRQ(ierr);
+	ierr = DirectActionRK4(&RSVD_mat, &RSVDt, &LNS_mat, &DFT_mat, &WS_mat, &dirs, &TSR);CHKERRQ(ierr);
 
 	ierr = PowerIterationRK4(&RSVD_mat, &RSVDt, &LNS_mat, &DFT_mat, &WS_mat, &dirs, &TSR);CHKERRQ(ierr);
 
-	ierr = ReducedQR(&RSVD_mat, &RSVDt);CHKERRQ(ierr);
+	ierr = QRAllFreqs(&RSVD_mat, &RSVDt);CHKERRQ(ierr);
 
 	ierr = StoreQ(&RSVD_mat, &RSVDt);CHKERRQ(ierr);
 
 	ierr = AdjointActionRK4(&RSVD_mat, &RSVDt, &LNS_mat, &DFT_mat, &WS_mat, &dirs, &TSR);CHKERRQ(ierr);
 
-	ierr = ReducedSVD(&RSVD_mat, &RSVDt, &WS_mat, &Res_mat);CHKERRQ(ierr);
+	ierr = SVDAllFreqs(&RSVD_mat, &RSVDt, &WS_mat, &Res_mat);CHKERRQ(ierr);
 
 	ierr = SaveResults(&Res_mat, &RSVDt, &dirs);CHKERRQ(ierr);
 

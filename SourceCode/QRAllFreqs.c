@@ -2,7 +2,7 @@
 #include <slepcbv.h>
 #include "Variables.h"
 
-PetscErrorCode ReducedQR(RSVD_matrices *RSVD_mat, RSVDt_vars *RSVDt)
+PetscErrorCode QRAllFreqs(RSVD_matrices *RSVD_mat, RSVDt_vars *RSVDt)
 {
 	/*
 		Performs QR decomposition for all Nw matrices of size N \times k

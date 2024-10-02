@@ -19,10 +19,7 @@ PetscErrorCode ReversePermuteMat(Mat F, RSVDt_vars *RSVDt)
 	ierr = MatGetSize(F,&N,&Nw);CHKERRQ(ierr);
 	k    = RSVDt->RSVD.k;
 	Nw  /= k;
-	ierr = MatCreate(PETSC_COMM_WORLD,&F_permuted);CHKERRQ(ierr);
-	ierr = MatSetType(F_permuted,MATMPIDENSE);CHKERRQ(ierr);
-	ierr = MatSetSizes(F_permuted,PETSC_DECIDE,PETSC_DECIDE,N,Nw*k);CHKERRQ(ierr);
-	ierr = MatSetUp(F_permuted);CHKERRQ(ierr);
+	ierr = MatDuplicate(F,MAT_DO_NOT_COPY_VALUES,&F_permuted);CHKERRQ(ierr);
 
 	for (ik=0; ik<k; ik++) {
 		for (iw=0; iw<Nw; iw++) {

@@ -1,13 +1,13 @@
 
 #include <petscksp.h>
 #include "Variables.h"
-#include "QR_simple.h"
+#include "QRDecomposition.h"
 
-PetscErrorCode EfficientTransientRemovalEstimation(Mat Q_transient, Vec qss, PetscInt period_index, RSVDt_vars *RSVDt, DFT_matrices *DFT_mat, Directories *dirs)
+PetscErrorCode TransientRemovalEst(Mat Q_transient, Vec qss, PetscInt period_index, RSVDt_vars *RSVDt, DFT_matrices *DFT_mat, Directories *dirs)
 {
 	/*
-		Once the matrix of transient responses is created, we can test the transinet removal performance.
-		This function assumes Q_all is periodic and saved in the time domain.
+		Once the matrix of transient responses is created, we can test the transinet removal performance
+		This function assumes Q_all is periodic and saved in the time domain
 	*/  
 	
 	PetscErrorCode        ierr;
@@ -103,7 +103,7 @@ PetscErrorCode EfficientTransientRemovalEstimation(Mat Q_transient, Vec qss, Pet
 		*/
 
 		ierr = VecNorm(qss,NORM_2,&norm);CHKERRQ(ierr);
-		ierr = QR_simple(Q_all);CHKERRQ(ierr);
+		ierr = QRDecomposition(Q_all);CHKERRQ(ierr);
 		ierr = MatMultHermitianTranspose(Q_all,qss,b);CHKERRQ(ierr);
 		ierr = MatMult(Q_all,b,qdiff);CHKERRQ(ierr);
 		ierr = VecAYPX(qdiff,-1,qss);CHKERRQ(ierr);

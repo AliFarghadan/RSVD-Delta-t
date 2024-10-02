@@ -8,7 +8,7 @@
 #include "SaveSnapshots.h"
 #include "DisplayProgress.h"
 #include "DestroyTSMats.h"
-#include "EfficientTransientRemoval.h"
+#include "TransientRemovalStrategy.h"
 #include "DFT.h"
 
 
@@ -28,7 +28,7 @@ PetscErrorCode TSActionRK4(RSVD_matrices *RSVD_mat, DFT_matrices *DFT_mat, \
 	
 	PetscFunctionBeginUser;
 
-	ierr = RSVDt->TS.flg_dir_adj ? PetscPrintf(PETSC_COMM_WORLD,"\n*** Direct action begins! ***\n") : \
+	ierr = RSVDt->TS.DirAdj ? PetscPrintf(PETSC_COMM_WORLD,"\n*** Direct action begins! ***\n") : \
 				PetscPrintf(PETSC_COMM_WORLD,"\n*** Adjoint action begins! ***\n");CHKERRQ(ierr);
 
 	/*
@@ -39,27 +39,14 @@ PetscErrorCode TSActionRK4(RSVD_matrices *RSVD_mat, DFT_matrices *DFT_mat, \
 	k      = RSVDt->RSVD.k;
 	Nw     = RSVDt->RSVD.Nw;
 	rend   = RSVDt->TS.Nt + RSVDt->TS.Ns;
-	rend  += RSVDt->TS.TransRemoval ? RSVDt->TS.ResRatio : 0;
-	Nstore = RSVDt->TS.TransRemoval ? Nw+1 : Nw;
+	rend  += RSVDt->TS.TransientRemoval ? RSVDt->TS.ResRatio : 0;
+	Nstore = RSVDt->TS.TransientRemoval ? Nw+1 : Nw;
 	
 	/*
 		Uses the solution from the previous action as forcing for the current action
 	*/
 
-	ierr = MatCreate(PETSC_COMM_WORLD,&RSVD_mat->F_hat);CHKERRQ(ierr);
-	ierr = MatSetType(RSVD_mat->F_hat,MATDENSE);CHKERRQ(ierr);
-	ierr = MatSetSizes(RSVD_mat->F_hat,PETSC_DECIDE,PETSC_DECIDE,N,RSVDt->RSVD.Nw_eff*k);CHKERRQ(ierr);
-	ierr = MatSetUp(RSVD_mat->F_hat);CHKERRQ(ierr);
-
-	// only force at the highest frequency --test-- !!!!!!!!
-	// ierr = MatDenseGetColumnVecWrite(RSVD_mat->F_hat,1,&y_temp);CHKERRQ(ierr);
-	// ierr = MatDenseGetColumnVecRead(RSVD_mat->Y_hat,1,&y1);CHKERRQ(ierr);
-	// ierr = VecCopy(y1, y_temp);CHKERRQ(ierr);
-	// ierr = MatDenseRestoreColumnVecRead(RSVD_mat->Y_hat,1,&y1);CHKERRQ(ierr);
-	// ierr = MatDenseRestoreColumnVecWrite(RSVD_mat->F_hat,1,&y_temp);CHKERRQ(ierr);
-
-	ierr = MatCopy(RSVD_mat->Y_hat,RSVD_mat->F_hat,SAME_NONZERO_PATTERN);CHKERRQ(ierr);
-	// why not duplicate?
+	ierr = MatDuplicate(RSVD_mat->Y_hat,MAT_COPY_VALUES,&RSVD_mat->F_hat);CHKERRQ(ierr);
 	ierr = MatDestroy(&RSVD_mat->Y_hat);CHKERRQ(ierr);
 
 	// // zero the first few columns --test-- !!!!!!!!
@@ -162,13 +149,13 @@ PetscErrorCode TSActionRK4(RSVD_matrices *RSVD_mat, DFT_matrices *DFT_mat, \
 
 	/*
 		Takes the response to the frequency domain
-		Efficient transient removal is performed before DFT if desired
+		Efficient transient removal is performed before discrete Fourier transform (DFT) if desired
 	*/
 
-	ierr = RSVDt->TS.TransRemoval ? EfficientTransientRemoval(Y_all,LNS_mat,RSVD_mat,RSVDt,TSR,DFT_mat) : \
+	ierr = RSVDt->TS.TransientRemoval ? TransientRemovalStrategy(Y_all,LNS_mat,RSVD_mat,RSVDt,TSR,DFT_mat) : \
 											DFT(Y_all,DFT_mat,RSVD_mat,RSVDt);CHKERRQ(ierr);
 	
-	ierr = RSVDt->TS.flg_dir_adj ? PetscPrintf(PETSC_COMM_WORLD,"*** Direct action ") : PetscPrintf(PETSC_COMM_WORLD,"*** Adjoint action ");CHKERRQ(ierr);
+	ierr = RSVDt->TS.DirAdj ? PetscPrintf(PETSC_COMM_WORLD,"*** Direct action ") : PetscPrintf(PETSC_COMM_WORLD,"*** Adjoint action ");CHKERRQ(ierr);
 
 	/*
 		Printing out the elapsed time and exit
