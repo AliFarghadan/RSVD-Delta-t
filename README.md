@@ -6,16 +6,15 @@ Welcome to $\text{RSVD}-\Delta t$, a novel algorithm designed to address the com
 
 ![ResModes](image.png)
 
+## Overview
+
+Resolvent analysis is a valuable tool for studying coherent structures in turbulent flows. However, its application to inherently three-dimensional flows and large systems has been limited by the computational cost of computing resolvent modes. $\text{RSVD}-\Delta t$ presents a solution to these challenges by combining randomized singular value decomposition (RSVD) with an optimized time-stepping method, resulting in significant reductions in CPU cost and memory requirements.
+
 ## Important Note
 
 For harmonic resolvent analysis, please use the package available in the **[harmonic-resolvent-analysis branch](https://github.com/AliFarghadan/RSVD-Delta-t/tree/Harmonic-resolvent-analysis)**. 
 
 > **Important:** The source codes and input variables differ between the default branch and the harmonic resolvent analysis branch, so ensure you are using the correct branch for your analysis.
-
-
-## Overview
-
-Resolvent analysis is a valuable tool for studying coherent structures in turbulent flows. However, its application to inherently three-dimensional flows and large systems has been limited by the computational cost of computing resolvent modes. $\text{RSVD}-\Delta t$ presents a solution to these challenges by combining randomized singular value decomposition (RSVD) with an optimized time-stepping method, resulting in significant reductions in CPU cost and memory requirements.
 
 ## Features
 
