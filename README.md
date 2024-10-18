@@ -157,7 +157,7 @@ By setting these environment variables, you ensure that the paths to PETSc and S
 
 The `makefile` is used to build the executable from the source code. First, navigate to the directory of the $\text{RSVD}-\Delta t$ package, where you will find the `makefile`, `inputs.yaml`, and a `SourceCodes` folder. 
 
-The `inputs.yaml` file serves as the interface for defining all parameters before computing the modes. Note that the input list for harmonic resolvent analysis differs from that for resolvent analysis. 
+The `inputs.yaml` file serves as the interface for defining all parameters before computing the modes.
 
 The `SourceCodes` directory contains all the functions implemented for our algorithm. These files do not need to be modified unless you wish to contribute or add new features. Do not alter the relative path between the `makefile` and the `SourceCodes` folder, as this will prevent the executable from being created.
 
