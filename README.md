@@ -21,10 +21,13 @@ For harmonic resolvent analysis, please use the package available in the **[harm
 We are using the $\text{RSVD}-\Delta t$ algorithm to compute resolvent modes of the linearized Navier-Stokes (LNS) equations. The resolvent operator $R$ is defined as
 
 $$
-R = C(\text{i}\omega I - A)^{-1} B = U \Sigma V^*,
+R = C(\text{i}\omega I - A)^{-1} B,
 $$
 
-where $A$ is the LNS operator. $B$ and $C$ are input and output matrices, respectively. $R$ maps the input forcing to the output response in the frequency domain. 
+where $A$ is the LNS operator. $B$ and $C$ are input and output matrices, respectively. $R$ maps the input forcing to the output response in the frequency domain and can be expressed in terms of its singular vectors and values as 
+$$
+R = U \Sigma V^*.
+$$
 
 In our weighted formulation, we compute the weighted resolvent operator $\tilde{R}$ as
 
