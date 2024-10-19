@@ -33,10 +33,14 @@ $$
 In our weighted formulation, we define the weighted resolvent operator $\tilde{R}$ as
 
 $$
-\tilde{R} = W_q^{1/2} C (\text{i}\omega I - A)^{-1} B W_f^{-1/2} = \tilde{U} \Sigma \tilde{V}^*,
+\tilde{R} = W_q^{1/2} C (\text{i}\omega I - A)^{-1} B W_f^{-1/2},
 $$
 
 where the resolvent modes are computed as
+
+$$
+\tilde{R} = \tilde{U} \Sigma \tilde{V}^*
+$$
 
 $$
 U = W^{-1/2}_q \tilde{U},
