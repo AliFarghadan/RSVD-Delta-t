@@ -13,25 +13,25 @@ The linearized operator is provided [here](./). This operator is the one we used
 Here is a list of variables used for this test case. Please note that you will need to modify these variables to suit your own projects.
 
 ```yaml
-# Root directory (string) 
+# Root directory (string)
 # This directory must exist before the simulation
-RootDir:          /path/to/root/directory/
+RootDir:          /path/to/root/directory/ 
 
 # Results directory (string)
 # The resolvent modes/gains will be saved in RootDir/ResultsDir/ResolventModes_<int>
 # This directory must exist before the simulation
-ResultsDir:       /path/to/results/
+ResultsDir:       /path/to/results/ 
 
-# The linearized operator (matrix - usually very sparse and saved in binary format)
+# The linearized operator (string)
 # The operator directory is defined as RootDir/OperatorDir
 # This directory must exist before the simulation, OperatorDir can be same as ResultsDir
-OperatorDir:      /path/to/A_GL
+OperatorDir:      /path/to/A # expected a matrix saved in binary format
 
 # Number of test vectors (integer)
-k:                2
+k:                10
 
 # Number of power iterations (integer)
-q:                0
+q:                1
 
 # Number of frequencies to resolve (integer - even number)
 Nw:               42
@@ -69,6 +69,41 @@ RandSeed:         14
 # Saving resolvent modes options (integer 1 <= SaveResultsOpt <= 2)
 SaveResultsOpt:   1
 
+# Input forcing flag (boolean)
+# The input forcing directory must exist before the simulation if true, otherwise ignored
+InputForcingFlg:  false
+# Input forcing directory when "InputForcing = True" (string)
+# This directory is defined as RootDir/InputForcingDir 
+InputForcingDir:  /path/to/F_hat # expected a matrix saved in binary format, size must match N x (k x Nw)
+
+# Input weight flag (boolean)
+# The input weight directory must exist before the simulation if true, otherwise ignored
+InputWeightFlg:   false
+# Input weight directory when "InputWeightFlg = True" (string)
+# This directory is defined as RootDir/InputWeightDir
+InputWeightDir:   /path/to/W_q_sqrt # expected a matrix saved in binary format, size must be N x N
+
+# Output weight flag (boolean)
+# The input weight directory must exist before the simulation if true, otherwise ignored
+OutputWeightFlg:  false
+# Output weight directory when when "OutputWeightFlg = True" (string)
+# This directory is defined as RootDir/OutputWeightDir
+OutputWeightDir:  /path/to/W_f_sqrt_inv # expected a matrix saved in binary format, size must be N x N
+
+# Input matrix flag (boolean)
+# The input matrix directory must exist before the simulation if true, otherwise ignored
+InputMatrixFlg:   false
+# Input matrix directory when when "InputMatrixFlg = True" (string)
+# This directory is defined as RootDir/InputMatrixDir
+InputMatrixDir:   /path/to/B # expected a matrix saved in binary format, size must be N x NB
+
+# Output matrix flag (boolean)
+# The output matrix directory must exist before the simulation if true, otherwise ignored
+OutputMatrixFlg:  false
+# Output matrix directory when when "OutputMatrixFlg = True" (string)
+# This directory is defined as RootDir/OutputMatrixDir
+OutputMatrixDir:  /path/to/C # expected a matrix saved in binary format, size must be Nc x N
+
 # Runs the transient simulation if true, otherwise RSVD-delta-t will run (boolean)
 TransRun:         false
 
@@ -78,10 +113,10 @@ TransRun:         false
 TransPeriods:     3
 
 # Saves the transient outputs if true (boolean)
+# The snapshots will be saved in RootDir/ResultsDir/TransientSnapshots_<int>
 TransSave:        false
 
 # Saves the snapshots every "TransSaveMod" number (integer)
-# The snapshots will be saved in RootDir/ResultsDir/TransientSnapshots_<int>
 TransSaveMod:     500
 
 # Estimates the transient error using our strategy if true (boolean)
@@ -92,6 +127,15 @@ TransDivVal:      1e3
 
 # Convergence value, the transient simulation will stop when reached (real)
 TransConVal:      1e-6
+
+# Initial condition flag (boolean)
+# The initial condition directory must exist before the simulation if true, otherwise ignored
+TransICFlg:       false
+# Initial condition directory when "TransICFlg = True" (string)
+# This directory is defined as RootDir/TransICDir 
+TransICDir:       /path/to/ICvec # expected a vector saved in binary format
+
+
 ```
 
 ### Important notes:
