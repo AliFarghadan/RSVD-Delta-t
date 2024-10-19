@@ -30,13 +30,13 @@ $$
 R = U \Sigma V^*.
 $$
 
-In our weighted formulation, we compute the weighted resolvent operator $\tilde{R}$ as
+In our weighted formulation, we define the weighted resolvent operator $\tilde{R}$ as
 
 $$
 \tilde{R} = W_q^{1/2} C (\text{i}\omega I - A)^{-1} B W_f^{-1/2} = \tilde{U} \Sigma \tilde{V}^*,
 $$
 
-where the resolvent modes are
+where the resolvent modes are computed as
 
 $$
 U = W^{-1/2}_q \tilde{U},
@@ -180,7 +180,7 @@ After you have completed the installation of PETSc and SLEPc, you need to define
      source ~/.bashrc
      ```
 
-   - For other environments (e.g., Windows or macOS), you can add the equivalent commands to your respective shell configuration files (e.g., `.bash_profile`, `.zshrc`).
+   - For other environments (e.g., Windows or macOS), you can add the equivalent commands to your respective shell configuration files (*e.g.*, `.bash_profile`, `.zshrc`).
 
 By setting these environment variables, you ensure that the paths to PETSc and SLEPc are correctly defined, allowing you to compile and run your applications without needing to manually set the paths each time.
 
