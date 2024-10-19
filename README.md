@@ -39,7 +39,7 @@ $$
 where the resolvent modes are computed as
 
 $$
-\tilde{R} = \tilde{U} \Sigma \tilde{V}^*
+\tilde{R} = \tilde{U} \Sigma \tilde{V}^*,
 $$
 
 $$
