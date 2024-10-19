@@ -16,7 +16,7 @@ For harmonic resolvent analysis, please use the package available in the **[harm
 
 > **Important:** The source codes and input variables differ between the default branch and the harmonic resolvent analysis branch, so ensure you are using the correct branch for your analysis.
 
-## What We Are Computing
+## What We Are Computing?
 
 We are using the $\text{RSVD}-\Delta t$ algorithm to compute resolvent modes of the linearized Navier-Stokes (LNS) equations. The resolvent operator $R$ is defined as
 
