@@ -32,7 +32,7 @@ $$
 \tilde{R} = W_q^{1/2} C (\text{i}\omega I - A)^{-1} B W_f^{-1/2} = \tilde{U} \Sigma \tilde{V}^*,
 $$
 
-where the output modes are returned as
+where the results are saved as
 
 $$
 U = W^{-1/2}_q \tilde{U},
