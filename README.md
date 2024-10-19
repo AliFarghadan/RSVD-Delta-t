@@ -36,14 +36,14 @@ $$
 \tilde{R} = W_q^{1/2} C (\text{i}\omega I - A)^{-1} B W_f^{-1/2} = \tilde{U} \Sigma \tilde{V}^*,
 $$
 
-where the results are saved as
+where the resolvent modes are
 
 $$
 U = W^{-1/2}_q \tilde{U},
 $$
 
 $$
-V = W^{-1/2}_f \tilde{V},
+V = W^{-1/2}_f \tilde{V}.
 $$
 
 By the end of the simulation, resolvent modes (*i.e.*, gains, forcing, and response) are computed using time-stepping across all frequencies. In case $B$, $C$, $W_q^{1/2}$, or $W_f^{-1/2}$ are not defined, we assume they are identity matrices.
