@@ -16,6 +16,35 @@ For harmonic resolvent analysis, please use the package available in the **[harm
 
 > **Important:** The source codes and input variables differ between the default branch and the harmonic resolvent analysis branch, so ensure you are using the correct branch for your analysis.
 
+## What We Are Computing
+
+We are using the $\text{RSVD}-\Delta t$ algorithm to compute resolvent modes of the linearized Navier-Stokes (LNS) equations. The resolvent operator $R$ is defined as
+
+$$
+R = C(\text{i}\omega I - A)^{-1} B = U \Sigma V^*,
+$$
+
+where $A$ is the LNS operator. $B$ and $C$ are input and output matrices, respectively. $R$ maps the input forcing to the output response in the frequency domain. 
+
+In our weighted formulation, we compute the weighted resolvent operator $\tilde{R}$ as
+
+$$
+\tilde{R} = W_q^{1/2} C (\text{i}\omega I - A)^{-1} B W_f^{-1/2} = \tilde{U} \Sigma \tilde{V}^*,
+$$
+
+and the outputs are 
+
+$$
+U = W^{-1/2}_q \tilde{U},
+$$
+
+$$
+V = W^{-1/2}_f \tilde{V},
+$$
+
+By the end of the simulation, resolvent modes (*i.e.*, gains, forcing, and response) are computed using time-stepping across all frequencies. In case $B$, $C$, $W_q^{1/2}$, or $W_f^{-1/2}$ are not defined, we assume they are identity matrices.
+
+
 ## Features
 
 - **Linear CPU time scalability**: Computational complexity scales linearly with the number of discrete degrees of freedom, $O(N)$, which significantly reduces computational overhead for large systems compared to existing algorithms.
@@ -120,7 +149,6 @@ In our implementation, SLEPc is used to perform QR decomposition and SVD. Its ad
 
 After navigating to your SLEPc directory and setting up the variables `PETSC_DIR` and `PETSC_ARCH`, configure the SLEPc package using the `./configure` command. After configuration, wait for the installation to complete, follow the provided instructions, and ensure that all tests pass successfully. Note that you need to use the same C++ compiler and MPI module for proper installation.
 
-
 ## Setting up environment variables for PETSc and SLEPc
 
 After you have completed the installation of PETSc and SLEPc, you need to define the environment variables `PETSC_DIR` and `SLEPC_DIR` to point to the installation directories of these packages. This is necessary for the proper functioning of applications that rely on PETSc and SLEPc.
@@ -151,7 +179,6 @@ After you have completed the installation of PETSc and SLEPc, you need to define
    - For other environments (e.g., Windows or macOS), you can add the equivalent commands to your respective shell configuration files (e.g., `.bash_profile`, `.zshrc`).
 
 By setting these environment variables, you ensure that the paths to PETSc and SLEPc are correctly defined, allowing you to compile and run your applications without needing to manually set the paths each time.
-
 
 ## Makefile usage
 
@@ -205,6 +232,7 @@ mpiexec RSVDt -inputs variables.yaml
 Note that you may need to use `srun` or `mpirun` instead of `mpiexec` depending on your installation and cluster configurations. Moreover, `make PETSC_ARCH=complex-opt` is required only once; it compiles the source files to create the executable or does nothing if the executable is already compiled. Finally, you might encounter slight differences in defining the number of nodes, tasks, CPUs, memory, etc., based on your cluster specifications. This jobfile serves as a sample case.
 
 The installation of PETSc and SLEPc packages is required only once. To perform resolvent analysis, download the package from the [resolvent-analysis branch](https://github.com/AliFarghadan/RSVD-Delta-t/tree/Resolvent-analysis) and compile it to generate the executable. We provide detailed explanations of the parameters for resolvent analysis and thoroughly describe the procedure using a Ginzburg-Landau system, which we used to validate our algorithm, in the [Tutorial](./Tutorial/Ginzburg-Landau).
+
 
 ## Additional resources
 
