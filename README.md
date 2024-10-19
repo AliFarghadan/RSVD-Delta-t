@@ -25,6 +25,7 @@ R = C(\text{i}\omega I - A)^{-1} B,
 $$
 
 where $A$ is the LNS operator. $B$ and $C$ are input and output matrices, respectively. $R$ maps the input forcing to the output response in the frequency domain and can be expressed in terms of its singular vectors and values as 
+
 $$
 R = U \Sigma V^*.
 $$
