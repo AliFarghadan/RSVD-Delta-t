@@ -12,9 +12,11 @@ Resolvent analysis is a valuable tool for studying coherent structures in turbul
 
 ## Important note
 
-For harmonic resolvent analysis, please use the package available in the **[harmonic-resolvent-analysis branch](https://github.com/AliFarghadan/RSVD-Delta-t/tree/Harmonic-resolvent-analysis)**. 
+A harmonic resolvent analysis package will appear soon!
 
-> **Important:** The source codes and input variables differ between the default branch and the harmonic resolvent analysis branch, so ensure you are using the correct branch for your analysis.
+<!-- For harmonic resolvent analysis, please use the package available in the **[harmonic-resolvent-analysis branch](https://github.com/AliFarghadan/RSVD-Delta-t/tree/Harmonic-resolvent-analysis)**. 
+
+> **Important:** The source codes and input variables differ between the default branch and the harmonic resolvent analysis branch, so ensure you are using the correct branch for your analysis. -->
 
 ## What are we computing?
 
