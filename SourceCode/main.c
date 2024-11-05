@@ -7,57 +7,58 @@
 
 /*
 
-	List of inputs ** Description ************************************ Format
+	List of inputs *** Description ************************************ Format
 
 	RSVD-delta-t variables:
-	A                 linear (or LNS) operator                         matrix
-	B                 input matrix as defined in the reference paper   matrix
-	C                 output matrix as defined in the reference paper  matrix
-	W_q_sqrt          W_q^(1/2) as defined in the reference paper      matrix
-	W_q_sqrt_inv      W_q^(-1/2) as defined in the reference paper     matrix
-	W_f_sqrt_inv      W_f^(-1/2) as defined in the reference paper     matrix
-	k                 number of test vectors                           integer
-	q                 number of power iterations                       integer
-	w                 base frequency                                   real 
-	TwoPI             base frequency multiplies by 2*pi if true        boolean 
-	Nw                number of frequencies to resolve                 integer
-	dt                time step                                        real
-	RootDir           root directory                                   string
-	ResultsDir        results directory (RootDir/ResultsDir)           string
-	TransientLength   transient length                                 real
-	beta              beta value for discounting (A <-- A - beta I)    real > 0
-	TransientRemoval  performs Galerkin transient removal if true      boolean
-	RandSeed          seeding random number                            integer
-	DiscFlg           applies discounting for unstable linear systems  boolean
-	InputForcingFlg   starts from a specified forcing input            boolean
-	InputMatrixFlg    applies input matrix                             boolean 
-	OutputMatrixFlg   applies output weight matrix                     boolean 
-	InputWeightFlg    applies input weight matrix                      boolean 
-	OutputWeightFlg   applies output weight matrix                     boolean 
-	Display           display options                                  integer
+	A                  linear (or LNS) operator                         matrix
+	B                  input matrix as defined in the reference paper   matrix
+	C                  output matrix as defined in the reference paper  matrix
+	W_q_sqrt           W_q^(1/2) as defined in the reference paper      matrix
+	W_q_sqrt_inv       W_q^(-1/2) as defined in the reference paper     matrix
+	W_f_sqrt_inv       W_f^(-1/2) as defined in the reference paper     matrix
+	k                  number of test vectors                           integer
+	q                  number of power iterations                       integer
+	w                  base frequency                                   real 
+	TwoPI              base frequency multiplies by 2*pi if true        boolean 
+	Nw                 number of frequencies to resolve                 integer
+	dt                 time step                                        real
+	RootDir            root directory                                   string
+	ResultsDir         results directory (RootDir/ResultsDir)           string
+	TransientLength    transient length                                 real
+	beta               beta value for discounting (A <-- A - beta I)    real > 0
+	TransientRemoval   performs Galerkin transient removal if true      boolean
+	RandSeed           seeding random number                            integer
+	DiscFlg            applies discounting for unstable linear systems  boolean
+	InputForcingFlg    starts from a specified forcing input            boolean
+	InputMatrixFlg     applies input matrix                             boolean 
+	OutputMatrixFlg    applies output matrix                            boolean 
+	InputWeightFlg     applies input weight matrix                      boolean
+	InvInputWeightFlg  applies inverse input weight matrix              boolean 
+	InvOutputWeightFlg applies inverse output weight matrix             boolean 
+	Display            display options                                  integer
 	    case 1) Display = 0: nothing
 	    case 2) Display = 1: problem information + elapsed time of each test vector (and total elapsed time) + estimated remaining time
 	    case 3) Display = 2: "Display = 1" information + progress percentage of the first test vector (every 10 percent)
-	SaveResultsOpt    saving resolvent modes options                   integer
+	SaveResultsOpt     saving resolvent modes options                   integer
 	    case 1) SaveResultsOpt = 1: saves resolvent modes as k  matrices of size N x Nw
 	    case 2) SaveResultsOpt = 2: saves resolvent modes as Nw matrices of size N x k
 
 	Transient simulation variables:
-	TransRun          runs transient simulation and exits              boolean	
-	TransRemovalEst   estimates the transient error if true            boolean
-	TransSave         saves the transient outputs if true              boolean
-	TransPeriods      number of periods to integrate                   integer
-	TransSaveMod      saves the snapshots every "TransSaveMod" number  integer
-	TransDivVal       divergence value                                 real
-	TransConVal       convergence value                                real
-	TransICFlg        starts transient simulation from a specified IC  boolean
-	TransICDir        initial vector directory (RootDir/TransICDir)    boolean
+	TransRun           runs transient simulation and exits              boolean	
+	TransRemovalEst    estimates the transient error if true            boolean
+	TransSave          saves the transient outputs if true              boolean
+	TransPeriods       number of periods to integrate                   integer
+	TransSaveMod       saves the snapshots every "TransSaveMod" number  integer
+	TransDivVal        divergence value                                 real
+	TransConVal        convergence value                                real
+	TransICFlg         starts transient simulation from a specified IC  boolean
+	TransICDir         initial vector directory (RootDir/TransICDir)    boolean
 
-	List of outputs * Description ************************************ Format
+	List of outputs ** Description ************************************ Format
 
-	U                 response resolvent modes                         matrix
-	V                 forcing resolvent modes                          matrix
-	Sigma             resolvent gains                                  matrix
+	U                  response resolvent modes                         matrix
+	V                  forcing resolvent modes                          matrix
+	Sigma              resolvent gains                                  matrix
 
 */
 

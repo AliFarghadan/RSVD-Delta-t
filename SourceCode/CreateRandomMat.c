@@ -28,7 +28,7 @@ PetscErrorCode CreateRandomMat(RSVD_matrices *RSVD_mat, RSVDt_vars *RSVDt, Direc
 		ierr = MatGetSize(RSVD_mat->Y_hat,&row,&RSVDt->RSVD.k);CHKERRQ(ierr);
 		if (row != RSVDt->RSVD.Nb) SETERRQ(PETSC_COMM_WORLD,PETSC_ERR_USER,"Input forcing must be have %d rows, current size = %d x %d", (int)RSVDt->RSVD.Nb, (int)row, (int)RSVDt->RSVD.k);CHKERRQ(ierr);   
 		RSVDt->RSVD.k /= RSVDt->RSVD.Nw_eff;
-		ierr = PetscPrintf(PETSC_COMM_WORLD,"Based on the input forcing: k = %d, Nw_eff = %d\n", (int)RSVDt->RSVD.k, (int)RSVDt->RSVD.Nw_eff);CHKERRQ(ierr);	
+		ierr = PetscPrintf(PETSC_COMM_WORLD,"Based on the input forcing: k = %d\n", (int)RSVDt->RSVD.k);CHKERRQ(ierr);	
 	} else {
 		ierr = PetscPrintf(PETSC_COMM_WORLD,"Generating a random forcing matrix\n");CHKERRQ(ierr);
 		ierr = MatSetSizes(RSVD_mat->Y_hat,PETSC_DECIDE,PETSC_DECIDE,RSVDt->RSVD.Nb,RSVDt->RSVD.Nw_eff*RSVDt->RSVD.k);CHKERRQ(ierr);

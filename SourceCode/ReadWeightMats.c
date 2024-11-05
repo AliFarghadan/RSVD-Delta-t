@@ -16,7 +16,7 @@ PetscErrorCode ReadWeightMats(RSVDt_vars *RSVDt, Weight_matrices *Weight_mat, Di
 
 	if (Weight_mat->InvInputWeightFlg) {
 		ierr = PetscSNPrintf((char*)&dirs->IO_dir,PETSC_MAX_PATH_LEN,"%s%s",dirs->RootDir,dirs->InvInputWeightDir);CHKERRQ(ierr);
-		ierr = PetscPrintf(PETSC_COMM_WORLD,"Reading the input weight matrix          : %s\n", dirs->IO_dir);
+		ierr = PetscPrintf(PETSC_COMM_WORLD,"Reading the inverse input weight matrix  : %s\n", dirs->IO_dir);
 		ierr = MatCreate(PETSC_COMM_WORLD,&Weight_mat->W_f_sqrt_inv);CHKERRQ(ierr);
 		ierr = MatSetType(Weight_mat->W_f_sqrt_inv,MATMPIAIJ);CHKERRQ(ierr);
 		ierr = PetscViewerBinaryOpen(PETSC_COMM_WORLD,dirs->IO_dir,FILE_MODE_READ,&fd);CHKERRQ(ierr);
