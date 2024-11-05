@@ -52,7 +52,7 @@ $$
 V = W^{-1/2}_f \tilde{V}.
 $$
 
-By the end of the simulation, resolvent modes (*i.e.*, gains, forcing, and response) are computed using time-stepping across all frequencies. In case $B$, $C$, $W_q^{1/2}$, or $W_f^{-1/2}$ are not defined, we assume they are identity matrices.
+By the end of the simulation, resolvent modes (*i.e.*, gains, forcing, and response) are computed using time-stepping across all frequencies. In case $B$, $C$, W_q^{-1/2}, $W_q^{1/2}$, or $W_f^{-1/2}$ are not defined, we assume they are identity matrices.
 
 
 ## Features
