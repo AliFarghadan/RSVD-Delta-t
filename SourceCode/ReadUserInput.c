@@ -31,48 +31,60 @@ PetscErrorCode ReadUserInput(RSVDt_vars *RSVDt, Weight_matrices *Weight_mat, LNS
 		RSVDt->RSVD.InputForcingFlg = 0;
 		ierr = PetscPrintf(PETSC_COMM_WORLD,"Warning: 'InputForcingFlg' variable not found. Setting 'InputForcingFlg' to default value: %d\n", (int) RSVDt->RSVD.InputForcingFlg);
 	} else {
-		ierr = PetscOptionsGetString(NULL,NULL,"-InputForcingDir",(char*)&dirs->InputForcingDir,PETSC_MAX_PATH_LEN,&flg_set);CHKERRQ(ierr);
-		if (!flg_set) SETERRQ(PETSC_COMM_WORLD,PETSC_ERR_USER,"Must specify 'InputForcingDir'");CHKERRQ(ierr);
+		if (RSVDt->RSVD.InputForcingFlg) {
+			ierr = PetscOptionsGetString(NULL,NULL,"-InputForcingDir",(char*)&dirs->InputForcingDir,PETSC_MAX_PATH_LEN,&flg_set);CHKERRQ(ierr);
+			if (!flg_set) SETERRQ(PETSC_COMM_WORLD,PETSC_ERR_USER,"Must specify 'InputForcingDir'");CHKERRQ(ierr);
+		}
 	}
 	ierr = PetscOptionsGetBool(NULL,NULL,"-InvInputWeightFlg",&Weight_mat->InvInputWeightFlg,&flg_set);CHKERRQ(ierr);	
 	if (!flg_set) {
 		Weight_mat->InvInputWeightFlg = 0;
 		ierr = PetscPrintf(PETSC_COMM_WORLD,"Warning: 'InvInputWeightFlg' variable not found. Setting 'InputWeightFlg' to default value: %d\n", (int) Weight_mat->InvInputWeightFlg);
 	} else {
-		ierr = PetscOptionsGetString(NULL,NULL,"-InvInputWeightDir",(char*)&dirs->InvInputWeightDir,PETSC_MAX_PATH_LEN,&flg_set);CHKERRQ(ierr);
-		if (!flg_set) SETERRQ(PETSC_COMM_WORLD,PETSC_ERR_USER,"Must specify 'InvInputWeightDir'");CHKERRQ(ierr);
+		if (Weight_mat->InvInputWeightFlg) {
+			ierr = PetscOptionsGetString(NULL,NULL,"-InvInputWeightDir",(char*)&dirs->InvInputWeightDir,PETSC_MAX_PATH_LEN,&flg_set);CHKERRQ(ierr);
+			if (!flg_set) SETERRQ(PETSC_COMM_WORLD,PETSC_ERR_USER,"Must specify 'InvInputWeightDir'");CHKERRQ(ierr);
+		}
 	}
 	ierr = PetscOptionsGetBool(NULL,NULL,"-OutputWeightFlg",&Weight_mat->OutputWeightFlg,&flg_set);CHKERRQ(ierr);	
 	if (!flg_set) {
 		Weight_mat->OutputWeightFlg = 0;
 		ierr = PetscPrintf(PETSC_COMM_WORLD,"Warning: 'OutputWeightFlg' variable not found. Setting 'OutputWeightFlg' to default value: %d\n", (int) Weight_mat->OutputWeightFlg);
 	} else {
-		ierr = PetscOptionsGetString(NULL,NULL,"-OutputWeightDir",(char*)&dirs->OutputWeightDir,PETSC_MAX_PATH_LEN,&flg_set);CHKERRQ(ierr);
-		if (!flg_set) SETERRQ(PETSC_COMM_WORLD,PETSC_ERR_USER,"Must specify 'OutputWeightDir'");CHKERRQ(ierr);
+		if (Weight_mat->OutputWeightFlg) {
+			ierr = PetscOptionsGetString(NULL,NULL,"-OutputWeightDir",(char*)&dirs->OutputWeightDir,PETSC_MAX_PATH_LEN,&flg_set);CHKERRQ(ierr);
+			if (!flg_set) SETERRQ(PETSC_COMM_WORLD,PETSC_ERR_USER,"Must specify 'OutputWeightDir'");CHKERRQ(ierr);
+		}
 	}
 	ierr = PetscOptionsGetBool(NULL,NULL,"-InvOutputWeightFlg",&Weight_mat->InvOutputWeightFlg,&flg_set);CHKERRQ(ierr);	
 	if (!flg_set) {
 		Weight_mat->InvOutputWeightFlg = 0;
 		ierr = PetscPrintf(PETSC_COMM_WORLD,"Warning: 'InvOutputWeightFlg' variable not found. Setting 'InvOutputWeightFlg' to default value: %d\n", (int) Weight_mat->InvOutputWeightFlg);
 	} else {
-		ierr = PetscOptionsGetString(NULL,NULL,"-InvOutputWeightDir",(char*)&dirs->InvOutputWeightDir,PETSC_MAX_PATH_LEN,&flg_set);CHKERRQ(ierr);
-		if (!flg_set) SETERRQ(PETSC_COMM_WORLD,PETSC_ERR_USER,"Must specify 'InvOutputWeightDir'");CHKERRQ(ierr);
+		if (Weight_mat->InvOutputWeightFlg) {
+			ierr = PetscOptionsGetString(NULL,NULL,"-InvOutputWeightDir",(char*)&dirs->InvOutputWeightDir,PETSC_MAX_PATH_LEN,&flg_set);CHKERRQ(ierr);
+			if (!flg_set) SETERRQ(PETSC_COMM_WORLD,PETSC_ERR_USER,"Must specify 'InvOutputWeightDir'");CHKERRQ(ierr);
+		}
 	}
 	ierr = PetscOptionsGetBool(NULL,NULL,"-InputMatrixFlg",&Weight_mat->InputMatrixFlg,&flg_set);CHKERRQ(ierr);	
 	if (!flg_set) {
 		Weight_mat->InputMatrixFlg = 0;
 		ierr = PetscPrintf(PETSC_COMM_WORLD,"Warning: 'InputMatrixFlg' variable not found. Setting 'InputMatrixFlg' to default value: %d\n", (int) Weight_mat->InputMatrixFlg);
 	} else {
-		ierr = PetscOptionsGetString(NULL,NULL,"-InputMatrixDir",(char*)&dirs->InputMatrixDir,PETSC_MAX_PATH_LEN,&flg_set);CHKERRQ(ierr);
-		if (!flg_set) SETERRQ(PETSC_COMM_WORLD,PETSC_ERR_USER,"Must specify 'InputMatrixDir'");CHKERRQ(ierr);
+		if (Weight_mat->InputMatrixFlg) {
+			ierr = PetscOptionsGetString(NULL,NULL,"-InputMatrixDir",(char*)&dirs->InputMatrixDir,PETSC_MAX_PATH_LEN,&flg_set);CHKERRQ(ierr);
+			if (!flg_set) SETERRQ(PETSC_COMM_WORLD,PETSC_ERR_USER,"Must specify 'InputMatrixDir'");CHKERRQ(ierr);
+		}
 	}
 	ierr = PetscOptionsGetBool(NULL,NULL,"-OutputMatrixFlg",&Weight_mat->OutputMatrixFlg,&flg_set);CHKERRQ(ierr);	
 	if (!flg_set) {
 		Weight_mat->OutputMatrixFlg = 0;
 		ierr = PetscPrintf(PETSC_COMM_WORLD,"Warning: 'OutputMatrixFlg' variable not found. Setting 'OutputMatrixFlg' to default value: %d\n", (int) Weight_mat->OutputMatrixFlg);
 	} else {
-		ierr = PetscOptionsGetString(NULL,NULL,"-OutputMatrixDir",(char*)&dirs->OutputMatrixDir,PETSC_MAX_PATH_LEN,&flg_set);CHKERRQ(ierr);
-		if (!flg_set) SETERRQ(PETSC_COMM_WORLD,PETSC_ERR_USER,"Must specify 'OutputMatrixDir'");CHKERRQ(ierr);
+		if (Weight_mat->OutputMatrixFlg) {
+			ierr = PetscOptionsGetString(NULL,NULL,"-OutputMatrixDir",(char*)&dirs->OutputMatrixDir,PETSC_MAX_PATH_LEN,&flg_set);CHKERRQ(ierr);
+			if (!flg_set) SETERRQ(PETSC_COMM_WORLD,PETSC_ERR_USER,"Must specify 'OutputMatrixDir'");CHKERRQ(ierr);
+		}
 	}
 	ierr = PetscOptionsGetBool(NULL,NULL,"-TwoPI",&RSVDt->RSVD.TwoPI,&flg_set);CHKERRQ(ierr);
 	if (!flg_set) {
