@@ -185,7 +185,7 @@ The process of running the $\text{RSVD}-\Delta t$ algorithm can be divided into 
 
 ### Transient simulation
 
-Before running the actual RSVD-\Delta t algorithm, it is often necessary to perform a transient simulation to ensure the stability of the system and determine the transient decay rate.
+Before running the $\text{RSVD}-\Delta t$ algorithm, it is often necessary to perform a transient simulation to ensure the stability of the system and determine the transient decay rate.
 
 To run the transient simulation, set the `TransRun` flag to `true` in the input file (`variables.yaml`).
 
