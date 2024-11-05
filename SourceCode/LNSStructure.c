@@ -17,9 +17,9 @@ PetscErrorCode LNSStructure(LNS_vars *LNS_mat, RSVDt_vars *RSVDt, TransRun_vars 
 	PetscFunctionBeginUser;
 
 	ierr = PetscTime(&t1);CHKERRQ(ierr);
-	ierr = PetscPrintf(PETSC_COMM_WORLD,"*** Loading the operator: %s ***\n",dirs->OperatorDir);CHKERRQ(ierr);
+	ierr = PetscPrintf(PETSC_COMM_WORLD,"Loading the operator: %s%s \n",dirs->RootDir, dirs->OperatorDir);CHKERRQ(ierr);
 
-	ierr = PetscSNPrintf((char*)&dirs->IO_dir,PETSC_MAX_PATH_LEN,"%s%s",dirs->RootDir,dirs->OperatorDir);CHKERRQ(ierr);
+	ierr = PetscSNPrintf((char*)&dirs->IO_dir,PETSC_MAX_PATH_LEN,"%s%s",dirs->RootDir, dirs->OperatorDir);CHKERRQ(ierr);
 	ierr = PetscViewerBinaryOpen(PETSC_COMM_WORLD,dirs->IO_dir,FILE_MODE_READ,&fd);CHKERRQ(ierr);
 	ierr = MatCreate(PETSC_COMM_WORLD,&LNS_mat->A);CHKERRQ(ierr);
 	ierr = MatSetType(LNS_mat->A,MATMPIAIJ);CHKERRQ(ierr);
@@ -27,7 +27,7 @@ PetscErrorCode LNSStructure(LNS_vars *LNS_mat, RSVDt_vars *RSVDt, TransRun_vars 
 	ierr = MatGetSize(LNS_mat->A,&RSVDt->RSVD.N,NULL);CHKERRQ(ierr);
 
 	ierr = PetscTime(&t2);CHKERRQ(ierr);
-	ierr = PetscPrintf(PETSC_COMM_WORLD,"*** The operator is loaded in %f seconds (N = %d) ***\n", t2-t1, (int)RSVDt->RSVD.N);CHKERRQ(ierr);
+	ierr = PetscPrintf(PETSC_COMM_WORLD,"The operator is loaded in %f seconds (N = %d) \n", t2-t1, (int)RSVDt->RSVD.N);CHKERRQ(ierr);
 
 	/*
 		Check whether the operator is real-valued or complex-valued. This determines the number of frequencies.

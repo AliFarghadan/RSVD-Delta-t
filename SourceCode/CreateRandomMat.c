@@ -23,7 +23,7 @@ PetscErrorCode CreateRandomMat(RSVD_matrices *RSVD_mat, RSVDt_vars *RSVDt, Direc
 	if (RSVDt->RSVD.InputForcingFlg) {
 		ierr = PetscSNPrintf((char*)&dirs->IO_dir,PETSC_MAX_PATH_LEN,"%s%s",dirs->RootDir,dirs->InputForcingDir);CHKERRQ(ierr);
 		ierr = PetscViewerBinaryOpen(PETSC_COMM_WORLD,dirs->IO_dir,FILE_MODE_READ,&fd);CHKERRQ(ierr);
-		ierr = PetscPrintf(PETSC_COMM_WORLD,"Reading the input forcing matrix: %s\n", dirs->IO_dir);CHKERRQ(ierr);
+		ierr = PetscPrintf(PETSC_COMM_WORLD,"Reading the input forcing matrix         : %s\n", dirs->IO_dir);CHKERRQ(ierr);
 		ierr = MatLoad(RSVD_mat->Y_hat,fd);CHKERRQ(ierr);
 		ierr = MatGetSize(RSVD_mat->Y_hat,&row,&RSVDt->RSVD.k);CHKERRQ(ierr);
 		if (row != RSVDt->RSVD.Nb) SETERRQ(PETSC_COMM_WORLD,PETSC_ERR_USER,"Input forcing must be have %d rows, current size = %d x %d", (int)RSVDt->RSVD.Nb, (int)row, (int)RSVDt->RSVD.k);CHKERRQ(ierr);   
