@@ -25,7 +25,7 @@ PetscErrorCode SVDAllFreqsBeforeAdjoint(RSVD_matrices *RSVD_mat, RSVDt_vars *RSV
 
 	ierr = MatCreate(PETSC_COMM_WORLD,&Y);CHKERRQ(ierr);
 	ierr = MatSetType(Y,MATDENSE);CHKERRQ(ierr);
-	ierr = MatSetSizes(Y,PETSC_DECIDE,PETSC_DECIDE,RSVDt->RSVD.N,RSVDt->RSVD.k*RSVDt->RSVD.Nw_eff);CHKERRQ(ierr);
+	ierr = MatSetSizes(Y,PETSC_DECIDE,PETSC_DECIDE,RSVDt->RSVD.Nc,RSVDt->RSVD.k*RSVDt->RSVD.Nw_eff);CHKERRQ(ierr);
 	ierr = MatSetUp(Y);CHKERRQ(ierr);
 
 	for (iw=0; iw<RSVDt->RSVD.Nw_eff; iw++) {

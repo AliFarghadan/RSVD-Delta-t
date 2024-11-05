@@ -6,6 +6,15 @@ PetscErrorCode ReadWeightMats(RSVDt_vars *RSVDt, Weight_matrices *Weight_mat, Di
 {
 	/*
 		Reads the weight, input and outputs matrices if defined
+		
+		Assumptions:
+		- B is a matrix of size N x Nb (Nb can equal N).
+		- W_f_sqrt_inv is a matrix of size Nb x Nb.
+		- C is a matrix of size Nc x N (Nc can equal N).
+		- W_q_sqrt_inv and W_q_sqrt are a matrices of size Nc x Nc.
+
+		If any of these matrix dimensions mismatch the expected sizes, an error will occur.
+		If the flag is off, an identity matrix is assumed.
 	*/
 
 	PetscErrorCode        ierr;

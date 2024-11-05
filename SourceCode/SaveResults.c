@@ -42,8 +42,8 @@ PetscErrorCode SaveResults(Resolvent_matrices *Res_mat, RSVDt_vars *RSVDt, Direc
 	if (RSVDt->SaveResultsOpt == 1) {
 
 	ierr = PetscPrintf(PETSC_COMM_WORLD,"%d matrices of size %d x %d for response modes\n%d matrices of size %d x %d for forcing modes\n\n", \
-			(int) RSVDt->RSVD.k, (int) RSVDt->RSVD.N, (int) RSVDt->RSVD.Nw_eff, \
-			(int) RSVDt->RSVD.k, (int) RSVDt->RSVD.N, (int) RSVDt->RSVD.Nw_eff);CHKERRQ(ierr);
+			(int) RSVDt->RSVD.k, (int) RSVDt->RSVD.Nc, (int) RSVDt->RSVD.Nw_eff, \
+			(int) RSVDt->RSVD.k, (int) RSVDt->RSVD.Nb, (int) RSVDt->RSVD.Nw_eff);CHKERRQ(ierr);
 
 		ierr = PermuteMat(Res_mat->U_hat, RSVDt);CHKERRQ(ierr);
 		ierr = PermuteMat(Res_mat->V_hat, RSVDt);CHKERRQ(ierr);
@@ -65,8 +65,8 @@ PetscErrorCode SaveResults(Resolvent_matrices *Res_mat, RSVDt_vars *RSVDt, Direc
 	} else { // RSVDt->SaveResultsOpt == 2
 
 		ierr = PetscPrintf(PETSC_COMM_WORLD,"%d matrices of size %d x %d for response modes\n%d matrices of size %d x %d for forcing modes\n\n", \
-			(int) RSVDt->RSVD.Nw_eff, (int) RSVDt->RSVD.N, (int) RSVDt->RSVD.k, \
-			(int) RSVDt->RSVD.Nw_eff, (int) RSVDt->RSVD.N, (int) RSVDt->RSVD.k);CHKERRQ(ierr);
+			(int) RSVDt->RSVD.Nw_eff, (int) RSVDt->RSVD.Nc, (int) RSVDt->RSVD.k, \
+			(int) RSVDt->RSVD.Nw_eff, (int) RSVDt->RSVD.Nb, (int) RSVDt->RSVD.k);CHKERRQ(ierr);
 
 		for (iw=0; iw<RSVDt->RSVD.Nw_eff; iw++) {
 			
