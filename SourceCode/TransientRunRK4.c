@@ -1,12 +1,12 @@
 
 #include <petscmat.h>
 #include <petscviewerhdf5.h>
-#include "Variables.h"
-#include "CreateTSMats.h"
-#include "TSTransRK4.h"
-#include "TransientRemovalEst.h"
-#include "DestroyTSMats.h"
-#include "SaveInputVarsCopy.h"
+#include <Variables.h>
+#include <CreateTSMats.h>
+#include <TSTransRK4.h>
+#include <TransientRemovalEst.h>
+#include <DestroyTSMats.h>
+#include <SaveInputVarsCopy.h>
 
 PetscErrorCode TransientRunRK4(TransRun_vars *TR_vars, RSVDt_vars *RSVDt, LNS_vars *LNS_mat, DFT_matrices *DFT_mat, Directories *dirs)
 {
@@ -23,15 +23,12 @@ PetscErrorCode TransientRunRK4(TransRun_vars *TR_vars, RSVDt_vars *RSVDt, LNS_va
 	Vec                   q0,trans_norm,q_temp,qss;
 	PetscInt              Nt_saved,i,rend,pos=0,Nt_period,Ns,Nt_saved_delta,hh,mm,ss;
 	PetscReal             norm,TSS,deltaT;
-	PetscBool             flg_IC;
 	PetscRandom           r;
 	PetscViewer           fd;
 	PetscLogDouble        t1, t2;
-	// char                  FolderName[PETSC_MAX_PATH_LEN] = "";
 
 	PetscFunctionBeginUser;
 
-	// RSVDt->TS.DirAdj = TR_vars->TransRun_dir;
 	ierr = PetscPrintf(PETSC_COMM_WORLD,"\n********************************************\n"
 			"************** Transient run ***************\n********************************************\n\n");CHKERRQ(ierr);
 
@@ -82,14 +79,13 @@ PetscErrorCode TransientRunRK4(TransRun_vars *TR_vars, RSVDt_vars *RSVDt, LNS_va
 		The initial condition is normalized unless the initial vector is specified
 	*/
 
-	ierr = PetscOptionsGetString(NULL,NULL,"-IC",(char*)&dirs->filename,PETSC_MAX_PATH_LEN,&flg_IC);CHKERRQ(ierr);
-	if (flg_IC) {
-		ierr = PetscPrintf(PETSC_COMM_WORLD,"Reading the initial state vector without normalization\n");CHKERRQ(ierr);
-		ierr = PetscSNPrintf((char*)&dirs->IO_dir,PETSC_MAX_PATH_LEN,"%s%s%s",dirs->RootDir,dirs->ResultsDir,dirs->filename);CHKERRQ(ierr);
+	if (TR_vars->TransICFlg) {
+		ierr = PetscPrintf(PETSC_COMM_WORLD,"Reading the initial vector\n");CHKERRQ(ierr);
+		ierr = PetscSNPrintf((char*)&dirs->IO_dir,PETSC_MAX_PATH_LEN,"%s%s%s",dirs->RootDir,dirs->ResultsDir,dirs->TransICDir);CHKERRQ(ierr);
 		ierr = PetscViewerBinaryOpen(PETSC_COMM_WORLD,dirs->IO_dir,FILE_MODE_READ,&fd);CHKERRQ(ierr);
 		ierr = VecLoad(q0,fd);CHKERRQ(ierr);
 	} else {
-		ierr = PetscPrintf(PETSC_COMM_WORLD,"Generating a normalized random initial state vector\n\n");CHKERRQ(ierr);
+		ierr = PetscPrintf(PETSC_COMM_WORLD,"Random vector is generated\n\n");CHKERRQ(ierr);
 		ierr = PetscRandomCreate(PETSC_COMM_WORLD,&r);CHKERRQ(ierr);
 		ierr = PetscRandomSetSeed(r, RSVDt->RSVD.RandSeed);CHKERRQ(ierr);
 		ierr = PetscRandomSeed(r);CHKERRQ(ierr);

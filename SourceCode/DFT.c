@@ -1,7 +1,7 @@
 
 #include <petscmat.h>
-#include "Variables.h"
-#include "ReversePermuteMat.h"
+#include <Variables.h>
+#include <ReversePermuteMat.h>
 
 PetscErrorCode DFT(Mat Y_all, DFT_matrices *DFT_mat, RSVD_matrices *RSVD_mat, RSVDt_vars *RSVDt)
 {

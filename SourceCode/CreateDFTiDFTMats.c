@@ -1,6 +1,6 @@
 
 #include <petscmat.h>
-#include "Variables.h"
+#include <Variables.h>
 
 PetscErrorCode CreateDFTiDFTMats(RSVDt_vars *RSVDt, DFT_matrices *DFT_mat, LNS_vars *LNS_mat)
 {

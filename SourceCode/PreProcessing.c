@@ -1,15 +1,15 @@
 
 #include <petscmat.h>
-#include "Variables.h"
-#include "ReadUserInput.h"
-#include "LNSStructure.h"
-#include "SetupTimeFreqGrid.h"
-#include "CreateDFTiDFTMats.h"
-#include "CreateRandomMat.h"
-#include "CreateResultsDir.h"
-#include "ReadWSMats.h"
+#include <Variables.h>
+#include <ReadUserInput.h>
+#include <LNSStructure.h>
+#include <SetupTimeFreqGrid.h>
+#include <CreateDFTiDFTMats.h>
+#include <CreateRandomMat.h>
+#include <CreateResultsDir.h>
+#include <ReadWeightMats.h>
 
-PetscErrorCode PreProcessing(RSVDt_vars *RSVDt, WS_matrices *WS_mat, LNS_vars *LNS_mat, RSVD_matrices *RSVD_mat, \
+PetscErrorCode PreProcessing(RSVDt_vars *RSVDt, Weight_matrices *Weight_mat, LNS_vars *LNS_mat, RSVD_matrices *RSVD_mat, \
 					Resolvent_matrices *Res_mat, TransRun_vars *TR_vars, DFT_matrices *DFT_mat, Directories *dirs)
 {
 	/*
@@ -24,7 +24,7 @@ PetscErrorCode PreProcessing(RSVDt_vars *RSVDt, WS_matrices *WS_mat, LNS_vars *L
 		Reads in user input parameters
 	*/
 
-	ierr = ReadUserInput(RSVDt, WS_mat, LNS_mat, Res_mat, TR_vars, dirs);
+	ierr = ReadUserInput(RSVDt, Weight_mat, LNS_mat, Res_mat, TR_vars, dirs);
 
 	if (!TR_vars->TransRun) ierr = PetscPrintf(PETSC_COMM_WORLD,"********************************************\n"
 			"*************** Problem info ***************\n********************************************\n\n");CHKERRQ(ierr);
@@ -46,19 +46,19 @@ PetscErrorCode PreProcessing(RSVDt_vars *RSVDt, WS_matrices *WS_mat, LNS_vars *L
 	*/
 
 	ierr = CreateDFTiDFTMats(RSVDt, DFT_mat, LNS_mat);CHKERRQ(ierr);
-	
-	/*
-		Generates a random input matrix (or read in if desired)
-	*/
-
-	if (!TR_vars->TransRun) ierr = CreateRandomMat(RSVD_mat, RSVDt, dirs);CHKERRQ(ierr);
 
 	/*
 		Loads the weight and spatial matrices (if applicable)
 	*/
 
-	if (!TR_vars->TransRun) ierr = ReadWSMats(WS_mat, dirs);CHKERRQ(ierr);
+	if (!TR_vars->TransRun) ierr = ReadWeightMats(RSVDt, Weight_mat, dirs);CHKERRQ(ierr);
 
+	/*
+		Generates a random input matrix (or read in if desired)
+	*/
+
+	if (!TR_vars->TransRun) ierr = CreateRandomMat(RSVD_mat, RSVDt, dirs);CHKERRQ(ierr);
+	
 	/*
 		Creates a folder for the results
 	*/

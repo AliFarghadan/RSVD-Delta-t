@@ -1,7 +1,7 @@
 
 #include <petscmat.h>
-#include "Variables.h"
-#include "CreateForcingOnFly.h"
+#include <Variables.h>
+#include <CreateForcingOnFly.h>
 
 PetscErrorCode TSRK4(Mat F_hat, DFT_matrices *DFT_mat, LNS_vars *LNS_mat, \
 					TS_matrices *TS_mat, RSVDt_vars *RSVDt, PetscInt i, Vec y)

@@ -1,6 +1,6 @@
 
 #include <petscmat.h>
-#include "Variables.h"
+#include <Variables.h>
 
 PetscErrorCode CreateForcingOnFly(Mat F_hat, DFT_matrices *DFT_mat, PetscInt jt_cyc, Vec F)
 {

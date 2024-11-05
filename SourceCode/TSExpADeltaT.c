@@ -1,15 +1,15 @@
 
 #include <petscmat.h>
-#include "Variables.h"
-#include "CreateTSMats.h"
-#include "DestroyTSMats.h"
-#include "TSTransRK4.h"
+#include <Variables.h>
+#include <CreateTSMats.h>
+#include <DestroyTSMats.h>
+#include <TSTransRK4.h>
 
 PetscErrorCode TSExpADeltaT(LNS_vars *LNS_mat, RSVDt_vars *RSVDt, Mat U)
 {
 	/*
 		Performs RK4 time stepping of e^(A \Delta t)U_i, for i = 1, 2, ..., k, 
-		where U_i is the ith column of U, the trial function
+		where U_i is the ith column of U, the trial basis
 	*/  
 
 	PetscErrorCode       ierr;

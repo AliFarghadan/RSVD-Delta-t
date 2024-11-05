@@ -1,6 +1,6 @@
 
 #include <petscmat.h>
-#include "Variables.h"
+#include <Variables.h>
 
 PetscErrorCode LNSStructure(LNS_vars *LNS_mat, RSVDt_vars *RSVDt, TransRun_vars *TR_vars, Directories *dirs)
 {

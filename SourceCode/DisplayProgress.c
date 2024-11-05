@@ -1,6 +1,6 @@
 
 #include <petscmat.h>
-#include "Variables.h"
+#include <Variables.h>
 
 PetscErrorCode DisplayProgress(PetscInt i, PetscInt rend, PetscInt ik, PetscInt *prg_cnt, PetscLogDouble t1, RSVDt_vars *RSVDt, PetscBool inLoop)
 {
@@ -16,7 +16,7 @@ PetscErrorCode DisplayProgress(PetscInt i, PetscInt rend, PetscInt ik, PetscInt 
 	PetscFunctionBeginUser;
 
 	if (ik == 0 && inLoop && (double)i/rend >= 0.01*(*prg_cnt)) {
-		if (RSVDt->display == 2) {
+		if (RSVDt->Display == 2) {
 			ierr = PetscPrintf(PETSC_COMM_WORLD,"Progress percentage: %d%%\n",(int)*prg_cnt);CHKERRQ(ierr);
 			ierr = PetscTime(&t2);CHKERRQ(ierr);
 			hh   = (t2-t1)/3600;
@@ -29,7 +29,7 @@ PetscErrorCode DisplayProgress(PetscInt i, PetscInt rend, PetscInt ik, PetscInt 
 	}
 
 	if (!inLoop) {
-		if (RSVDt->display >= 1) {
+		if (RSVDt->Display >= 1) {
 			ierr   = PetscTime(&t2);CHKERRQ(ierr);
 			T_rem  = (RSVDt->RSVD.k-1-ik)*(t2-t1);
 			hh     = (t2-t1)/3600;

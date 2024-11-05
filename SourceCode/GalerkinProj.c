@@ -1,6 +1,6 @@
 
 #include <petscksp.h>
-#include "Variables.h"
+#include <Variables.h>
 
 PetscErrorCode GalerkinProj(Mat Y_all, Mat M_tilde, Mat V, PetscInt ik, \
 							RSVDt_vars *RSVDt, TS_removal_matrices *TSR, DFT_matrices *DFT_mat)

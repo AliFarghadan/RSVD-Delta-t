@@ -1,7 +1,7 @@
 
 #include <petscksp.h>
-#include "Variables.h"
-#include "QRDecomposition.h"
+#include <Variables.h>
+#include <QRDecomposition.h>
 
 PetscErrorCode TransientRemovalEst(Mat Q_transient, Vec qss, PetscInt period_index, RSVDt_vars *RSVDt, DFT_matrices *DFT_mat, Directories *dirs)
 {

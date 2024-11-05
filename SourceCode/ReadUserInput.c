@@ -1,8 +1,8 @@
 
 #include <petscmat.h>
-#include "Variables.h"
+#include <Variables.h>
 
-PetscErrorCode ReadUserInput(RSVDt_vars *RSVDt, WS_matrices *WS_mat, LNS_vars *LNS_mat, \
+PetscErrorCode ReadUserInput(RSVDt_vars *RSVDt, Weight_matrices *Weight_mat, LNS_vars *LNS_mat, \
 							Resolvent_matrices *Res_mat, TransRun_vars *TR_vars, Directories *dirs)
 {
 	/*
@@ -19,14 +19,61 @@ PetscErrorCode ReadUserInput(RSVDt_vars *RSVDt, WS_matrices *WS_mat, LNS_vars *L
 
 	ierr = PetscOptionsGetString(NULL, NULL,"-inputs",(char*)&filename,PETSC_MAX_PATH_LEN,&flg_set);CHKERRQ(ierr);
 	if (!flg_set) SETERRQ(PETSC_COMM_WORLD,PETSC_ERR_USER,"Must specify inputs variables via -inputs");CHKERRQ(ierr);
-
 	ierr = PetscOptionsInsertFileYAML(PETSC_COMM_WORLD, NULL, filename, PETSC_FALSE);CHKERRQ(ierr);
 	ierr = PetscOptionsGetReal(NULL,NULL,"-TransientLength",&RSVDt->TS.TransientLength,&flg_set);CHKERRQ(ierr);
 	if (!flg_set) SETERRQ(PETSC_COMM_WORLD,PETSC_ERR_USER,"Must specify 'TransientLength'");CHKERRQ(ierr);
 	ierr = PetscOptionsGetReal(NULL,NULL,"-dt",&RSVDt->TS.dt,&flg_set);CHKERRQ(ierr);
 	if (!flg_set) SETERRQ(PETSC_COMM_WORLD,PETSC_ERR_USER,"Must specify 'dt'");CHKERRQ(ierr);
 	ierr = PetscOptionsGetReal(NULL,NULL,"-w",&RSVDt->RSVD.w,&flg_set);CHKERRQ(ierr);
-	if (!flg_set) SETERRQ(PETSC_COMM_WORLD,PETSC_ERR_USER,"Must specify 'w'");CHKERRQ(ierr);
+	if (!flg_set) SETERRQ(PETSC_COMM_WORLD,PETSC_ERR_USER,"Must specify 'dt'");CHKERRQ(ierr);
+	ierr = PetscOptionsGetBool(NULL,NULL,"-InputForcingFlg",&RSVDt->RSVD.InputForcingFlg,&flg_set);CHKERRQ(ierr);	
+	if (!flg_set) {
+		RSVDt->RSVD.InputForcingFlg = 0;
+		ierr = PetscPrintf(PETSC_COMM_WORLD,"Warning: 'InputForcingFlg' variable not found. Setting 'InputForcingFlg' to default value: %d\n", (int) RSVDt->RSVD.InputForcingFlg);
+	} else {
+		ierr = PetscOptionsGetString(NULL,NULL,"-InputForcingDir",(char*)&dirs->InputForcingDir,PETSC_MAX_PATH_LEN,&flg_set);CHKERRQ(ierr);
+		if (!flg_set) SETERRQ(PETSC_COMM_WORLD,PETSC_ERR_USER,"Must specify 'InputForcingDir'");CHKERRQ(ierr);
+	}
+	ierr = PetscOptionsGetBool(NULL,NULL,"-InvInputWeightFlg",&Weight_mat->InvInputWeightFlg,&flg_set);CHKERRQ(ierr);	
+	if (!flg_set) {
+		Weight_mat->InvInputWeightFlg = 0;
+		ierr = PetscPrintf(PETSC_COMM_WORLD,"Warning: 'InvInputWeightFlg' variable not found. Setting 'InputWeightFlg' to default value: %d\n", (int) Weight_mat->InvInputWeightFlg);
+	} else {
+		ierr = PetscOptionsGetString(NULL,NULL,"-InvInputWeightDir",(char*)&dirs->InvInputWeightDir,PETSC_MAX_PATH_LEN,&flg_set);CHKERRQ(ierr);
+		if (!flg_set) SETERRQ(PETSC_COMM_WORLD,PETSC_ERR_USER,"Must specify 'InvInputWeightDir'");CHKERRQ(ierr);
+	}
+	ierr = PetscOptionsGetBool(NULL,NULL,"-OutputWeightFlg",&Weight_mat->OutputWeightFlg,&flg_set);CHKERRQ(ierr);	
+	if (!flg_set) {
+		Weight_mat->OutputWeightFlg = 0;
+		ierr = PetscPrintf(PETSC_COMM_WORLD,"Warning: 'OutputWeightFlg' variable not found. Setting 'OutputWeightFlg' to default value: %d\n", (int) Weight_mat->OutputWeightFlg);
+	} else {
+		ierr = PetscOptionsGetString(NULL,NULL,"-OutputWeightDir",(char*)&dirs->OutputWeightDir,PETSC_MAX_PATH_LEN,&flg_set);CHKERRQ(ierr);
+		if (!flg_set) SETERRQ(PETSC_COMM_WORLD,PETSC_ERR_USER,"Must specify 'OutputWeightDir'");CHKERRQ(ierr);
+	}
+	ierr = PetscOptionsGetBool(NULL,NULL,"-InvOutputWeightFlg",&Weight_mat->InvOutputWeightFlg,&flg_set);CHKERRQ(ierr);	
+	if (!flg_set) {
+		Weight_mat->InvOutputWeightFlg = 0;
+		ierr = PetscPrintf(PETSC_COMM_WORLD,"Warning: 'InvOutputWeightFlg' variable not found. Setting 'InvOutputWeightFlg' to default value: %d\n", (int) Weight_mat->InvOutputWeightFlg);
+	} else {
+		ierr = PetscOptionsGetString(NULL,NULL,"-InvOutputWeightDir",(char*)&dirs->InvOutputWeightDir,PETSC_MAX_PATH_LEN,&flg_set);CHKERRQ(ierr);
+		if (!flg_set) SETERRQ(PETSC_COMM_WORLD,PETSC_ERR_USER,"Must specify 'InvOutputWeightDir'");CHKERRQ(ierr);
+	}
+	ierr = PetscOptionsGetBool(NULL,NULL,"-InputMatrixFlg",&Weight_mat->InputMatrixFlg,&flg_set);CHKERRQ(ierr);	
+	if (!flg_set) {
+		Weight_mat->InputMatrixFlg = 0;
+		ierr = PetscPrintf(PETSC_COMM_WORLD,"Warning: 'InputMatrixFlg' variable not found. Setting 'InputMatrixFlg' to default value: %d\n", (int) Weight_mat->InputMatrixFlg);
+	} else {
+		ierr = PetscOptionsGetString(NULL,NULL,"-InputMatrixDir",(char*)&dirs->InputMatrixDir,PETSC_MAX_PATH_LEN,&flg_set);CHKERRQ(ierr);
+		if (!flg_set) SETERRQ(PETSC_COMM_WORLD,PETSC_ERR_USER,"Must specify 'InputMatrixDir'");CHKERRQ(ierr);
+	}
+	ierr = PetscOptionsGetBool(NULL,NULL,"-OutputMatrixFlg",&Weight_mat->OutputMatrixFlg,&flg_set);CHKERRQ(ierr);	
+	if (!flg_set) {
+		Weight_mat->OutputMatrixFlg = 0;
+		ierr = PetscPrintf(PETSC_COMM_WORLD,"Warning: 'OutputMatrixFlg' variable not found. Setting 'OutputMatrixFlg' to default value: %d\n", (int) Weight_mat->OutputMatrixFlg);
+	} else {
+		ierr = PetscOptionsGetString(NULL,NULL,"-OutputMatrixDir",(char*)&dirs->OutputMatrixDir,PETSC_MAX_PATH_LEN,&flg_set);CHKERRQ(ierr);
+		if (!flg_set) SETERRQ(PETSC_COMM_WORLD,PETSC_ERR_USER,"Must specify 'OutputMatrixDir'");CHKERRQ(ierr);
+	}
 	ierr = PetscOptionsGetBool(NULL,NULL,"-TwoPI",&RSVDt->RSVD.TwoPI,&flg_set);CHKERRQ(ierr);
 	if (!flg_set) {
 		RSVDt->RSVD.TwoPI = 0;
@@ -76,14 +123,22 @@ PetscErrorCode ReadUserInput(RSVDt_vars *RSVDt, WS_matrices *WS_mat, LNS_vars *L
 		RSVDt->RSVD.RandSeed = 1373;
 		ierr = PetscPrintf(PETSC_COMM_WORLD,"Warning: 'RandSeed' variable not found. Setting 'RandSeed' to default value: %d\n", (int) RSVDt->RSVD.RandSeed);
 	}	
-	ierr = PetscOptionsGetInt(NULL,NULL,"-Display",&RSVDt->display,&flg_set);CHKERRQ(ierr);
+	ierr = PetscOptionsGetInt(NULL,NULL,"-Display",&RSVDt->Display,&flg_set);CHKERRQ(ierr);
 	if (!flg_set) {
-		RSVDt->display = 2;
-		ierr = PetscPrintf(PETSC_COMM_WORLD,"Warning: 'Display' variable not found. Setting 'Display' to default value: %d\n", (int) RSVDt->display);
+		RSVDt->Display = 2;
+		ierr = PetscPrintf(PETSC_COMM_WORLD,"Warning: 'Display' variable not found. Setting 'Display' to default value: %d\n", (int) RSVDt->Display);
 	}
 	ierr = PetscOptionsGetReal(NULL,NULL,"-beta",&LNS_mat->RSVDt.Disc.beta,&flg_set);CHKERRQ(ierr);
 	if (!flg_set && LNS_mat->RSVDt.Disc.DiscFlg) SETERRQ(PETSC_COMM_WORLD,PETSC_ERR_USER,"Discounting flag is on! Either set Discounting to zero or specify 'beta'");
 	if (LNS_mat->RSVDt.Disc.beta < 0 && LNS_mat->RSVDt.Disc.DiscFlg) SETERRQ(PETSC_COMM_WORLD,PETSC_ERR_USER,"'beta' must be positive, current value: %g", LNS_mat->RSVDt.Disc.beta);
+	ierr = PetscOptionsGetBool(NULL,NULL,"-TransICFlg",&TR_vars->TransICFlg,&flg_set);CHKERRQ(ierr);
+	if (!flg_set && TR_vars->TransRun) {
+		TR_vars->TransICFlg = 0;
+		ierr = PetscPrintf(PETSC_COMM_WORLD,"Warning: 'TransICFlg' variable not found. Setting 'TransICFlg' to default value: %d\n", (int) TR_vars->TransICFlg);
+	} else {
+		ierr = PetscOptionsGetString(NULL,NULL,"-TransICDir",(char*)&dirs->TransICDir,PETSC_MAX_PATH_LEN,&flg_set);CHKERRQ(ierr);
+		if (!flg_set) SETERRQ(PETSC_COMM_WORLD,PETSC_ERR_USER,"Must specify 'TransICDir'");CHKERRQ(ierr);
+	}
 	ierr = PetscOptionsGetReal(NULL,NULL,"-TransDivVal",&TR_vars->TransDivVal,&flg_set);CHKERRQ(ierr);
 	if (!flg_set && TR_vars->TransRun) {
 		TR_vars->TransDivVal = 1e3;

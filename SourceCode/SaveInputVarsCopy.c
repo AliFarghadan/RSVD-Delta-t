@@ -1,6 +1,6 @@
 
 #include <petscmat.h>
-#include "Variables.h"
+#include <Variables.h>
 
 PetscErrorCode SaveInputVarsCopy(Directories *dirs)
 {
@@ -17,16 +17,17 @@ PetscErrorCode SaveInputVarsCopy(Directories *dirs)
 	FILE                 *src_file;
 	FILE                 *dst_file;
 	size_t                bytes_read;
-	PetscBool             flg_set;
+	PetscInt              rank;
 
 	PetscFunctionBeginUser;
 
-	ierr = PetscOptionsGetString(NULL, NULL,"-inputs",(char*)&filename,PETSC_MAX_PATH_LEN,&flg_set);CHKERRQ(ierr);
-	if (flg_set) {
+	ierr = MPI_Comm_rank(PETSC_COMM_WORLD,(int*)&rank);CHKERRMPI(ierr);
+
+	if ((int)rank == 0) {
+		ierr = PetscOptionsGetString(NULL, NULL,"-inputs",(char*)&filename,PETSC_MAX_PATH_LEN,NULL);CHKERRQ(ierr);
 		ierr = PetscGetWorkingDirectory(pwd, PETSC_MAX_PATH_LEN);CHKERRQ(ierr);
 		ierr = PetscSNPrintf((char*)&src,PETSC_MAX_PATH_LEN,"%s/%s",pwd,filename);CHKERRQ(ierr);
 		ierr = PetscSNPrintf((char*)&dst,PETSC_MAX_PATH_LEN,"%s%s",dirs->FolderDir,filename);CHKERRQ(ierr);
-
 		ierr = PetscFOpen(MPI_COMM_SELF, src, "r", &src_file);CHKERRQ(ierr);
 		ierr = PetscFOpen(MPI_COMM_SELF, dst, "w", &dst_file);CHKERRQ(ierr);
 		while ((bytes_read = fread(buffer, 1, 1024, src_file)) > 0) {

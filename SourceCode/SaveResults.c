@@ -1,8 +1,8 @@
 
 #include <petscmat.h>
-#include "Variables.h"
-#include "PermuteMat.h"
-#include "SaveInputVarsCopy.h"
+#include <Variables.h>
+#include <PermuteMat.h>
+#include <SaveInputVarsCopy.h>
 
 PetscErrorCode SaveResults(Resolvent_matrices *Res_mat, RSVDt_vars *RSVDt, Directories *dirs)
 {
@@ -20,7 +20,7 @@ PetscErrorCode SaveResults(Resolvent_matrices *Res_mat, RSVDt_vars *RSVDt, Direc
 	ierr = PetscPrintf(PETSC_COMM_WORLD,"\n********************************************\n"
 			"************ Saving the output *************\n********************************************\n");CHKERRQ(ierr);
 
-	ierr = PetscPrintf(PETSC_COMM_WORLD,"\nThe results directory is: %s\n\n",dirs->FolderDir);CHKERRQ(ierr);
+	ierr = PetscPrintf(PETSC_COMM_WORLD,"\nThe results directory: %s\n\n",dirs->FolderDir);CHKERRQ(ierr);
 
 	/*
 		Saves resolvent modes for each mode separately (accross all frequencies) 

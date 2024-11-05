@@ -1,9 +1,9 @@
 
 #include <petscmat.h>
-#include "Variables.h"
-#include "CreateMtilde.h"
-#include "GalerkinProjAllModes.h"
-#include "ReversePermuteMat.h"
+#include <Variables.h>
+#include <CreateMtilde.h>
+#include <GalerkinProjAllModes.h>
+#include <ReversePermuteMat.h>
 
 PetscErrorCode TransientRemovalStrategy(Mat Y_all, LNS_vars *LNS_mat, RSVD_matrices *RSVD_mat, RSVDt_vars *RSVDt, TS_removal_matrices *TSR, DFT_matrices *DFT_mat)
 {
@@ -30,13 +30,12 @@ PetscErrorCode TransientRemovalStrategy(Mat Y_all, LNS_vars *LNS_mat, RSVD_matri
 	ierr = CreateMtilde(Y_all,LNS_mat,RSVDt,TSR);CHKERRQ(ierr);
 
 	/*
-		Updates the steady-state solutions by removing the transient part using Galekin projection
+		Updates the steady-state solutions by removing the transient part using Galerkin projection
 	*/
 
 	ierr = GalerkinProjAllModes(Y_all,LNS_mat,RSVDt,TSR,DFT_mat);CHKERRQ(ierr);
 
 	ierr = ReversePermuteMat(TSR->Y_hat_up, RSVDt);CHKERRQ(ierr);
-	ierr = MatCreate(PETSC_COMM_WORLD,&RSVD_mat->Y_hat);CHKERRQ(ierr);
 	ierr = MatDuplicate(TSR->Y_hat_up,MAT_COPY_VALUES,&RSVD_mat->Y_hat);CHKERRQ(ierr);
 	ierr = MatDestroy(&TSR->Y_hat_up);CHKERRQ(ierr);
 

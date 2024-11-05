@@ -1,6 +1,6 @@
 
 #include <petscmat.h>
-#include "Variables.h"
+#include <Variables.h>
 
 PetscErrorCode SetupTimeFreqGrid(RSVDt_vars *RSVDt, TransRun_vars *TR_vars)
 {
@@ -20,13 +20,22 @@ PetscErrorCode SetupTimeFreqGrid(RSVDt_vars *RSVDt, TransRun_vars *TR_vars)
 	RSVDt->TS.Nt        = round(RSVDt->TS.TransientLength/RSVDt->TS.dt);
 	RSVDt->TS.ResRatio  = RSVDt->TS.Ns/RSVDt->RSVD.Nw;
 
-	if (!TR_vars->TransRun) ierr = PetscPrintf(PETSC_COMM_WORLD,\
+	if (!TR_vars->TransRun) {
+
+		ierr = PetscPrintf(PETSC_COMM_WORLD,\
 			"RSVD parameters:\n@ k        = %d\n@ q        = %d\n@ w        = %g\n\n",\
 			(int)RSVDt->RSVD.k,(int)RSVDt->RSVD.q,RSVDt->RSVD.w);CHKERRQ(ierr);
 
-	if (!TR_vars->TransRun) ierr = PetscPrintf(PETSC_COMM_WORLD,"Time-stepping parameters:\n"
-			"@ TransientLength = %g\n@ dt              = %g\n@ Ns              = %d\n@ Nt              = %d\n\n",\
+		ierr = PetscPrintf(PETSC_COMM_WORLD,"Time-stepping parameters:\n"
+			"@ TransientLength = %g\n@ dt              = %g\n@ Ns              = %d\n@ Nt              = %d\n",\
 			RSVDt->TS.TransientLength, RSVDt->TS.dt,(int)RSVDt->TS.Ns,(int)RSVDt->TS.Nt);CHKERRQ(ierr);
+		
+		if (RSVDt->TS.TransientRemoval) {
+			ierr = PetscPrintf(PETSC_COMM_WORLD,"Transient removal strategy is requested\n\n");CHKERRQ(ierr);
+		} else {
+			ierr = PetscPrintf(PETSC_COMM_WORLD,"Transient removal strategy is NOT requested\n\n");CHKERRQ(ierr);
+		}
+	}
 
 	PetscFunctionReturn(0);
 	

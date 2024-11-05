@@ -1,15 +1,15 @@
 
 #include <petscmat.h>
-#include "Variables.h"
-#include "CreateTSMats.h"
-#include "PermuteMat.h"
-#include "CreateForcingOnFly.h"
-#include "TSRK4.h"
-#include "SaveSnapshots.h"
-#include "DisplayProgress.h"
-#include "DestroyTSMats.h"
-#include "TransientRemovalStrategy.h"
-#include "DFT.h"
+#include <Variables.h>
+#include <CreateTSMats.h>
+#include <PermuteMat.h>
+#include <CreateForcingOnFly.h>
+#include <TSRK4.h>
+#include <SaveSnapshots.h>
+#include <DisplayProgress.h>
+#include <DestroyTSMats.h>
+#include <TransientRemovalStrategy.h>
+#include <DFT.h>
 
 
 PetscErrorCode TSActionRK4(RSVD_matrices *RSVD_mat, DFT_matrices *DFT_mat, \
@@ -22,7 +22,7 @@ PetscErrorCode TSActionRK4(RSVD_matrices *RSVD_mat, DFT_matrices *DFT_mat, \
 	PetscErrorCode       ierr;
 	TS_matrices          TS_mat;
 	Mat                  Y_all,F_temp,Y_all_k,F_hat_k;
-	Vec                  y,y_temp;
+	Vec                  y;
 	PetscInt             N,k,Nw,Nstore,i,ik,rend,prg_cnt=0,hh,mm,ss;
 	PetscLogDouble       t0,t1=0,t2;
 	
@@ -48,14 +48,6 @@ PetscErrorCode TSActionRK4(RSVD_matrices *RSVD_mat, DFT_matrices *DFT_mat, \
 
 	ierr = MatDuplicate(RSVD_mat->Y_hat,MAT_COPY_VALUES,&RSVD_mat->F_hat);CHKERRQ(ierr);
 	ierr = MatDestroy(&RSVD_mat->Y_hat);CHKERRQ(ierr);
-
-	// // zero the first few columns --test-- !!!!!!!!
-	for (ik=0; ik<0; ik++) {
-		ierr = PetscPrintf(PETSC_COMM_WORLD,"*** Skipping the zeroth forcing!!! ***\n");CHKERRQ(ierr);
-		ierr = MatDenseGetColumnVecWrite(RSVD_mat->F_hat,ik,&y_temp);CHKERRQ(ierr);
-		ierr = VecScale(y_temp, 0.0);CHKERRQ(ierr);
-		ierr = MatDenseRestoreColumnVecWrite(RSVD_mat->F_hat,ik,&y_temp);CHKERRQ(ierr);
-	}
 
 	/*
 		Creates all required matrices

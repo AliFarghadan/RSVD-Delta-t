@@ -1,8 +1,8 @@
 
 #include <petscmat.h>
-#include "Variables.h"
-#include "QRDecomposition.h"
-#include "GalerkinProj.h"
+#include <Variables.h>
+#include <QRDecomposition.h>
+#include <GalerkinProj.h>
 
 PetscErrorCode GalerkinProjAllModes(Mat Y_all, LNS_vars *LNS_mat, RSVDt_vars *RSVDt, \
 								TS_removal_matrices *TSR, DFT_matrices *DFT_mat)
