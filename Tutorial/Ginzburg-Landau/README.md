@@ -300,6 +300,11 @@ The following variables must be specified as they have no default values:
 - `Nw`
 - `dt`
 - `beta` (only when `DiscFlg` is `true`)
+- `InvInputWeightDir` (only when `InvInputWeightFlg` is `true`)
+- `InputMatrixDir` (only when `InputMatrixFlg` is `true`)
+- `InvOutputWeightDir` (only when `InvOutputWeightFlg` is `true`)
+- `OutputWeightDir` (only when `OutputWeightFlg` is `true`)
+- `OutputMatrixDir` (only when `OutputMatrixFlg` is `true`)
 
 ## Transfer Data Between MATLAB and PETSc/SLEPc Binary Format
 
