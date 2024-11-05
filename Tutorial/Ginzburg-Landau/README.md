@@ -227,22 +227,22 @@ Setting `TransRun = false` runs the $\text{RSVD}-\Delta t$ algorithm by default.
 - `q`: The number of power iterations.
 - `Nw`: The number of frequencies to resolve.
 - `w`: The base frequency.
-- `TwoPI`: Indicates whether to convert frequencies to angular frequencies. If `true`, the output frequencies are converted to angular frequencies by multiplying by \(2\pi\).
+- `TwoPI`: Indicates whether to convert frequencies to angular frequencies. If `true`, the output frequencies are converted to angular frequencies by multiplying by $2\pi$.
 - `TransientLength`: The length of the transient simulation.
 - `dt`: The time step for transient simulations.
 - `TransientRemoval`: Determines whether the transient removal strategy is used.
 - `InputForcingFlg`: Determines whether the input forcing is used instead of random forcing. This is useful for test and validation purposes.
-- `InputForcingDir`: Defines the path to the input forcing directory.
+- `InputForcingDir`: Defines the path to the input forcing $(\hat{F})$ directory.
 - `InvInputWeightFlg`: Determines whether the inverse input weight is used.
-- `InvInputWeightDir`: Defines the path to the inverse input weight directory.
+- `InvInputWeightDir`: Defines the path to the inverse input weight $(W_f^{-1/2})$ directory.
 - `InputMatrixFlg`: Determines whether the intput matrix is used.
-- `InputMatrixDir`: Defines the path to the intput matrix weight directory.
+- `InputMatrixDir`: Defines the path to the intput matrix weight $(B)$ directory.
 - `InvOutputWeightFlg`: Determines whether the inverse output weight is used.
-- `InvOutputWeightDir`: Defines the path to the inverse output weight directory.
+- `InvOutputWeightDir`: Defines the path to the inverse output weight $(W_q^{-1/2})$ directory.
 - `OutputWeightFlg`: Determines whether the output weight is used.
-- `OutputWeightDir`: Defines the path to the output weight directory.
+- `OutputWeightDir`: Defines the path to the output weight $(W_q^{1/2})$ directory.
 - `OutputMatrixFlg`: Determines whether the output matrix is used.
-- `OutputMatrixDir`: Defines the path to the output matrix directory.
+- `OutputMatrixDir`: Defines the path to the output matrix $(C)$ directory.
 - `Display`: Controls the amount of information printed during computation, ranging from 0 (no output) to 2 (verbose output).
   - `Display = 0`: Minimal output, with no information displayed.
   - `Display = 1`: Standard output, displaying:
