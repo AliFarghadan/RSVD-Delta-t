@@ -13,128 +13,135 @@ The linearized operator is provided [here](./). This operator is the one we used
 Here is a list of variables used for this test case. Please note that you will need to modify these variables to suit your own projects.
 
 ```yaml
+
 # Root directory (string)
 # This directory must exist before the simulation
-RootDir:          /path/to/root/directory/ 
+RootDir:            /path/to/root/directory/ 
 
 # Results directory (string)
 # The resolvent modes/gains will be saved in RootDir/ResultsDir/ResolventModes_<int>
 # This directory must exist before the simulation
-ResultsDir:       /path/to/results/ 
+ResultsDir:         /path/to/results/ 
 
 # The linearized operator (string)
 # The operator directory is defined as RootDir/OperatorDir
 # This directory must exist before the simulation, OperatorDir can be same as ResultsDir
-OperatorDir:      /path/to/A # expected a matrix saved in binary format
+OperatorDir:        /path/to/A # expected a matrix saved in binary format
 
 # Number of test vectors (integer)
-k:                10
+k:                  10
 
 # Number of power iterations (integer)
-q:                1
+q:                  1
 
 # Number of frequencies to resolve (integer - even number)
-Nw:               42
+Nw:                 42
 
 # Base frequency (real)
 # The resolvent modes will be computed at freuqency range (-Nw/2-1:1:Nw/2)*w
-w:                0.05
+w:                  0.05
 
 # Convert frequencies to angular frequencies (boolean)
 # if true: w <-- 2*pi*w, otherwise, w <-- w
-TwoPI:            false
+TwoPI:              false
 
 # Transient length (real)
-TransientLength:  10
+TransientLength:    10
 
 # Time step (real)
-dt:               0.003
+dt:                 0.003
 
 # Transient removal flag (boolean)
-TransientRemoval: true
+TransientRemoval:   true
 
 # Display options (integer 0 <= Display <= 2)
-Display:          2
+Display:            2
 
 # Discounting flag (boolean)
 # Applies discounting for unstable linear systems, A <-- A - beta I
-DiscFlg:          false
+DiscFlg:            false
 
 # beta value when "DiscFlg = True", otherwise beta is ignored (real > 0)
-beta:             0.1
+beta:               0.1
 
 # Seeding random number to replicate data if needed (integer)
-RandSeed:         14
+RandSeed:           14
 
 # Saving resolvent modes options (integer 1 <= SaveResultsOpt <= 2)
-SaveResultsOpt:   1
+SaveResultsOpt:     1
 
 # Input forcing flag (boolean)
 # The input forcing directory must exist before the simulation if true, otherwise ignored
-InputForcingFlg:  false
+InputForcingFlg:    false
 # Input forcing directory when "InputForcing = True" (string)
 # This directory is defined as RootDir/InputForcingDir 
-InputForcingDir:  /path/to/F_hat # expected a matrix saved in binary format, size must match N x (k x Nw)
+InputForcingDir:    /path/to/F_hat # expected a matrix saved in binary format, size must match N x (k x Nw)
 
-# Input weight flag (boolean)
-# The input weight directory must exist before the simulation if true, otherwise ignored
-InputWeightFlg:   false
-# Input weight directory when "InputWeightFlg = True" (string)
-# This directory is defined as RootDir/InputWeightDir
-InputWeightDir:   /path/to/W_q_sqrt # expected a matrix saved in binary format, size must be N x N
+# Inverse input weight flag (boolean)
+# The inverse input weight directory must exist before the simulation if true, otherwise ignored
+InvInputWeightFlg:  false
+# Inverse input weight directory when "InvInputWeightFlg = True" (string)
+# This directory is defined as RootDir/InvInputWeightDir
+InvInputWeightDir:  /path/to/W_f_sqrt_inv # expected a matrix saved in binary format
 
 # Output weight flag (boolean)
 # The input weight directory must exist before the simulation if true, otherwise ignored
-OutputWeightFlg:  false
+OutputWeightFlg:    false
 # Output weight directory when when "OutputWeightFlg = True" (string)
 # This directory is defined as RootDir/OutputWeightDir
-OutputWeightDir:  /path/to/W_f_sqrt_inv # expected a matrix saved in binary format, size must be N x N
+OutputWeightDir:    /path/to/W_q_sqrt # expected a matrix saved in binary format
+
+# Inverse output weight flag (boolean)
+# The inverse input weight directory must exist before the simulation if true, otherwise ignored
+InvOutputWeightFlg: false
+# Inverse output weight directory when "InvOutputWeightFlg = True" (string)
+# This directory is defined as RootDir/InvOutputWeightDir
+InvOutputWeightDir: /path/to/W_q_sqrt_inv # expected a matrix saved in binary format
 
 # Input matrix flag (boolean)
 # The input matrix directory must exist before the simulation if true, otherwise ignored
-InputMatrixFlg:   false
+InputMatrixFlg:     false
 # Input matrix directory when when "InputMatrixFlg = True" (string)
 # This directory is defined as RootDir/InputMatrixDir
-InputMatrixDir:   /path/to/B # expected a matrix saved in binary format, size must be N x NB
+InputMatrixDir:     /path/to/B # expected a matrix saved in binary format
 
 # Output matrix flag (boolean)
 # The output matrix directory must exist before the simulation if true, otherwise ignored
-OutputMatrixFlg:  false
+OutputMatrixFlg:    false
 # Output matrix directory when when "OutputMatrixFlg = True" (string)
 # This directory is defined as RootDir/OutputMatrixDir
-OutputMatrixDir:  /path/to/C # expected a matrix saved in binary format, size must be Nc x N
+OutputMatrixDir:    /path/to/C # expected a matrix saved in binary format
 
 # Runs the transient simulation if true, otherwise RSVD-delta-t will run (boolean)
-TransRun:         false
+TransRun:           false
 
 # All variables below this are relevant when TransRun is true
 
 # Number of periods to integrate (integer)
-TransPeriods:     3
+TransPeriods:       3
 
 # Saves the transient outputs if true (boolean)
 # The snapshots will be saved in RootDir/ResultsDir/TransientSnapshots_<int>
-TransSave:        false
+TransSave:          false
 
 # Saves the snapshots every "TransSaveMod" number (integer)
-TransSaveMod:     500
+TransSaveMod:       500
 
 # Estimates the transient error using our strategy if true (boolean)
-TransRemovalEst:  false
+TransRemovalEst:    false
 
 # Divergence value, the transient simulation will stop when reached (real)
-TransDivVal:      1e3
+TransDivVal:        1e3
 
 # Convergence value, the transient simulation will stop when reached (real)
-TransConVal:      1e-6
+TransConVal:        1e-6
 
 # Initial condition flag (boolean)
 # The initial condition directory must exist before the simulation if true, otherwise ignored
-TransICFlg:       false
+TransICFlg:         false
 # Initial condition directory when "TransICFlg = True" (string)
 # This directory is defined as RootDir/TransICDir 
-TransICDir:       /path/to/ICvec # expected a vector saved in binary format
-
+TransICDir:         /path/to/ICvec # expected a vector saved in binary format
 
 ```
 
