@@ -457,6 +457,17 @@ We expect the modes to remain qualitatively unchanged, although phase shifts may
 <img src="OptimalUandV.png" alt="Modes-plot" width="600"/>
 
 These results should serve as a benchmark for your implementation. If your outputs differ significantly, please review your setup and parameters.
+
+## Practical Recommendation
+
+For large-scale problems, after ensuring the system is stable following a transient simulation, run the $\text{RSVD}-\Delta t$ algorithm with the following settings:
+- `k = 1`
+- `q = 0`
+- Use a very short transient duration
+- No transient update
+
+Although this process may take some time, it’s highly recommended to perform it as it helps identify and resolve any potential, though rare, undesirable errors that may arise.
+
     
 ## Conclusion
 In this tutorial, we covered the setup and execution of the $\text{RSVD}-\Delta t$ algorithm for computing resolvent modes of the Ginzburg-Landau system. We discussed input variables, the process of running the algorithm, saving results, and provided reference results for comparison. Depending on your specific problems, you may need to adjust the input variables accordingly. Experimentation and iteration are often essential for achieving optimal results.
