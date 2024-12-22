@@ -63,7 +63,7 @@ By the end of the simulation, resolvent modes (*i.e.*, gains, forcing, and respo
 - **User-friendly interface**: $\text{RSVD}-\Delta t$ features an input list for specifying directories and parameters, as outlined in this README. Computations are managed by an executable that leverages parallel processing via PETSc and SLEPc libraries, allowing researchers to focus on analysis rather than computational demands.
 
 
-## Usage
+## Getting started
 
 To use $\text{RSVD}-\Delta t$, follow these steps:
 
@@ -248,7 +248,7 @@ The installation of PETSc and SLEPc packages is required only once. To perform r
 
 ### References
 
-* [Scalable resolvent analysis for three-dimensional flows](https://arxiv.org/pdf/2309.04617.pdf), *Journal of Computational Physics (under review)*, 2024
+* [Scalable resolvent analysis for three-dimensional flows](https://arxiv.org/pdf/2309.04617.pdf), *Journal of Computational Physics*, 2024
 * [A randomized time-domain algorithm for efficiently computing resolvent modes](https://arc.aiaa.org/doi/10.2514/6.2021-2896), *AIAA AVIATION*, 2021
 
 ### Contact information
