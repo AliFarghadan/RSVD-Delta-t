@@ -259,10 +259,12 @@ Aaron Towne, University of Michigan, towne@umich.edu
 ### Cite as
 
 ```cite
-@Article{Farghadan2023scalable,
+@article{farghadan2024scalable,
   title={Scalable resolvent analysis for three-dimensional flows},
-  author={Farghadan, A. and Martini, E. and Towne, A.},
-  journal={arXiv preprint arXiv:2309.04617},
-  year={2023}
+  author={Farghadan, Ali and Martini, Eduardo and Towne, Aaron},
+  journal={Journal of Computational Physics},
+  pages={113695},
+  year={2024},
+  publisher={Elsevier}
 }
 ```
