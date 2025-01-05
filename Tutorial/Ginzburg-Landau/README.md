@@ -264,13 +264,13 @@ Setting `TransRun = false` runs the $\text{RSVD}-\Delta t$ algorithm by default.
     - `k` response modes (each of size `N × Nw`) are saved as `U_hat_k<int>_allFreqs`, where `<int>` represents the integer index of the mode.
     - Forcing modes are similarly saved as `V_hat_k<int>_allFreqs`.
     - For instance, `U_hat_k1_allFreqs` and `V_hat_k1_allFreqs` contain the optimal response and forcing modes, respectively, across all frequencies of interest.
-    - The order of columns corresponds to the optimality of the test vectors: column 1 contains the optimal mode, column 2 contains the first suboptimal mode, and so on.
+    - The order of frequencies starts with column 1 (frequency 0), column 2 (frequency $\omega$), up to frequency $\left(\frac{N_{\omega}}{2} - 1 \right) \times \omega$, and then from $-\frac{N_{\omega}}{2} \times \omega$ up to the last column that contains the $-\omega$ frequency (equivalent to MATLAB ordering). For example, when $N_{\omega} = 42$, the frequencies will be ordered as $0, \omega, 2\omega, ... 20\omega, -21\omega, -20\omega, ..., -\omega$.
 
   - **Option 2 when `SaveResultsOpt = 2`:**
     - `Nw` response modes (each of size `N × k`) are saved as `U_hat_Freq<int>_allK`, where `<int>` represents the integer index of the frequency.
     - Forcing modes are similarly saved as `V_hat_Freq<int>_allK`.
     - For instance, `U_hat_Freq1_allK` and `V_hat_Freq1_allK` contain the response and forcing modes, respectively, associated with the first frequency.
-    - The order of frequencies starts with column 1 (frequency 0), column 2 (frequency $\omega$), up to frequency $\left(\frac{N_{\omega}}{2} - 1 \right) \times \omega$, and then from $-\frac{N_{\omega}}{2} \times \omega$ up to the last column that contains the $-\omega$ frequency (equivalent to MATLAB ordering). For example, when $N_{\omega} = 42$, the frequencies will be ordered as $0, \omega, 2\omega, ... 20\omega, -21\omega, -20\omega, ..., -\omega$.
+    - The order of columns corresponds to the optimality of the test vectors: column 1 contains the optimal mode, column 2 contains the first suboptimal mode, and so on.
 
 - Finally, gains are saved as a single matrix `S_hat` of size `k × Nw` in either case.
 
