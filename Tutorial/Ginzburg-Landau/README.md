@@ -269,7 +269,7 @@ Setting `TransRun = false` runs the $\text{RSVD}-\Delta t$ algorithm by default.
   - **Option 2 when `SaveResultsOpt = 2`:**
     - `Nw` response modes (each of size `N × k`) are saved as `U_hat_Freq<int>_allK`, where `<int>` represents the integer index of the frequency.
     - Forcing modes are similarly saved as `V_hat_Freq<int>_allK`.
-    - For instance, `U_hat_Freq1_allK` and `V_hat_Freq1_allK` contain the response and forcing modes, respectively, associated with the first frequency.
+    - For instance, `U_hat_Freq1_allK` and `V_hat_Freq1_allK` contain the response and forcing modes, respectively, associated with the first frequency ($\omega = 0)$.
     - The order of columns corresponds to the optimality of the test vectors: column 1 contains the optimal mode, column 2 contains the first suboptimal mode, and so on.
 
 - Finally, gains are saved as a single matrix `S_hat` of size `k × Nw` in either case.
