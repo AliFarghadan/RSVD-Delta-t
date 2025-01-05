@@ -273,6 +273,7 @@ Setting `TransRun = false` runs the $\text{RSVD}-\Delta t$ algorithm by default.
     - The order of columns corresponds to the optimality of the test vectors: column 1 contains the optimal mode, column 2 contains the first suboptimal mode, and so on.
 
 - Finally, gains are saved as a single matrix `S_hat` of size `k × Nw` in either case.
+  - The row `S_hat(i, :)` represents the gain of the `i`-th mode across all frequencies of interest. The frequency order is consistent with the setting `SaveResultsOpt = 1`.
 
 **Important note:** Not all variables have default values. If a variable is not specified, you will receive a warning or error message.
 
