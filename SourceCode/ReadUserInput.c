@@ -15,9 +15,9 @@ PetscErrorCode ReadUserInput(RSVDt_vars *RSVDt, Weight_matrices *Weight, LNS_var
 
 	PetscFunctionBeginUser;
 
-	// ierr = PetscOptionsGetString(NULL, NULL,"-inputs",(char*)&filename,PETSC_MAX_PATH_LEN,&flg_set);CHKERRQ(ierr);
-	// if (!flg_set) SETERRQ(PETSC_COMM_WORLD,PETSC_ERR_USER,"Must specify inputs variables via -inputs");CHKERRQ(ierr);
-	// ierr = PetscOptionsInsertFileYAML(PETSC_COMM_WORLD, NULL, filename, PETSC_FALSE);CHKERRQ(ierr);
+	ierr = PetscOptionsGetString(NULL, NULL,"-inputs",(char*)&filename,PETSC_MAX_PATH_LEN,&flg_set);CHKERRQ(ierr);
+	if (!flg_set) SETERRQ(PETSC_COMM_WORLD,PETSC_ERR_USER,"Must specify inputs variables via -inputs");CHKERRQ(ierr);
+	ierr = PetscOptionsInsertFileYAML(PETSC_COMM_WORLD, NULL, filename, PETSC_FALSE);CHKERRQ(ierr);
 	ierr = PetscOptionsGetBool(NULL,NULL,"-TransRun",&TR->TransRun,&flg_set);CHKERRQ(ierr);
 	if (!flg_set) {
 		TR->TransRun = 0;
