@@ -34,7 +34,7 @@ k:                  10
 # Number of power iterations (integer)
 q:                  1
 
-# Number of frequencies to resolve (integer - even number)
+# Number of frequencies to resolve (integer)
 Nw:                 42
 
 # Base frequency (real)
@@ -260,6 +260,64 @@ Setting `TransRun = false` runs the $\text{RSVD}-\Delta t$ algorithm by default.
 - `SaveResultsOpt`: An integer option that controls the saving results format, with two possible values: 1 and 2.
   - `SaveResultsOpt = 1`: Saves resolvent modes as `k` matrices of size `N × Nw`.
   - `SaveResultsOpt = 2`: Saves resolvent modes as `Nw` matrices of size `N × k`.
+
+### Number of Frequencies to Resolve (`Nw`)
+The parameter `Nw` determines the number of frequencies to resolve. Its treatment depends on whether the operator is real-valued or complex-valued.
+
+---
+
+### Case 1: Real-Valued Operator
+
+When the operator is real-valued, symmetry allows retaining only positive frequencies in memory and as output. The adjustment of `Nw` and the frequency range $\omega_{min}:\Delta \omega:\omega_{max}$ depends on whether `Nw` is even or odd:
+
+#### Even `Nw`:
+- The maximum frequency to resolve is $w_{\text{max}} = \frac{N_w}{2} \times w$
+- The updated `Nw` is halved.
+
+#### Odd `Nw`:
+- The maximum frequency to resolve is $w_{\text{max}} = \frac{N_w + 1}{2} \times w$
+- The updated `Nw` is adjusted to include the symmetric number of positive frequencies.
+
+#### Examples:
+- If `w = 0.05` and `Nw = 41`, instead of computing resolvent modes for
+  $\Omega = ${-1, -0.95, -0.9, ..., 0.95, 1},
+  We set `Nw = 21` and compute the modes at
+  $\Omega_+ =$ {0, 0.05, 0.1, ..., 0.95, 1}
+  
+- If `w = 0.05` and `Nw = 40`, instead of computing resolvent modes for
+  $\Omega =$ {-1, -0.95, -0.9, ..., 0.9, 0.95}, 
+  we set `Nw = 20` and compute the modes at
+  $\Omega_+ =$ {0, 0.05, 0.1, ..., 0.9, 0.95}.
+
+- If `w = 0.05` and `Nw = 42`, instead of computing resolvent modes for
+  $\Omega =$ {-1.05, -0.95, -0.9, ..., 0.95, 1},
+  we set `Nw = 21` and compute the modes at
+  $\Omega_+ =$ {0, 0.05, 0.1, ..., 0.95, 1}.
+
+---
+
+### Case 2: Complex-Valued Operator
+
+When the operator is complex-valued, we compute the modes for all frequencies, and `Nw` is not updated. The desired frequency range depends on whether `Nw` is even or odd:
+
+#### Even `Nw`:
+- The frequency range is $[\omega_{min}, \omega_{max}]$ with $\Delta \omega$ (base frequency `w`),
+  where $\omega_{min} = -\left(\frac{N_w}{2}\right) \times \omega$ and $\omega_{max} = \left(\frac{N_w}{2} - 1\right) \times \omega$.<br />
+  Example: `w = 0.1` and `Nw = 42` --> $\Omega =$ {-2.1, -2.0, -1.9, ..., 1.9, 2}.
+
+#### Odd `Nw`:
+- The frequency range is $[\omega_{min}, \omega_{max}]$ with $\Delta \omega$ (base frequency `w`),
+  where $\omega_{min} = -\left(\frac{N_w - 1}{2}\right) \times \omega$ and $\omega_{max} = \left(\frac{N_w - 1}{2}\right) \times \omega$.<br />
+  Example: `w = 0.1` and `Nw = 41` --> $\Omega =$ {-2, -2.0, -1.9, ..., 1.9, 2}.
+
+---
+
+### Display of Frequency Parameters
+
+Before computing the modes, we display the following parameters (if `Display` is not `0`):
+- Minimum frequency (`w_min`).
+- Maximum frequency (`w_max`).
+- Frequency step size ($\Delta \omega$).
 
 ### Saving Resolvent Modes
 
