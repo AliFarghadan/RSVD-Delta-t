@@ -177,7 +177,7 @@ The process of running the $\text{RSVD}-\Delta t$ algorithm can be divided into 
 ### Common variables between transient and $\text{RSVD}-\Delta t$
 
 - `RootDir`: Specifies the root directory path for the simulation.
-- `ResultsDir`: Defines the path to the results directory where output files will be saved. This directory must exist within `RootDir`. If it does not, the system will create the directory at the specified path. Ensure you have write access to the root directory, or an error message will be displayed.
+- `ResultsDir`: Defines the path to the results directory where output files will be saved. This directory must exist within `RootDir`. 
 - `OperatorDir`: Specifies the directory path for the linearized operator matrix. If the operator is located in the `RootDir`, you only need to provide the operator name (e.g., `A_GL`). Otherwise, specify the relative path to the operator from `RootDir` (e.g., `matrices/A_GL`).
 - `RandSeed`: Indicates the seeding number for random number generation. Using the same number of cores and `RandSeed` value allows for repeatable results in simulations.
 - `DiscFlg`: A boolean flag indicating whether to use a discounting strategy.
@@ -532,7 +532,6 @@ For large-scale problems, after ensuring the system is stable following a transi
 - No transient update
 
 Although this process may take some time, it’s highly recommended to perform it as it helps identify and resolve any potential, though rare, undesirable errors that may arise.
-
     
 ## Conclusion
 In this tutorial, we covered the setup and execution of the $\text{RSVD}-\Delta t$ algorithm for computing resolvent modes of the Ginzburg-Landau system. We discussed input variables, the process of running the algorithm, saving results, and provided reference results for comparison. Depending on your specific problems, you may need to adjust the input variables accordingly. Experimentation and iteration are often essential for achieving optimal results.
