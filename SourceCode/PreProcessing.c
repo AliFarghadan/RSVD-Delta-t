@@ -35,7 +35,7 @@ PetscErrorCode PreProcessing(RSVDt_vars *RSVDt, Weight_matrices *Weight_mat, LNS
 				CreateResultsDir(dirs, "TransientSnapshots_");CHKERRQ(ierr); 	
 
 	/*
-		Saves a copy of the input variables in the results folder and exits
+		Saves a copy of the input variables in the results folder
 	*/
 
 	ierr = SaveInputVarsCopy(dirs);CHKERRQ(ierr); 
