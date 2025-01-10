@@ -12,7 +12,9 @@ Resolvent analysis is a valuable tool for studying coherent structures in turbul
 
 ## Important note
 
-A harmonic resolvent analysis package will appear soon!
+1. A harmonic resolvent analysis package will appear soon!
+2. The RSVD-LU implementation is available in the [repository](https://github.com/AliFarghadan/RSVD-LU).
+
 
 <!-- For harmonic resolvent analysis, please use the package available in the **[harmonic-resolvent-analysis branch](https://github.com/AliFarghadan/RSVD-Delta-t/tree/Harmonic-resolvent-analysis)**. 
 
