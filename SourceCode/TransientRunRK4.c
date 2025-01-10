@@ -28,7 +28,7 @@ PetscErrorCode TransientRunRK4(TransRun_vars *TR, RSVDt_vars *RSVDt, LNS_vars *L
 
 	PetscFunctionBeginUser;
 
-	ierr = PetscPrintf(PETSC_COMM_WORLD,"\n********************************************\n"
+	ierr = PetscPrintf(PETSC_COMM_WORLD,"********************************************\n"
 			"************** Transient run ***************\n********************************************\n\n");CHKERRQ(ierr);
 
 	/*
