@@ -38,7 +38,7 @@ PetscErrorCode PreProcessing(RSVDt_vars *RSVDt, Weight_matrices *Weight_mat, LNS
 		Saves a copy of the input variables in the results folder and exits
 	*/
 
-	ierr = SaveInputVarsCopy(dirs);CHKERRQ(ierr); 
+	// ierr = SaveInputVarsCopy(dirs);CHKERRQ(ierr); 
 
 	/*
 		Loads the LNS operator (+ discounting if desired)

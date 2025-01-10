@@ -46,17 +46,16 @@ PetscErrorCode TransientRunRK4(TransRun_vars *TR, RSVDt_vars *RSVDt, LNS_vars *L
 	ierr = PetscPrintf(PETSC_COMM_WORLD,"Total integration time = %g = %d x %g with dt = %g\n", \
 					RSVDt->TS.dt*rend, (int) TR->TransPeriods, TSS, RSVDt->TS.dt);CHKERRQ(ierr);
 	if (TR->TransRemovalEst) {
-		ierr = PetscPrintf(PETSC_COMM_WORLD,"Transient removal strategy estimation is requested\n\n");CHKERRQ(ierr);
+		ierr = PetscPrintf(PETSC_COMM_WORLD,"Transient removal strategy estimation is requested\n");CHKERRQ(ierr);
 	} else {
-		ierr = PetscPrintf(PETSC_COMM_WORLD,"Transient removal strategy estimation is NOT requested\n\n");CHKERRQ(ierr);
+		ierr = PetscPrintf(PETSC_COMM_WORLD,"Transient removal strategy estimation is NOT requested\n");CHKERRQ(ierr);
 	}
+	ierr = TR->TransSave ? PetscPrintf(PETSC_COMM_WORLD,"Total snapshots to be saved = %d\n", (int) Nt_saved) : \
+									PetscPrintf(PETSC_COMM_WORLD,"Saving snapshots is not requested\n");CHKERRQ(ierr); 
 
 	/*
 		Creates the required matrices/vecs
-	*/
-
-	ierr = TR->TransSave ? PetscPrintf(PETSC_COMM_WORLD,"Total snapshots to be saved = %d\n", (int) Nt_saved) : \
-										PetscPrintf(PETSC_COMM_WORLD,"Saving snapshots is not requested\n");CHKERRQ(ierr);  
+	*/ 
 
 	if (TR->TransRemovalEst) {
 		ierr = MatCreate(PETSC_COMM_WORLD,&Q_all);CHKERRQ(ierr);
@@ -85,7 +84,7 @@ PetscErrorCode TransientRunRK4(TransRun_vars *TR, RSVDt_vars *RSVDt, LNS_vars *L
 	*/
 
 	if (TR->TransICFlg) {
-		ierr = PetscPrintf(PETSC_COMM_WORLD,"Reading the initial vector\n");CHKERRQ(ierr);
+		ierr = PetscPrintf(PETSC_COMM_WORLD,"Reading the initial vector\n\n");CHKERRQ(ierr);
 		ierr = PetscSNPrintf((char*)&dirs->IO_dir,PETSC_MAX_PATH_LEN,"%s%s%s",dirs->RootDir,dirs->ResultsDir,dirs->TransICDir);CHKERRQ(ierr);
 		ierr = PetscViewerBinaryOpen(PETSC_COMM_WORLD,dirs->IO_dir,FILE_MODE_READ,&fd);CHKERRQ(ierr);
 		ierr = VecLoad(q0,fd);CHKERRQ(ierr);

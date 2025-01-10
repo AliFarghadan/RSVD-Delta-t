@@ -25,7 +25,6 @@ PetscErrorCode TransientRemovalEst(Mat Q_transient, Vec qss, PetscInt period_ind
 
 	ierr = MatGetSize(Q_transient,&N,&Ns);CHKERRQ(ierr);
 	deltaT  = 2*PETSC_PI/RSVDt->RSVD.w/Ns;
-	ierr = PetscPrintf(PETSC_COMM_WORLD,"**** deltaT = %g ****\n", (double) deltaT);
 	Ns  -= period_index == 1 ? 1 : 0; // skip the initial snapshot as it is a zero vector
 	ierr = MatCreate(PETSC_COMM_WORLD,&Q_all);CHKERRQ(ierr);
 	ierr = MatSetType(Q_all,MATDENSE);CHKERRQ(ierr);
