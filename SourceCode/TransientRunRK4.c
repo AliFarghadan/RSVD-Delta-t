@@ -28,7 +28,7 @@ PetscErrorCode TransientRunRK4(TransRun_vars *TR, RSVDt_vars *RSVDt, LNS_vars *L
 
 	PetscFunctionBeginUser;
 
-	ierr = PetscPrintf(PETSC_COMM_WORLD,"\n********************************************\n"
+	ierr = PetscPrintf(PETSC_COMM_WORLD,"********************************************\n"
 			"************** Transient run ***************\n********************************************\n\n");CHKERRQ(ierr);
 
 	/*
@@ -190,18 +190,12 @@ PetscErrorCode TransientRunRK4(TransRun_vars *TR, RSVDt_vars *RSVDt, LNS_vars *L
 		}
 	}
 
-	ierr = PetscTime(&t2);CHKERRQ(ierr);
-	hh   = (t2-t1)/3600;
-	mm   = (t2-t1-3600*hh)/60;
-	ss   = t2-t1-3600*hh-mm*60;
-	ierr = PetscPrintf(PETSC_COMM_WORLD,"*** Transient simulation elapsed time = %02d:%02d:%02d ***\n", (int)hh, (int)mm, (int)ss);CHKERRQ(ierr);
-
 	/*
 		Saves the norm of snapshots throughout the intergation (every "TransSaveMod" number)
 		Saves the last snapshot
 	*/ 
 
-	ierr = PetscPrintf(PETSC_COMM_WORLD,"\nThe results directory is: %s\n\n",dirs->FolderDir);CHKERRQ(ierr);	
+	ierr = PetscPrintf(PETSC_COMM_WORLD,"\nThe results directory: %s\n\n",dirs->FolderDir);CHKERRQ(ierr);	
 
 	ierr = VecAssemblyBegin(trans_norm);CHKERRQ(ierr);
 	ierr = VecAssemblyEnd(trans_norm);CHKERRQ(ierr);
@@ -225,6 +219,11 @@ PetscErrorCode TransientRunRK4(TransRun_vars *TR, RSVDt_vars *RSVDt, LNS_vars *L
 	ierr = DestroyTSMats(&TS_mat);CHKERRQ(ierr);
 
 	ierr = PetscPrintf(PETSC_COMM_WORLD,"DONE :))\n\n");CHKERRQ(ierr);
+	ierr = PetscTime(&t2);CHKERRQ(ierr);
+	hh   = (t2-t1)/3600;
+	mm   = (t2-t1-3600*hh)/60;
+	ss   = t2-t1-3600*hh-mm*60;
+	ierr = PetscPrintf(PETSC_COMM_WORLD,"*** Transient simulation elapsed time = %02d:%02d:%02d ***\n", (int)hh, (int)mm, (int)ss);CHKERRQ(ierr);
 
 	PetscFunctionReturn(0);
 
