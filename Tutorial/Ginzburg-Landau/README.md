@@ -201,7 +201,7 @@ To run the transient simulation, set the `TransRun` flag to `true` in the input 
 - If `TransSave` is `true`, snapshots are saved as `q_transient_<int>` every `TransSaveMod` time steps in the results directory. In addition, the norm of the snapshots is saved in a vector `q_transient_norms`, and the last snapshot is saved as `q_transient_last_snapshot`.
 - If `TransSave` is `false`, only `q_transient_norms` and `q_transient_last_snapshot` are saved every `TransSaveMod` time steps.
 - If `TransRemovalEst` is `true`, the simulation saves the initial and updated transient norms to `Initial_transient_norm_period_<int>` and `Updated_transient_norm_period_<int>`, respectively, at the end of each period. For instance, `Initial_transient_norm_period_1` and `Updated_transient_norm_period_1` contain the norm of snapshots across the frequency range at the end of the first period.
-- The order of frequencies is as follows: column 1 corresponds to frequency 0, column 2 to frequency $\omega$, and so on up to frequency $\omega_{max}$. For the transient update, only the positive frequencies are retained. For example, when $N_{\omega} = 42$, the frequencies will be ordered as $0, \omega, 2\omega, ... 20\omega.
+- The order of frequencies is as follows: column 1 corresponds to frequency 0, column 2 to frequency $\omega$, and so on up to frequency $\omega_{max}$. For the transient update, only the positive frequencies are retained. For example, for $N_{\omega}$, the frequencies will be ordered as $0, \omega, 2\omega, ... \lceil \frac{N_{\omega}}{2} \rceil\omega$.
 
 ### Default values
 
