@@ -217,6 +217,12 @@ If a transient variable is not specified or is commented out (using `#` before i
 
 For consistency and to avoid confusion, all variables starting with `Trans` are used exclusively in the transient part of the analysis.
 
+### Required Variables
+
+The following variable is the only required variable:
+
+- `TransICDir` (only when `TransICFlg` is `true`)
+
 ### $\text{RSVD}-\Delta t$ Algorithm
 
 Setting `TransRun = false` runs the $\text{RSVD}-\Delta t$ algorithm by default.
