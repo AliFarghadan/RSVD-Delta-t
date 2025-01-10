@@ -85,9 +85,6 @@ PetscErrorCode SVDAllFreqs4Forcing(RSVD_matrices *RSVD, RSVDt_vars *RSVDt, Weigh
 		Saves resolvent modes for each mode separately (accross all frequencies) 
 	*/
 
-	ierr = PetscPrintf(PETSC_COMM_WORLD,"One matrix of size %d (modes) x %d (frequencies) for gains\n", \
-			(int) RSVDt->RSVD.k, (int) RSVDt->RSVD.Nw_eff);CHKERRQ(ierr);
-
 	ierr = PetscSNPrintf((char*)&dirs->IO_dir,PETSC_MAX_PATH_LEN,"%s%s",dirs->FolderDir,"S_hat");CHKERRQ(ierr);
 	ierr = PetscViewerBinaryOpen(PETSC_COMM_WORLD,dirs->IO_dir,FILE_MODE_WRITE,&fd);CHKERRQ(ierr);
 	ierr = MatView(Res->S_hat,fd);CHKERRQ(ierr);
@@ -131,6 +128,8 @@ PetscErrorCode SVDAllFreqs4Forcing(RSVD_matrices *RSVD, RSVDt_vars *RSVDt, Weigh
 	mm   = (t2-t1-3600*hh)/60;
 	ss   = t2-t1-3600*hh-mm*60;
 	if (RSVDt->Display) ierr = PetscPrintf(PETSC_COMM_WORLD,"*** Saving the forcing modes and gains elapsed time = %02d:%02d:%02d ***\n\n", (int)hh, (int)mm, (int)ss);CHKERRQ(ierr);
+	ierr = PetscPrintf(PETSC_COMM_WORLD,"One matrix of size %d (modes) x %d (frequencies) for gains\n", \
+		(int) RSVDt->RSVD.k, (int) RSVDt->RSVD.Nw_eff);CHKERRQ(ierr);
 	if (RSVDt->SaveResultsOpt == 1) {
 		ierr = PetscPrintf(PETSC_COMM_WORLD,"%d matrices of size %d x %d for response modes\n%d matrices of size %d x %d for forcing modes\n\n", \
 				(int) RSVDt->RSVD.k, (int) RSVDt->RSVD.Nc, (int) RSVDt->RSVD.Nw_eff, \
