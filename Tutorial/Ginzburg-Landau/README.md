@@ -201,7 +201,7 @@ To run the transient simulation, set the `TransRun` flag to `true` in the input 
 - If `TransSave` is `true`, snapshots are saved as `q_transient_<int>` every `TransSaveMod` time steps in the results directory. In addition, the norm of the snapshots is saved in a vector `q_transient_norms`, and the last snapshot is saved as `q_transient_last_snapshot`.
 - If `TransSave` is `false`, only `q_transient_norms` and `q_transient_last_snapshot` are saved every `TransSaveMod` time steps.
 - If `TransRemovalEst` is `true`, the simulation saves the initial and updated transient norms to `Initial_transient_norm_period_<int>` and `Updated_transient_norm_period_<int>`, respectively, at the end of each period. For instance, `Initial_transient_norm_period_1` and `Updated_transient_norm_period_1` contain the norm of snapshots across the frequency range at the end of the first period.
-- The order of frequencies is as follows: column 1 corresponds to frequency 0, column 2 to frequency $\omega$, and so on up to frequency $\omega_{max}$. After this, the frequencies continue from $\omega_{min}$ up to the last column, which represents $-\omega$ frequency. This ordering is the same as that obtained from MATLAB's FFT function. For example, when $N_{\omega} = 42$, the frequencies will be ordered as $0, \omega, 2\omega, ... 20\omega, -21\omega, -20\omega, ..., -\omega$. If the operator is real-valued, only the positive frequencies are retained.
+- The order of frequencies is as follows: column 1 corresponds to frequency 0, column 2 to frequency $\omega$, and so on up to frequency $\omega_{max}$. For the transient update, only the positive frequencies are retained. For example, for $N_{\omega}$, the frequencies will be ordered as $0, \omega, 2\omega, ... \lceil \frac{N_{\omega}}{2} \rceil\omega$.
 
 ### Default values
 
@@ -390,9 +390,9 @@ MATLAB can save data in various formats, but for use with PETSc/SLEPc, we need t
 
     Create your matrix in MATLAB and save it using PETSc's binary write function. We have provided A_GL in both binary and .mat formats which you can test.
     ```matlab
-    PetscBinaryWrite('/path/to/your/matrix/A', A_GL, 'complex', true, 'indices', 'int64');
+    PetscBinaryWrite('/path/to/your/matrix/A_GL', A, 'complex', true, 'indices', 'int64');
     ```
-    Note that `A` is an example name for the binary saved file. `A_GL` is the variable in MATLAB. Depending on the PETSc architecture that you have compiled, `'complex', true` and `'indices', 'int64'` can be different. Please refer to `PetscBinaryWrite` function for more information.
+    Note that `A_GL` is an example name for the binary saved file. `A` is the variable in MATLAB. Depending on the PETSc architecture that you have compiled, `'complex', true` and `'indices', 'int64'` can be different. Please refer to `PetscBinaryWrite` function for more information.
 
 3. **Load Data in PETSc:**
 
@@ -401,7 +401,7 @@ MATLAB can save data in various formats, but for use with PETSc/SLEPc, we need t
     Mat A;
     PetscViewer viewer;
     
-    PetscViewerBinaryOpen(PETSC_COMM_WORLD, "/path/to/your/matrix/A", FILE_MODE_READ, &viewer);
+    PetscViewerBinaryOpen(PETSC_COMM_WORLD, "/path/to/your/matrix/A_GL", FILE_MODE_READ, &viewer);
     MatCreate(PETSC_COMM_WORLD, &A);
     MatSetType(A, MATSEQAIJ); // or MATMPIAIJ if parallel (depending on your matrix, you can vary the type)
     MatLoad(A, viewer);
@@ -418,7 +418,7 @@ To transfer data from PETSc/SLEPc to MATLAB, follow these steps:
     ```c
     PetscViewer viewer;
     
-    PetscViewerBinaryOpen(PETSC_COMM_WORLD, "/path/to/your/matrix/A", FILE_MODE_WRITE, &viewer);
+    PetscViewerBinaryOpen(PETSC_COMM_WORLD, "/path/to/your/matrix/A_GL", FILE_MODE_WRITE, &viewer);
     MatView(A, viewer);
     PetscViewerDestroy(&viewer);
     ```
@@ -428,7 +428,7 @@ To transfer data from PETSc/SLEPc to MATLAB, follow these steps:
     Read the PETSc binary file in MATLAB:
     ```matlab
     addpath('/path/to/PETSc/share/petsc/matlab/');
-    A = PetscBinaryRead('/path/to/your/matrix/A', 'complex', true, 'indices', 'int64');
+    A = PetscBinaryRead('/path/to/your/matrix/A_GL', 'complex', true, 'indices', 'int64');
     ```
 
 You do not need to be concerned with coding in the PETSc environment. Your primary task is to save your operator in binary format (from `.mat` to `.bin`) and to read your data from binary format into MATLAB (from `.bin` to `.mat`). For completeness, we have provided explanations for both directions.
