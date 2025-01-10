@@ -191,7 +191,7 @@ To run the transient simulation, set the `TransRun` flag to `true` in the input 
 
 ### Transient variables
 
-- `TransPeriods`: Determines the length of the transient simulation. We define the period length as $T = \frac{2\pi}{\omega_{min}}$, where $\omega_{min}$ (defined by the variable `w`) is the base frequency.
+- `TransPeriods`: Determines the length of the transient simulation. We define the period length as $T = \frac{2\pi}{\omega_{base}}$, where $\omega_{base} = \Delta \omega$ (defined by the variable `w`) is the base frequency.
 - `TransRemovalEst`: If `true`, applies the transient removal strategy we developed for slowly decaying systems. It estimates the updated transient residual at the end of each period.
 - `TransDivVal` and `TransConVal`: Divergence and convergence values, respectively, which stop the simulation if the transient norm reaches either value.
 
