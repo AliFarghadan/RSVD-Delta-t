@@ -4,8 +4,7 @@
 #include <QRDecomposition.h>
 #include <GalerkinProj.h>
 
-PetscErrorCode GalerkinProjAllModes(Mat Y_all, LNS_vars *LNS_mat, RSVDt_vars *RSVDt, \
-								TS_removal_matrices *TSR, DFT_matrices *DFT_mat)
+PetscErrorCode GalerkinProjAllModes(Mat Y_all, RSVDt_vars *RSVDt, TS_removal_matrices *TSR, DFT_matrices *DFT)
 {
 	/*
 		Performs Galerkin projection to remove the transient response separately for each test vector
@@ -32,7 +31,7 @@ PetscErrorCode GalerkinProjAllModes(Mat Y_all, LNS_vars *LNS_mat, RSVDt_vars *RS
 		ierr = MatDenseRestoreSubMatrix(Y_all,&Y_all_k);CHKERRQ(ierr);
 		ierr = QRDecomposition(V);CHKERRQ(ierr);
 		ierr = MatDenseGetSubMatrix(TSR->M_tilde_all,PETSC_DECIDE,PETSC_DECIDE,ik*Nstore,(ik+1)*Nstore,&M_tilde);CHKERRQ(ierr);
-		ierr = GalerkinProj(Y_all,M_tilde,V,ik,RSVDt,TSR,DFT_mat);CHKERRQ(ierr);
+		ierr = GalerkinProj(Y_all,M_tilde,V,ik,RSVDt,TSR,DFT);CHKERRQ(ierr);
 		ierr = MatDenseRestoreSubMatrix(TSR->M_tilde_all,&M_tilde);CHKERRQ(ierr);
 
 		ierr = MatDestroy(&V);CHKERRQ(ierr);

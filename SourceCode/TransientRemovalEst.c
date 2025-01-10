@@ -3,7 +3,7 @@
 #include <Variables.h>
 #include <QRDecomposition.h>
 
-PetscErrorCode TransientRemovalEst(Mat Q_transient, Vec qss, PetscInt period_index, RSVDt_vars *RSVDt, DFT_matrices *DFT_mat, Directories *dirs)
+PetscErrorCode TransientRemovalEst(Mat Q_transient, Vec qss, PetscInt period_index, RSVDt_vars *RSVDt, DFT_matrices *DFT, Directories *dirs)
 {
 	/*
 		Once the matrix of transient responses is created, we can test the transinet removal performance
@@ -55,7 +55,7 @@ PetscErrorCode TransientRemovalEst(Mat Q_transient, Vec qss, PetscInt period_ind
 	ierr = PetscPrintf(PETSC_COMM_WORLD,"**** period index = %d ****\n", (int) period_index);CHKERRQ(ierr);
 	ierr = PetscPrintf(PETSC_COMM_WORLD,"**** Displaying transient norms for (positive) frequencies ****\n");CHKERRQ(ierr);
 
-	ierr = MatMatMult(Q_transient,DFT_mat->dft,MAT_INITIAL_MATRIX,PETSC_DEFAULT,&Q_transient_hat);CHKERRQ(ierr);
+	ierr = MatMatMult(Q_transient,DFT->dft,MAT_INITIAL_MATRIX,PETSC_DEFAULT,&Q_transient_hat);CHKERRQ(ierr);
 	ierr = MatScale(Q_transient_hat, 1./RSVDt->RSVD.Nw);CHKERRQ(ierr);
 
 	for (iw=0; iw<RSVDt->RSVD.Nw/2; iw++) {

@@ -4,12 +4,12 @@
 #include <ApplyWeightMats.h>
 #include <TSActionRK4.h>
 
-PetscErrorCode DirectActionRK4(RSVD_matrices *RSVD_mat, RSVDt_vars *RSVDt, LNS_vars *LNS_mat, \
-			DFT_matrices *DFT_mat, Weight_matrices *Weight_mat, Directories *dirs, TS_removal_matrices *TSR)
+PetscErrorCode DirectActionRK4(RSVD_matrices *RSVD, RSVDt_vars *RSVDt, LNS_vars *LNS, \
+			DFT_matrices *DFT, Weight_matrices *Weight, Directories *dirs, TS_removal_matrices *TSR)
 {
 	/*
 		Performs time-stepping to approximate $R \times \hat{F}$ 
-		For a modified resolvent operator, it computes W_q_sqrt * C * R * B * W_f_sqrt_inv * \times \hat{F} 
+		For a modified resolvent operator, it computes W_q_sqrt * C * R * B * W_f_sqrt_inv \times \hat{F} 
 		In the latter case, the weight and input/output matrices are given as inputs
 	*/
 
@@ -23,9 +23,9 @@ PetscErrorCode DirectActionRK4(RSVD_matrices *RSVD_mat, RSVDt_vars *RSVDt, LNS_v
 
 	RSVDt->TS.DirAdj = 1;
 
-	ierr = ApplyWeightMats(RSVD_mat, RSVDt, Weight_mat, 1);CHKERRQ(ierr);
-	ierr = TSActionRK4(RSVD_mat, DFT_mat, LNS_mat, RSVDt, dirs, TSR);CHKERRQ(ierr);
-	ierr = ApplyWeightMats(RSVD_mat, RSVDt, Weight_mat, 0);CHKERRQ(ierr);
+	ierr = ApplyWeightMats(RSVD, RSVDt, Weight, 1);CHKERRQ(ierr);
+	ierr = TSActionRK4(RSVD, DFT, LNS, RSVDt, dirs, TSR);CHKERRQ(ierr);
+	ierr = ApplyWeightMats(RSVD, RSVDt, Weight, 0);CHKERRQ(ierr);
 
 	PetscFunctionReturn(0);
 	

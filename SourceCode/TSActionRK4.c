@@ -9,18 +9,18 @@
 #include <DisplayProgress.h>
 #include <DestroyTSMats.h>
 #include <TransientRemovalStrategy.h>
-#include <DFT.h>
+#include <DiscreteFourierTransform.h>
 
 
-PetscErrorCode TSActionRK4(RSVD_matrices *RSVD_mat, DFT_matrices *DFT_mat, \
-		LNS_vars *LNS_mat, RSVDt_vars *RSVDt, Directories *dirs, TS_removal_matrices *TSR)
+PetscErrorCode TSActionRK4(RSVD_matrices *RSVD, DFT_matrices *DFT, \
+		LNS_vars *LNS, RSVDt_vars *RSVDt, Directories *dirs, TS_removal_matrices *TSR)
 {
 	/*
 		Time stepping of the LNS equations to obtain either action of direct or adjoint resolvent operator
 	*/
 
-	PetscErrorCode       ierr;
-	TS_matrices          TS_mat;
+	PetscErrorCode       ierr=0;
+	TS_matrices          TS;
 	Mat                  Y_all,F_temp,Y_all_k,F_hat_k;
 	Vec                  y;
 	PetscInt             N,k,Nw,Nstore,i,ik,rend,prg_cnt=0,hh,mm,ss;
@@ -28,7 +28,7 @@ PetscErrorCode TSActionRK4(RSVD_matrices *RSVD_mat, DFT_matrices *DFT_mat, \
 	
 	PetscFunctionBeginUser;
 
-	ierr = RSVDt->TS.DirAdj ? PetscPrintf(PETSC_COMM_WORLD,"\n*** Direct action begins! ***\n") : \
+	if (RSVDt->Display) ierr = RSVDt->TS.DirAdj ? PetscPrintf(PETSC_COMM_WORLD,"\n*** Direct action begins! ***\n") : \
 				PetscPrintf(PETSC_COMM_WORLD,"\n*** Adjoint action begins! ***\n");CHKERRQ(ierr);
 
 	/*
@@ -46,8 +46,8 @@ PetscErrorCode TSActionRK4(RSVD_matrices *RSVD_mat, DFT_matrices *DFT_mat, \
 		Uses the solution from the previous action as forcing for the current action
 	*/
 
-	ierr = MatDuplicate(RSVD_mat->Y_hat,MAT_COPY_VALUES,&RSVD_mat->F_hat);CHKERRQ(ierr);
-	ierr = MatDestroy(&RSVD_mat->Y_hat);CHKERRQ(ierr);
+	ierr = MatDuplicate(RSVD->Y_hat,MAT_COPY_VALUES,&RSVD->F_hat);CHKERRQ(ierr);
+	ierr = MatDestroy(&RSVD->Y_hat);CHKERRQ(ierr);
 
 	/*
 		Creates all required matrices
@@ -57,7 +57,7 @@ PetscErrorCode TSActionRK4(RSVD_matrices *RSVD_mat, DFT_matrices *DFT_mat, \
 	ierr = VecSetType(y,VECMPI);CHKERRQ(ierr);
 	ierr = VecSetSizes(y,PETSC_DECIDE,N);CHKERRQ(ierr);
 
-	ierr = CreateTSMats(&TS_mat,N);CHKERRQ(ierr);
+	ierr = CreateTSMats(&TS,N);CHKERRQ(ierr);
 
 	ierr = MatCreate(PETSC_COMM_WORLD,&Y_all_k);CHKERRQ(ierr);
 	ierr = MatSetType(Y_all_k,MATDENSE);CHKERRQ(ierr);
@@ -73,7 +73,7 @@ PetscErrorCode TSActionRK4(RSVD_matrices *RSVD_mat, DFT_matrices *DFT_mat, \
 		Permutes the forcing matrix
 	*/
 
-	ierr = PermuteMat(RSVD_mat->F_hat, RSVDt);CHKERRQ(ierr);
+	ierr = PermuteMat(RSVD->F_hat, RSVDt);CHKERRQ(ierr);
 
 	ierr = MatCreate(PETSC_COMM_WORLD,&F_hat_k);CHKERRQ(ierr);
 	ierr = MatSetType(F_hat_k,MATDENSE);CHKERRQ(ierr);
@@ -90,17 +90,17 @@ PetscErrorCode TSActionRK4(RSVD_matrices *RSVD_mat, DFT_matrices *DFT_mat, \
 
 		ierr = VecZeroEntries(y);CHKERRQ(ierr);
 
-		ierr = MatDenseGetSubMatrix(RSVD_mat->F_hat,PETSC_DECIDE,PETSC_DECIDE,ik*RSVDt->RSVD.Nw_eff,(ik+1)*RSVDt->RSVD.Nw_eff,&F_temp);CHKERRQ(ierr);
+		ierr = MatDenseGetSubMatrix(RSVD->F_hat,PETSC_DECIDE,PETSC_DECIDE,ik*RSVDt->RSVD.Nw_eff,(ik+1)*RSVDt->RSVD.Nw_eff,&F_temp);CHKERRQ(ierr);
 		ierr = MatCopy(F_temp,F_hat_k,SAME_NONZERO_PATTERN);CHKERRQ(ierr);
 		ierr = MatAssemblyBegin(F_hat_k,MAT_FINAL_ASSEMBLY);CHKERRQ(ierr);
 		ierr = MatAssemblyEnd(F_hat_k,MAT_FINAL_ASSEMBLY);CHKERRQ(ierr);
-		ierr = MatDenseRestoreSubMatrix(RSVD_mat->F_hat,&F_temp);CHKERRQ(ierr);
+		ierr = MatDenseRestoreSubMatrix(RSVD->F_hat,&F_temp);CHKERRQ(ierr);
 
 		/*
 			Creates the initial forcing
 		*/
 
-		ierr = CreateForcingOnFly(F_hat_k,DFT_mat,0,TS_mat.F3);CHKERRQ(ierr);
+		ierr = CreateForcingOnFly(F_hat_k,DFT,0,TS.F3);CHKERRQ(ierr);
 
 		/*
 			Measures the time-stepping wall-time
@@ -115,7 +115,7 @@ PetscErrorCode TSActionRK4(RSVD_matrices *RSVD_mat, DFT_matrices *DFT_mat, \
 
 		for (i=1; i<=rend; i++) {
 
-			ierr = TSRK4(F_hat_k,DFT_mat,LNS_mat,&TS_mat,RSVDt,i,y);CHKERRQ(ierr);
+			ierr = TSRK4(F_hat_k,DFT,LNS,&TS,RSVDt,i,y);CHKERRQ(ierr);
 			ierr = SaveSnapshots(y,i,RSVDt,Y_all_k);CHKERRQ(ierr);
 			ierr = DisplayProgress(i,rend,ik,&prg_cnt,t1,RSVDt,1);CHKERRQ(ierr);
 
@@ -136,28 +136,27 @@ PetscErrorCode TSActionRK4(RSVD_matrices *RSVD_mat, DFT_matrices *DFT_mat, \
 	*/
 
 	ierr = VecDestroy(&y);CHKERRQ(ierr);
-	ierr = MatDestroy(&RSVD_mat->F_hat);CHKERRQ(ierr);
-	ierr = DestroyTSMats(&TS_mat);CHKERRQ(ierr);
+	ierr = MatDestroy(&RSVD->F_hat);CHKERRQ(ierr);
+	ierr = DestroyTSMats(&TS);CHKERRQ(ierr);
 
 	/*
 		Takes the response to the frequency domain
 		Efficient transient removal is performed before discrete Fourier transform (DFT) if desired
 	*/
 
-	ierr = RSVDt->TS.TransientRemoval ? TransientRemovalStrategy(Y_all,LNS_mat,RSVD_mat,RSVDt,TSR,DFT_mat) : \
-											DFT(Y_all,DFT_mat,RSVD_mat,RSVDt);CHKERRQ(ierr);
-	
-	ierr = RSVDt->TS.DirAdj ? PetscPrintf(PETSC_COMM_WORLD,"*** Direct action ") : PetscPrintf(PETSC_COMM_WORLD,"*** Adjoint action ");CHKERRQ(ierr);
+	ierr = RSVDt->TS.TransientRemoval ? TransientRemovalStrategy(Y_all,LNS,RSVD,RSVDt,TSR,DFT) : \
+											DiscreteFourierTransform(Y_all,DFT,RSVD,RSVDt);CHKERRQ(ierr);
 
 	/*
-		Printing out the elapsed time and exit
+		Prints out the elapsed time and exits
 	*/
 
 	ierr = PetscTime(&t2);CHKERRQ(ierr);
 	hh   = (t2-t0)/3600;
 	mm   = (t2-t0-3600*hh)/60;
 	ss   = t2-t0-3600*hh-mm*60;
-	ierr = PetscPrintf(PETSC_COMM_WORLD,"elapsed time = %02d:%02d:%02d ***\n", (int)hh, (int)mm, (int)ss);CHKERRQ(ierr);
+	if (RSVDt->Display) ierr = RSVDt->TS.DirAdj ? PetscPrintf(PETSC_COMM_WORLD,"*** Direct action ") : PetscPrintf(PETSC_COMM_WORLD,"*** Adjoint action ");CHKERRQ(ierr);
+	if (RSVDt->Display) ierr = PetscPrintf(PETSC_COMM_WORLD,"elapsed time = %02d:%02d:%02d ***\n", (int)hh, (int)mm, (int)ss);CHKERRQ(ierr);
 
 	PetscFunctionReturn(0);
 

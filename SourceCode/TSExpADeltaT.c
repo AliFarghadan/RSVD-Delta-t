@@ -5,7 +5,7 @@
 #include <DestroyTSMats.h>
 #include <TSTransRK4.h>
 
-PetscErrorCode TSExpADeltaT(LNS_vars *LNS_mat, RSVDt_vars *RSVDt, Mat U)
+PetscErrorCode TSExpADeltaT(LNS_vars *LNS, RSVDt_vars *RSVDt, Mat U)
 {
 	/*
 		Performs RK4 time stepping of e^(A \Delta t)U_i, for i = 1, 2, ..., k, 
@@ -13,27 +13,27 @@ PetscErrorCode TSExpADeltaT(LNS_vars *LNS_mat, RSVDt_vars *RSVDt, Mat U)
 	*/  
 
 	PetscErrorCode       ierr;
-	PetscInt             it, is, Nstore;
+	PetscInt             it, i, Nstore;
 	Vec                  y1;
-	TS_matrices          TS_mat;
+	TS_matrices          TS;
 
 	PetscFunctionBeginUser;
 
 	ierr = MatGetSize(U,NULL,&Nstore);CHKERRQ(ierr);
-	ierr = CreateTSMats(&TS_mat,RSVDt->RSVD.N);CHKERRQ(ierr);
+	ierr = CreateTSMats(&TS,RSVDt->RSVD.N);CHKERRQ(ierr);
 
-	for (is=0; is<Nstore; is++) {
+	for (i=0; i<Nstore; i++) {
 
-		ierr = MatDenseGetColumnVecWrite(U,is,&y1);CHKERRQ(ierr);
+		ierr = MatDenseGetColumnVecWrite(U,i,&y1);CHKERRQ(ierr);
 
 		for (it=0; it<RSVDt->TS.ResRatio; it++) {
-			ierr = TSTransRK4(LNS_mat, &TS_mat, RSVDt, it, y1);CHKERRQ(ierr);
+			ierr = TSTransRK4(LNS, &TS, RSVDt, y1);CHKERRQ(ierr);
 		}
 
-		ierr = MatDenseRestoreColumnVecWrite(U,is,&y1);CHKERRQ(ierr);
+		ierr = MatDenseRestoreColumnVecWrite(U,i,&y1);CHKERRQ(ierr);
 	}
 
-	ierr = DestroyTSMats(&TS_mat);CHKERRQ(ierr);
+	ierr = DestroyTSMats(&TS);CHKERRQ(ierr);
 
 	PetscFunctionReturn(0);
 	

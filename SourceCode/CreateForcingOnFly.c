@@ -2,7 +2,7 @@
 #include <petscmat.h>
 #include <Variables.h>
 
-PetscErrorCode CreateForcingOnFly(Mat F_hat, DFT_matrices *DFT_mat, PetscInt jt_cyc, Vec F)
+PetscErrorCode CreateForcingOnFly(Mat F_hat, DFT_matrices *DFT, PetscInt jt_cyc, Vec F)
 {
 
 	/*
@@ -14,9 +14,9 @@ PetscErrorCode CreateForcingOnFly(Mat F_hat, DFT_matrices *DFT_mat, PetscInt jt_
 
 	PetscFunctionBeginUser;
 
-	ierr = MatDenseGetColumnVecRead(DFT_mat->idft,jt_cyc,&W_col);CHKERRQ(ierr);
+	ierr = MatDenseGetColumnVecRead(DFT->idft,jt_cyc,&W_col);CHKERRQ(ierr);
 	ierr = MatMult(F_hat,W_col,F);CHKERRQ(ierr);
-	ierr = MatDenseRestoreColumnVecRead(DFT_mat->idft,jt_cyc,&W_col);CHKERRQ(ierr);
+	ierr = MatDenseRestoreColumnVecRead(DFT->idft,jt_cyc,&W_col);CHKERRQ(ierr);
 
 	PetscFunctionReturn(0);
 	

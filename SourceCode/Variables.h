@@ -13,7 +13,7 @@ typedef struct {
 	PetscReal     w;                                      /* base frequency */
 	PetscBool     TwoPI;                                  /* base frequency multiplies by 2*pi if true */
 	PetscBool     InputForcingFlg;                        /* input forcing from the specified directory if true, otherwise a random forcing */
-	PetscInt      RandSeed;                               /* seeding random number to replicate data if needed */
+	PetscInt      RandSeed;                               /* seeding random number to replicate data if desired */
 } RSVD_vars;
 
 typedef struct {

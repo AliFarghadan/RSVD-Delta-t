@@ -3,7 +3,7 @@
 #include <Variables.h>
 
 PetscErrorCode GalerkinProj(Mat Y_all, Mat M_tilde, Mat V, PetscInt ik, \
-							RSVDt_vars *RSVDt, TS_removal_matrices *TSR, DFT_matrices *DFT_mat)
+							RSVDt_vars *RSVDt, TS_removal_matrices *TSR, DFT_matrices *DFT)
 {
 	/*
 		Performs Galerkin projection to remove the transient response
@@ -29,7 +29,7 @@ PetscErrorCode GalerkinProj(Mat Y_all, Mat M_tilde, Mat V, PetscInt ik, \
 
 		ierr = RSVDt->TS.DirAdj ? MatDenseGetSubMatrix(Y_all,PETSC_DECIDE,PETSC_DECIDE,ik*Nstore,(ik+1)*Nstore-1,&Y_all_k) : \
 				MatDenseGetSubMatrix(Y_all,PETSC_DECIDE,PETSC_DECIDE,ik*Nstore+1,(ik+1)*Nstore,&Y_all_k);CHKERRQ(ierr);
-		ierr = MatDenseGetColumnVecRead(DFT_mat->dft,iw,&dft_iw);CHKERRQ(ierr);
+		ierr = MatDenseGetColumnVecRead(DFT->dft,iw,&dft_iw);CHKERRQ(ierr);
 		ierr = MatDuplicate(Y_all_k,MAT_COPY_VALUES,&Y_temp);CHKERRQ(ierr);
 		ierr = MatMult(Y_temp,dft_iw,y1);CHKERRQ(ierr);
 		ierr = VecScale(y1, RSVDt->TS.ResRatio);CHKERRQ(ierr);
@@ -42,7 +42,7 @@ PetscErrorCode GalerkinProj(Mat Y_all, Mat M_tilde, Mat V, PetscInt ik, \
 		ierr = MatMult(Y_temp,dft_iw,y2);CHKERRQ(ierr);
 		ierr = VecScale(y2, RSVDt->TS.ResRatio);CHKERRQ(ierr);
 		ierr = MatDestroy(&Y_temp);CHKERRQ(ierr);
-		ierr = MatDenseRestoreColumnVecRead(DFT_mat->dft,iw,&dft_iw);CHKERRQ(ierr);
+		ierr = MatDenseRestoreColumnVecRead(DFT->dft,iw,&dft_iw);CHKERRQ(ierr);
 		ierr = MatDenseRestoreSubMatrix(Y_all,&Y_all_k);CHKERRQ(ierr);
 
 		ierr = MatScale(M_temp, -1.);CHKERRQ(ierr);

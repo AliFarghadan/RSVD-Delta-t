@@ -66,16 +66,15 @@
 	List of input libraries and functions
 */
 
-#include <slepcsvd.h>
+#include <slepcsys.h>
 #include <Variables.h>
 #include <PreProcessing.h>
 #include <TransientRunRK4.h>
 #include <DirectActionRK4.h>
 #include <PowerIterationRK4.h>
-#include <StoreU.h>
 #include <AdjointActionRK4.h>
-#include <SVDAllFreqs.h>
-#include <SVDAllFreqsBeforeAdjoint.h>
+#include <SVDAllFreqs4Response.h>
+#include <SVDAllFreqs4Forcing.h>
 #include <SaveResults.h>
 
 /* 	
@@ -92,32 +91,34 @@ int main(int argc,char **args)
 	PetscErrorCode        ierr;                         /* Petsc error code */
 	Directories           dirs;                         /* I/O directories */
 	RSVDt_vars            RSVDt;                        /* RSVDt variables */
-	TransRun_vars         TR_vars;                      /* transient run variables */
-	LNS_vars              LNS_mat;                      /* LNS matrix */
-	DFT_matrices          DFT_mat;                      /* DFT and inverse DFT matrices */
+	TransRun_vars         TR;                           /* transient run variables */
+	LNS_vars              LNS;                          /* LNS matrix */
+	DFT_matrices          DFT;                          /* DFT and inverse DFT matrices */
 	TS_removal_matrices   TSR;                          /* transient removal matrices */
-	Weight_matrices       Weight_mat;                   /* weight and input/output matrices */
-	RSVD_matrices         RSVD_mat;                     /* RSVD matrices */
-	Resolvent_matrices    Res_mat;                      /* resolvent modes and gains */
+	Weight_matrices       Weight;                       /* weight and input/output matrices */
+	RSVD_matrices         RSVD;                         /* RSVD matrices */
+	Resolvent_matrices    Res;                          /* resolvent modes and gains */
+	PetscLogDouble        t1, t2;                       /* time measurement variables for simulation elapsed time */
 
 	/*
 		Initializes the SLEPc
 	*/
 
 	ierr = SlepcInitialize(&argc,&args,(char*)0,NULL); if (ierr) return ierr;
+	ierr = PetscTime(&t1);CHKERRQ(ierr);
 
 	/*
 		Reads user inputs and create required matrices before running the algorithm
 	*/
 	
-	ierr = PreProcessing(&RSVDt, &Weight_mat, &LNS_mat, &RSVD_mat, &Res_mat, &TR_vars, &DFT_mat, &dirs);CHKERRQ(ierr);
+	ierr = PreProcessing(&RSVDt, &Weight, &LNS, &RSVD, &TR, &DFT, &dirs);CHKERRQ(ierr);
 
 	/*
 		Transient simulation (if desired -- run and exit)
 	*/
 	
-	if (TR_vars.TransRun) {
-		ierr = TransientRunRK4(&TR_vars, &RSVDt, &LNS_mat, &DFT_mat, &dirs);CHKERRQ(ierr);
+	if (TR.TransRun) {
+		ierr = TransientRunRK4(&TR, &RSVDt, &LNS, &DFT, &dirs);CHKERRQ(ierr);
 		ierr = PetscOptionsClear(NULL);CHKERRQ(ierr);
 		ierr = SlepcFinalize();
 		return ierr;
@@ -128,22 +129,28 @@ int main(int argc,char **args)
 		****************    for resolvent analysis     *******************
 	**************************************************************************/
 
-	ierr = PetscPrintf(PETSC_COMM_WORLD,"\n********************************************\n"
+	if (RSVDt.Display) ierr = PetscPrintf(PETSC_COMM_WORLD,"\n********************************************\n"
 			"*************** RSVD-\\Delta t **************\n********************************************\n");CHKERRQ(ierr);
 
-	ierr = DirectActionRK4(&RSVD_mat, &RSVDt, &LNS_mat, &DFT_mat, &Weight_mat, &dirs, &TSR);CHKERRQ(ierr);
+	ierr = DirectActionRK4(&RSVD, &RSVDt, &LNS, &DFT, &Weight, &dirs, &TSR);CHKERRQ(ierr);
 
-	ierr = PowerIterationRK4(&RSVD_mat, &RSVDt, &LNS_mat, &DFT_mat, &Weight_mat, &dirs, &TSR);CHKERRQ(ierr);
+	ierr = PowerIterationRK4(&RSVD, &RSVDt, &LNS, &DFT, &Weight, &dirs, &TSR);CHKERRQ(ierr);
 
-	ierr = SVDAllFreqsBeforeAdjoint(&RSVD_mat, &RSVDt);CHKERRQ(ierr);
+	ierr = SVDAllFreqs4Response(&RSVD, &RSVDt, &Weight, &Res, &dirs);CHKERRQ(ierr);
 
-	ierr = StoreU(&RSVD_mat, &Res_mat);CHKERRQ(ierr);
+	ierr = AdjointActionRK4(&RSVD, &RSVDt, &LNS, &DFT, &Weight, &dirs, &TSR);CHKERRQ(ierr);
 
-	ierr = AdjointActionRK4(&RSVD_mat, &RSVDt, &LNS_mat, &DFT_mat, &Weight_mat, &dirs, &TSR);CHKERRQ(ierr);
+	ierr = SVDAllFreqs4Forcing(&RSVD, &RSVDt, &Weight, &Res, &dirs);CHKERRQ(ierr);
 
-	ierr = SVDAllFreqs(&RSVD_mat, &RSVDt, &Weight_mat, &Res_mat);CHKERRQ(ierr);
+	/*
+		Prints out the elapsed time and exits
+	*/
 
-	ierr = SaveResults(&Res_mat, &RSVDt, &dirs);CHKERRQ(ierr);
+	ierr          = PetscTime(&t2);CHKERRQ(ierr);
+	PetscInt hh   = (t2-t1)/3600;
+	PetscInt mm   = (t2-t1-3600*hh)/60;
+	PetscInt ss   = t2-t1-3600*hh-mm*60;
+	ierr = PetscPrintf(PETSC_COMM_WORLD,"Done :))\n\nEntire simulation elapsed time = %02d:%02d:%02d\n", (int)hh, (int)mm, (int)ss);CHKERRQ(ierr);
 	
 	ierr = PetscOptionsClear(NULL);CHKERRQ(ierr);
 	ierr = SlepcFinalize();

@@ -1,6 +1,5 @@
 
 #include <petscmat.h>
-#include <petscviewerhdf5.h>
 #include <Variables.h>
 #include <CreateTSMats.h>
 #include <TSTransRK4.h>
@@ -8,11 +7,11 @@
 #include <DestroyTSMats.h>
 #include <SaveInputVarsCopy.h>
 
-PetscErrorCode TransientRunRK4(TransRun_vars *TR_vars, RSVDt_vars *RSVDt, LNS_vars *LNS_mat, DFT_matrices *DFT_mat, Directories *dirs)
+PetscErrorCode TransientRunRK4(TransRun_vars *TR, RSVDt_vars *RSVDt, LNS_vars *LNS, DFT_matrices *DFT, Directories *dirs)
 {
 	/*
 		Transient simulation using RK4
-		This function runs only if 'TransientRun' is True
+		This function runs only if 'TransRun' is True
 		Solves the initial value problem for the differential equation \dot{q} - Aq = 0 in the time domain
 		This solver starts from a specified or random initial condition and computes the solution trajectory of q(t) over time
 	*/
@@ -42,18 +41,24 @@ PetscErrorCode TransientRunRK4(TransRun_vars *TR_vars, RSVDt_vars *RSVDt, LNS_va
 	RSVDt->TS.dt     = deltaT/PetscCeilReal(deltaT/RSVDt->TS.dt);
 	Nt_period        = round(TSS/RSVDt->TS.dt);
 	Nt_saved_delta   = Nt_period/Ns;
-	rend             = Nt_period*TR_vars->TransPeriods;
-	Nt_saved         = PetscFloorReal(rend/TR_vars->TransSaveMod)+1;
+	rend             = Nt_period*TR->TransPeriods;
+	Nt_saved         = PetscFloorReal(rend/TR->TransSaveMod)+1;
 	ierr = PetscPrintf(PETSC_COMM_WORLD,"Total integration time = %g = %d x %g with dt = %g\n", \
-					RSVDt->TS.dt*rend, (int) TR_vars->TransPeriods, TSS, RSVDt->TS.dt);CHKERRQ(ierr);
+					RSVDt->TS.dt*rend, (int) TR->TransPeriods, TSS, RSVDt->TS.dt);CHKERRQ(ierr);
+	if (TR->TransRemovalEst) {
+		ierr = PetscPrintf(PETSC_COMM_WORLD,"Transient removal strategy estimation is requested\n\n");CHKERRQ(ierr);
+	} else {
+		ierr = PetscPrintf(PETSC_COMM_WORLD,"Transient removal strategy estimation is NOT requested\n\n");CHKERRQ(ierr);
+	}
+
 	/*
 		Creates the required matrices/vecs
 	*/
 
-	ierr = TR_vars->TransSave ? PetscPrintf(PETSC_COMM_WORLD,"Total snapshots to be saved = %d\n", (int) Nt_saved) : \
+	ierr = TR->TransSave ? PetscPrintf(PETSC_COMM_WORLD,"Total snapshots to be saved = %d\n", (int) Nt_saved) : \
 										PetscPrintf(PETSC_COMM_WORLD,"Saving snapshots is not requested\n");CHKERRQ(ierr);  
 
-	if (TR_vars->TransRemovalEst) {
+	if (TR->TransRemovalEst) {
 		ierr = MatCreate(PETSC_COMM_WORLD,&Q_all);CHKERRQ(ierr);
 		ierr = MatSetType(Q_all,MATDENSE);CHKERRQ(ierr);
 		ierr = MatSetSizes(Q_all,PETSC_DECIDE,PETSC_DECIDE,RSVDt->RSVD.N,Ns);CHKERRQ(ierr);
@@ -79,7 +84,7 @@ PetscErrorCode TransientRunRK4(TransRun_vars *TR_vars, RSVDt_vars *RSVDt, LNS_va
 		The initial condition is normalized unless the initial vector is specified
 	*/
 
-	if (TR_vars->TransICFlg) {
+	if (TR->TransICFlg) {
 		ierr = PetscPrintf(PETSC_COMM_WORLD,"Reading the initial vector\n");CHKERRQ(ierr);
 		ierr = PetscSNPrintf((char*)&dirs->IO_dir,PETSC_MAX_PATH_LEN,"%s%s%s",dirs->RootDir,dirs->ResultsDir,dirs->TransICDir);CHKERRQ(ierr);
 		ierr = PetscViewerBinaryOpen(PETSC_COMM_WORLD,dirs->IO_dir,FILE_MODE_READ,&fd);CHKERRQ(ierr);
@@ -93,7 +98,7 @@ PetscErrorCode TransientRunRK4(TransRun_vars *TR_vars, RSVDt_vars *RSVDt, LNS_va
 		ierr = VecNormalize(q0,NULL);CHKERRQ(ierr);
 	}
 
-	if (TR_vars->TransRemovalEst) {
+	if (TR->TransRemovalEst) {
 		ierr = VecCopy(q0, qss);CHKERRQ(ierr);
 		ierr = VecScale(qss, -1.);CHKERRQ(ierr);
 	}
@@ -107,13 +112,13 @@ PetscErrorCode TransientRunRK4(TransRun_vars *TR_vars, RSVDt_vars *RSVDt, LNS_va
 	ierr = PetscPrintf(PETSC_COMM_WORLD,"Norm of the initial snapshot: %f @ t = %d\n", (double)norm, 0);CHKERRQ(ierr);
 	ierr = VecSetValues(trans_norm,1,&pos,(PetscScalar*)&norm,INSERT_VALUES);CHKERRQ(ierr);
 
-	if (TR_vars->TransRemovalEst) {
+	if (TR->TransRemovalEst) {
 		ierr = MatDenseGetColumnVecWrite(Q_all,0,&q_temp);CHKERRQ(ierr);
 		ierr = VecCopy(q0,q_temp);CHKERRQ(ierr);
 		ierr = MatDenseRestoreColumnVecWrite(Q_all,0,&q_temp);CHKERRQ(ierr);
 	}
 
-	if (TR_vars->TransSave) {
+	if (TR->TransSave) {
 		ierr = PetscSNPrintf((char*)&dirs->IO_dir,PETSC_MAX_PATH_LEN,"%s%s%d",dirs->FolderDir,"q_transient_",(int) pos);CHKERRQ(ierr);
 		ierr = PetscViewerBinaryOpen(PETSC_COMM_WORLD,dirs->IO_dir,FILE_MODE_WRITE,&fd);CHKERRQ(ierr);
 		ierr = VecView(q0,fd);CHKERRQ(ierr);
@@ -127,16 +132,16 @@ PetscErrorCode TransientRunRK4(TransRun_vars *TR_vars, RSVDt_vars *RSVDt, LNS_va
 
 	for (i=1; i<=rend; i++) {
 
-		ierr = TSTransRK4(LNS_mat,&TS_mat,RSVDt,i,q0);CHKERRQ(ierr);
+		ierr = TSTransRK4(LNS,&TS_mat,RSVDt,q0);CHKERRQ(ierr);
 
 		/*
 			Computes the norm of snapshot and check the convergence/divergence status
-			Saves the snapshot (if applicable)
+			Saves the snapshot if desired
 		*/
 
-		if (PetscFmodReal(i,TR_vars->TransSaveMod) == 0) { 
+		if (PetscFmodReal(i,TR->TransSaveMod) == 0) { 
 
-			pos  = i/TR_vars->TransSaveMod;
+			pos  = i/TR->TransSaveMod;
 
 			ierr = VecNorm(q0,NORM_2,&norm);CHKERRQ(ierr);
 
@@ -145,19 +150,19 @@ PetscErrorCode TransientRunRK4(TransRun_vars *TR_vars, RSVDt_vars *RSVDt, LNS_va
 				break;
 			}
 
-			if (norm > TR_vars->TransDivVal) {
+			if (norm > TR->TransDivVal) {
 				ierr = PetscPrintf(PETSC_COMM_WORLD,"Diverged! The norm of the last snapshot = %g exceeds the divergence threshold = %g\n",\
-																	norm, TR_vars->TransDivVal);CHKERRQ(ierr);
+																	norm, TR->TransDivVal);CHKERRQ(ierr);
 				break;
 			}
 
-			if (norm < TR_vars->TransConVal) {
+			if (norm < TR->TransConVal) {
 				ierr = PetscPrintf(PETSC_COMM_WORLD,"Converged! The norm of the last snapshot = %g is smaller than the convergence threshold = %g\n",\
-																	norm, TR_vars->TransConVal);CHKERRQ(ierr);
+																	norm, TR->TransConVal);CHKERRQ(ierr);
 				break;
 			}
 
-			if (TR_vars->TransSave) {
+			if (TR->TransSave) {
 				ierr = PetscSNPrintf((char*)&dirs->IO_dir,PETSC_MAX_PATH_LEN,"%s%s%d",dirs->FolderDir,"q_transient_",(int) pos);CHKERRQ(ierr);
 				ierr = PetscViewerBinaryOpen(PETSC_COMM_WORLD,dirs->IO_dir,FILE_MODE_WRITE,&fd);CHKERRQ(ierr);
 				ierr = VecView(q0,fd);CHKERRQ(ierr);
@@ -173,11 +178,11 @@ PetscErrorCode TransientRunRK4(TransRun_vars *TR_vars, RSVDt_vars *RSVDt, LNS_va
 			The estimate occurs at the end of each period
 		*/
 
-		if (TR_vars->TransRemovalEst) {
+		if (TR->TransRemovalEst) {
 			if (PetscFmodReal(i,Nt_saved_delta) == 0) {
 				pos  = i/Nt_saved_delta;
 				pos  = PetscFmodReal(pos,Ns);
-				if (pos == 0) ierr = TransientRemovalEst(Q_all, qss, i/Nt_period, RSVDt, DFT_mat, dirs);CHKERRQ(ierr);
+				if (pos == 0) ierr = TransientRemovalEst(Q_all, qss, i/Nt_period, RSVDt, DFT, dirs);CHKERRQ(ierr);
 				ierr = MatDenseGetColumnVecWrite(Q_all,pos,&q_temp);CHKERRQ(ierr);
 				ierr = VecCopy(q0,q_temp);CHKERRQ(ierr);
 				ierr = MatDenseRestoreColumnVecWrite(Q_all,pos,&q_temp);CHKERRQ(ierr);
@@ -214,12 +219,10 @@ PetscErrorCode TransientRunRK4(TransRun_vars *TR_vars, RSVDt_vars *RSVDt, LNS_va
 	*/
 
 	ierr = VecDestroy(&q0);CHKERRQ(ierr);
-	if (TR_vars->TransRemovalEst) ierr = MatDestroy(&Q_all);CHKERRQ(ierr);
-	if (TR_vars->TransRemovalEst) ierr = VecDestroy(&qss);CHKERRQ(ierr);
+	if (TR->TransRemovalEst) ierr = MatDestroy(&Q_all);CHKERRQ(ierr);
+	if (TR->TransRemovalEst) ierr = VecDestroy(&qss);CHKERRQ(ierr);
 	ierr = VecDestroy(&trans_norm);CHKERRQ(ierr);
 	ierr = DestroyTSMats(&TS_mat);CHKERRQ(ierr);
-
-	ierr = SaveInputVarsCopy(dirs);CHKERRQ(ierr); 
 
 	ierr = PetscPrintf(PETSC_COMM_WORLD,"DONE :))\n\n");CHKERRQ(ierr);
 
