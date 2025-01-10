@@ -281,7 +281,7 @@ When the operator is real-valued, symmetry allows retaining only positive freque
 #### Examples:
 - If `w = 0.05` and `Nw = 41`, instead of computing resolvent modes for
   $\Omega = ${-1, -0.95, -0.9, ..., 0.95, 1},
-  We set `Nw = 21` and compute the modes at
+  we set `Nw = 21` and compute the modes at
   $\Omega_+ =$ {0, 0.05, 0.1, ..., 0.95, 1}
   
 - If `w = 0.05` and `Nw = 40`, instead of computing resolvent modes for
