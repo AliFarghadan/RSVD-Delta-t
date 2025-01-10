@@ -317,7 +317,7 @@ When the operator is complex-valued, we compute the modes for all frequencies, a
 Before computing the modes, we display the following parameters (if `Display` is not `0`):
 - Minimum frequency (`w_min`).
 - Maximum frequency (`w_max`).
-- Frequency step size ($\Delta \omega$).
+- Frequency step size (`w`).
 
 ### Saving Resolvent Modes
 
