@@ -12,7 +12,7 @@ PetscErrorCode TransientRemovalEst(Mat Q_transient, Vec qss, PetscInt period_ind
 	
 	PetscErrorCode        ierr;
 	PetscReal             w, norm, norm_diff, deltaT;
-	PetscInt              N, Ns, is, is1, iw;
+	PetscInt              N, Ns, is, is1, iw, Nw;
 	Vec                   Initial_transient_norm, Updated_transient_norm, q_temp, q1, q2, b, qdiff;
 	Mat                   Q_all, Q_transient_hat;
 	PetscViewer           fd;
@@ -26,6 +26,7 @@ PetscErrorCode TransientRemovalEst(Mat Q_transient, Vec qss, PetscInt period_ind
 	ierr = MatGetSize(Q_transient,&N,&Ns);CHKERRQ(ierr);
 	deltaT  = 2*PETSC_PI/RSVDt->RSVD.w/Ns;
 	Ns  -= period_index == 1 ? 1 : 0; // skip the initial snapshot as it is a zero vector
+	Nw   = (int)PetscCeilReal((double)RSVDt->RSVD.Nw/2);
 	ierr = MatCreate(PETSC_COMM_WORLD,&Q_all);CHKERRQ(ierr);
 	ierr = MatSetType(Q_all,MATDENSE);CHKERRQ(ierr);
 	ierr = MatSetSizes(Q_all,PETSC_DECIDE,PETSC_DECIDE,N,Ns);CHKERRQ(ierr);
@@ -33,11 +34,11 @@ PetscErrorCode TransientRemovalEst(Mat Q_transient, Vec qss, PetscInt period_ind
 	ierr = PetscPrintf(PETSC_COMM_WORLD,"**** Subspace dim = %d ****\n", (int) Ns);
 
 	ierr = VecCreate(PETSC_COMM_WORLD, &Initial_transient_norm);CHKERRQ(ierr);
-	ierr = VecSetSizes(Initial_transient_norm, PETSC_DECIDE, RSVDt->RSVD.Nw/2);CHKERRQ(ierr);
+	ierr = VecSetSizes(Initial_transient_norm, PETSC_DECIDE, Nw);CHKERRQ(ierr);
 	ierr = VecSetUp(Initial_transient_norm);CHKERRQ(ierr);
 
 	ierr = VecCreate(PETSC_COMM_WORLD, &Updated_transient_norm);CHKERRQ(ierr);
-	ierr = VecSetSizes(Updated_transient_norm, PETSC_DECIDE, RSVDt->RSVD.Nw/2);CHKERRQ(ierr);
+	ierr = VecSetSizes(Updated_transient_norm, PETSC_DECIDE, Nw);CHKERRQ(ierr);
 	ierr = VecSetUp(Updated_transient_norm);CHKERRQ(ierr);
 
 	ierr = VecCreate(PETSC_COMM_WORLD, &q_temp);CHKERRQ(ierr);
@@ -57,7 +58,7 @@ PetscErrorCode TransientRemovalEst(Mat Q_transient, Vec qss, PetscInt period_ind
 	ierr = MatMatMult(Q_transient,DFT->dft,MAT_INITIAL_MATRIX,PETSC_DEFAULT,&Q_transient_hat);CHKERRQ(ierr);
 	ierr = MatScale(Q_transient_hat, 1./RSVDt->RSVD.Nw);CHKERRQ(ierr);
 
-	for (iw=0; iw<RSVDt->RSVD.Nw/2; iw++) {
+	for (iw=0; iw<Nw; iw++) {
 		ierr = MatDenseGetColumnVecWrite(Q_transient_hat,iw,&q1);CHKERRQ(ierr);
 		ierr = VecNorm(q1,NORM_2,&norm);CHKERRQ(ierr);
 		ierr = PetscPrintf(PETSC_COMM_WORLD,"**** Norm of the ratio norm(qt)/norm(qs): %g @ w = %g ****\n", \
@@ -72,7 +73,7 @@ PetscErrorCode TransientRemovalEst(Mat Q_transient, Vec qss, PetscInt period_ind
 
 	ierr = PetscPrintf(PETSC_COMM_WORLD,"**** Displaying updated transient norms for (positive) frequencies ****\n");CHKERRQ(ierr);
 
-	for (iw=0; iw<RSVDt->RSVD.Nw/2; iw++) {
+	for (iw=0; iw<Nw; iw++) {
 
 		/*
 			Build the matrix of synthetic snapshots 
