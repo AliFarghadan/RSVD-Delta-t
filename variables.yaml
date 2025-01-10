@@ -18,7 +18,7 @@ k:                  10
 # Number of power iterations (integer)
 q:                  1
 
-# Number of frequencies to resolve (integer - even number)
+# Number of frequencies to resolve (integer)
 Nw:                 42
 
 # Base frequency (real)
