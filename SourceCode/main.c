@@ -75,7 +75,6 @@
 #include <AdjointActionRK4.h>
 #include <SVDAllFreqs4Response.h>
 #include <SVDAllFreqs4Forcing.h>
-#include <SaveResults.h>
 
 /* 	
 	Beginning of the simulation
