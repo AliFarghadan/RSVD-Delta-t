@@ -13,7 +13,7 @@ PetscErrorCode ApplyWeightMats(RSVD_matrices *RSVD, RSVDt_vars *RSVDt, Weight_ma
 
 	PetscFunctionBeginUser;
 
-	if (DirAdj) { // direct 
+	if (RSVDt->TS.DirAdj) { // direct 
 		if (before) { // forcing 
 			if (Weight_mat->InvInputWeightFlg)  {
 				ierr = MatMatMult(Weight_mat->W_f_sqrt_inv,RSVD_mat->Y_hat,MAT_INITIAL_MATRIX,PETSC_DEFAULT,&Y);CHKERRQ(ierr);
