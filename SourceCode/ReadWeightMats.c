@@ -89,8 +89,10 @@ PetscErrorCode ReadWeightMats(RSVDt_vars *RSVDt, Weight_matrices *Weight, Direct
 		if (col2 != RSVDt->RSVD.N) SETERRQ(PETSC_COMM_WORLD,PETSC_ERR_USER,"Output matrix (C) must have %d columns, current size = %d x %d", (int)RSVDt->RSVD.N, (int)row2, (int)col2);CHKERRQ(ierr);
 		RSVDt->RSVD.Nc = row2;
 		if (row2 != row1) SETERRQ(PETSC_COMM_WORLD,PETSC_ERR_USER,"Size mismatch between output matrix (C) and output weight matrix (W_q_sqrt), %d != %d", (int)row2, (int)row1);CHKERRQ(ierr);
-		ierr = MatGetSize(Weight->W_q_sqrt_inv,&row1,NULL);CHKERRQ(ierr);
-		if (row2 != row1) SETERRQ(PETSC_COMM_WORLD,PETSC_ERR_USER,"Size mismatch between output matrix (C) and inverse output weight matrix (W_q_sqrt_inv), %d != %d", (int)row2, (int)row1);CHKERRQ(ierr);
+		if (Weight->InvOutputWeightFlg) {
+			ierr = MatGetSize(Weight->W_q_sqrt_inv,&row1,NULL);CHKERRQ(ierr);
+			if (row2 != row1) SETERRQ(PETSC_COMM_WORLD,PETSC_ERR_USER,"Size mismatch between output matrix (C) and inverse output weight matrix (W_q_sqrt_inv), %d != %d", (int)row2, (int)row1);CHKERRQ(ierr);
+		}
 	} else {
 		RSVDt->RSVD.Nc = RSVDt->RSVD.N;
 		if (Weight->OutputWeightFlg && RSVDt->RSVD.Nc != row1) SETERRQ(PETSC_COMM_WORLD,PETSC_ERR_USER,"Size mismatch between output matrix (C) and output weight matrix (W_q_sqrt)");CHKERRQ(ierr);
