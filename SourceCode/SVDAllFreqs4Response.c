@@ -70,8 +70,7 @@ PetscErrorCode SVDAllFreqs4Response(RSVD_matrices *RSVD, RSVDt_vars *RSVDt, Weig
 	ierr = PetscTime(&t1);CHKERRQ(ierr);
 	if (RSVDt->Display) ierr = PetscPrintf(PETSC_COMM_WORLD,"\n*** Saving the response modes begins! ***\n");CHKERRQ(ierr);
 
-	ierr = MatDuplicate(RSVD->Y_hat,MAT_COPY_VALUES,&Res->U_hat);CHKERRQ(ierr);
-	if (Weight->InvOutputWeightFlg) ierr = MatMatMult(Weight->W_q_sqrt_inv,RSVD->Y_hat,MAT_REUSE_MATRIX,PETSC_DEFAULT,&Res->U_hat);CHKERRQ(ierr);
+	if (Weight->InvOutputWeightFlg) ierr = MatMatMult(Weight->W_q_sqrt_inv,RSVD->Y_hat,MAT_INITIAL_MATRIX,PETSC_DEFAULT,&Res->U_hat);CHKERRQ(ierr);
 
 	if (RSVDt->SaveResultsOpt == 1) {
 
