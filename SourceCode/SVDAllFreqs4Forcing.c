@@ -62,7 +62,11 @@ PetscErrorCode SVDAllFreqs4Forcing(RSVD_matrices *RSVD, RSVDt_vars *RSVDt, Weigh
 	ierr = MatAssemblyBegin(Res->V_hat,MAT_FINAL_ASSEMBLY);CHKERRQ(ierr);
 	ierr = MatAssemblyEnd(Res->V_hat,MAT_FINAL_ASSEMBLY);CHKERRQ(ierr);
 
-	if (Weight->InvInputWeightFlg)  ierr = MatMatMult(Weight->W_f_sqrt_inv,Res->V_hat,MAT_REUSE_MATRIX,PETSC_DEFAULT,&Res->V_hat);CHKERRQ(ierr);
+	if (Weight->InvInputWeightFlg)  {
+		ierr = MatMatMult(Weight->W_f_sqrt_inv,Res->V_hat,MAT_INITIAL_MATRIX,PETSC_DEFAULT,&V);CHKERRQ(ierr);
+		ierr = MatCopy(V,Res->V_hat,SAME_NONZERO_PATTERN);CHKERRQ(ierr);
+		ierr = MatDestroy(&V);CHKERRQ(ierr);
+	}
 	
 	/*
 		Prints out the elapsed time
