@@ -22,6 +22,7 @@ PetscErrorCode ApplyWeightMats(RSVD_matrices *RSVD, RSVDt_vars *RSVDt, Weight_ma
 			}
 			if (Weight->InputMatrixFlg)  {
 				ierr = MatMatMult(Weight->B,RSVD->Y_hat,MAT_INITIAL_MATRIX,PETSC_DEFAULT,&Y);CHKERRQ(ierr);
+				ierr = MatDestroy(&RSVD->Y_hat);CHKERRQ(ierr);
 				ierr = MatDuplicate(Y,MAT_COPY_VALUES,&RSVD->Y_hat);CHKERRQ(ierr);
 				ierr = MatDestroy(&Y);CHKERRQ(ierr);
 			}
