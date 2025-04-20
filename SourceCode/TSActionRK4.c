@@ -137,6 +137,7 @@ PetscErrorCode TSActionRK4(RSVD_matrices *RSVD, DFT_matrices *DFT, \
 
 	ierr = VecDestroy(&y);CHKERRQ(ierr);
 	ierr = MatDestroy(&RSVD->F_hat);CHKERRQ(ierr);
+	ierr = MatDestroy(&Y_all_k);CHKERRQ(ierr);
 	ierr = DestroyTSMats(&TS);CHKERRQ(ierr);
 
 	/*
